@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { IScaffold } from './index'
 
-class Scaffold {
+class SimpleScaffold {
   private config: IScaffold.IConfig
   private locals = {} as any
   public scaffoldName = process.argv[2]
@@ -28,7 +28,7 @@ class Scaffold {
 
   private parseLocals(text: string): string {
     let out = text.toString()
-    const pattern = /{{\s*(.+)\s*}}/gi
+    const pattern = /{[%]\s*([^%{}]+)\s*[%]}/gi
     return out.replace(pattern, (match: string, $1: string) => this.locals[$1])
   }
 
@@ -60,7 +60,7 @@ class Scaffold {
     if (typeof this.config.output === 'function') {
       out = this.config.output(file)
     } else {
-      out = this.config.output + '/' + path.basename(file)
+      out = this.config.output + `/${this.scaffoldName}/` + path.basename(file)
     }
 
     return this.parseLocals(out)
@@ -70,6 +70,7 @@ class Scaffold {
     if (!fs.existsSync(path.dirname(filePath))) {
       fs.mkdirSync(path.dirname(filePath))
     }
+    console.info('Writing file:', filePath)
     fs.writeFileSync(filePath, fileContents, { encoding: 'utf-8' })
   }
 
@@ -80,21 +81,9 @@ class Scaffold {
       const outputPath = this.getOutputPath(file)
       const contents = this.getFileContents(file)
       const outputContents = this.parseLocals(contents)
-
-      this.writeFile(outputPath, contents)
-
-      console.info({outputPath, outputContents})
+      this.writeFile(outputPath, outputContents)
     })
   }
 }
 
-const templateDir = process.cwd() + '/examples'
-const scf = new Scaffold({
-  templates: [templateDir + '/test-input/Component'],
-  output: templateDir + '/test-output',
-  locals: {
-    property: 'myProp'
-  }
-})
-
-scf.run()
+exports.default = SimpleScaffold
