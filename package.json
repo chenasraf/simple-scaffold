@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
@@ -13,9 +13,6 @@
     "start": "node dist/scaffold.js",
     "test": "yarn build && node scripts/test.js"
   },
-  "files": [
-    "dist/scaffold.js"
-  ],
   "devDependencies": {
     "@types/node": "^8.0.50",
     "ts-loader": "^3.1.1",
