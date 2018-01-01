@@ -16,7 +16,6 @@ class SimpleScaffold {
   }
 
   constructor(config: IScaffold.IConfig) {
-    // this.config = utils.merge<IScaffold.IConfig>(this.DefaultConfig, config)
     if (!this.scaffoldName) {
       throw new Error('Must provide scaffold name')
     }
