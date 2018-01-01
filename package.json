@@ -1,0 +1,23 @@
+{
+  "name": "scaffolder",
+  "version": "1.0.0",
+  "description": "Create files based on templates",
+  "repository": "https://github.com/chenasraf/scaffolder.git",
+  "author": "Chen Asraf <chen@asraf.me>",
+  "license": "MIT",
+  "main": "./dist/scaffold.js",
+  "bin": "./dist/scaffold.js",
+  "scripts": {
+    "build": "webpack -p",
+    "dev": "webpack --watch",
+    "start": "chmod +x ./dist/scaffold.js && node ./dist/scaffold.js"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.50",
+    "ts-loader": "^3.1.1",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "sourceMap": true
+  },
+  "exclude": [
+    "examples"
+  ]
+}
