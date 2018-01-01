@@ -4,32 +4,32 @@ import { IScaffold } from './index'
 
 class Scaffold {
   private config: IScaffold.IConfig
+  private locals = {} as any
+  public scaffoldName = process.argv[2]
   private DefaultConfig: IScaffold.IConfig = {
     templates: [],
-    output: path.resolve(process.cwd())
+    output: path.resolve(process.cwd()),
+    locals: {
+      Name: this.scaffoldName[0].toUpperCase() + this.scaffoldName.slice(1),
+      name: this.scaffoldName[0].toLowerCase() + this.scaffoldName.slice(1)
+    }
   }
 
   constructor(config: IScaffold.IConfig) {
     // this.config = utils.merge<IScaffold.IConfig>(this.DefaultConfig, config)
+    if (!this.scaffoldName) {
+      throw new Error('Must provide scaffold name')
+    }
     this.config = (Object as any).assign({}, this.DefaultConfig, config)
+    this.locals = (Object as any).assign({}, this.DefaultConfig.locals, config.locals)
     console.info('Config loaded:', this.config)
+    console.info('Locals:', this.locals)
   }
 
   private parseLocals(text: string): string {
     let out = text.toString()
     const pattern = /{{\s*(.+)\s*}}/gi
-    return out.replace(pattern, (match: string, $1: string) => {
-      const upperName = 'MyComponent'
-      const lowerName = 'myComponent'
-
-      const replaceMap = {
-        Name: upperName,
-        name: lowerName,
-        property: 'someProp'
-      } as any
-
-      return replaceMap[$1]
-    })
+    return out.replace(pattern, (match: string, $1: string) => this.locals[$1])
   }
 
   private getFileList(pathList: string[]): string[] {
@@ -91,7 +91,10 @@ class Scaffold {
 const templateDir = process.cwd() + '/examples'
 const scf = new Scaffold({
   templates: [templateDir + '/test-input/Component'],
-  output: templateDir + '/test-output'
+  output: templateDir + '/test-output',
+  locals: {
+    property: 'myProp'
+  }
 })
 
 scf.run()
