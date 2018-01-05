@@ -56,5 +56,5 @@ const scaffold = new SimpleScaffold({
   locals: {
     property: 'value',
   }
-})
+}).run()
 ```
