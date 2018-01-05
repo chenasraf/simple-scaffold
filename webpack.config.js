@@ -14,6 +14,8 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    library: 'library',
+    libraryTarget: 'umd',
   },
   resolve: {
     extensions: ['.ts']
