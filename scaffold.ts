@@ -23,8 +23,6 @@ class SimpleScaffold {
     }
 
     this.locals = (Object as any).assign({}, DefaultLocals, config.locals)
-
-    // console.info('Config loaded:', this.config)
   }
 
   private parseLocals(text: string): string {
@@ -35,9 +33,8 @@ class SimpleScaffold {
   }
 
   private *fileList(input: string[]): IterableIterator<IScaffold.IFileRepr> {
-    console.info('input:', input)
     for (const checkPath of input) {
-      const files = glob.sync(checkPath).map(g => path.resolve(g))
+      const files = glob.sync(checkPath).map(g => g[0] == '/' ? g : path.join(process.cwd(), g))
       const idx = checkPath.indexOf('*')
       let cleanCheckPath = checkPath
       if (idx >= 0) {
@@ -63,7 +60,6 @@ class SimpleScaffold {
       const idx = file.indexOf(basePath)
       let relativeFilePath = file
       if (idx >= 0) {
-        // console.info('file:', {file, idx, basePath})
         relativeFilePath = file.slice(idx + basePath.length + 1)
       }
       out = outputDir + relativeFilePath
@@ -81,13 +77,12 @@ class SimpleScaffold {
   }
 
   public run(): void {
+    console.log(`Generating scaffold: ${this.config.name}...`)
     const templates = this.fileList(this.config.templates)
 
-    console.info('Templates input:', templates)
-    console.info('Locals:', this.locals)
-
-    let fileConf
+    let fileConf, count = 0
     while (fileConf = templates.next().value) {
+      count++
       const {file, base} = fileConf
       const outputPath = this.getOutputPath(file, base)
       const contents = this.getFileContents(file)
@@ -96,6 +91,12 @@ class SimpleScaffold {
       this.writeFile(outputPath, outputContents)
       console.info('Parsing:', {file, base, outputPath, outputContents: outputContents.replace("\n", "\\n")})
     }
+
+    if (!count) {
+      throw new Error('No files to scaffold!')
+    }
+
+    console.log('Done')
   }
 }
 

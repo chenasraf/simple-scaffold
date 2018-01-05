@@ -1,15 +1,17 @@
-import Scaffolder from './scaffold'
+import SimpleScaffold from './scaffold'
 import * as fs from 'fs'
 import IScaffold from './index'
 
 const args = process.argv.slice(2)
 
 class ScaffoldCmd {
+  private config: IScaffold.IConfig
+
   constructor() {
-    console.log(this.getOptionsFromArgs())
+    this.config = this.getOptionsFromArgs()
   }
 
-  private getOptionsFromArgs() {
+  private getOptionsFromArgs(): IScaffold.IConfig {
     let skipNext = false
     const options = {} as any
 
@@ -33,16 +35,25 @@ class ScaffoldCmd {
 
         const argName = arg.slice(2)
         options[argName] = this.getArgValue(argName, value, options)
+      } else {
+        if (!options.name) {
+          options.name = arg
+        } else {
+          throw new TypeError(`Invalid argument: ${arg}`)
+        }
       }
     })
+
+    if (!['name', 'templates', 'output'].every(o => options[o] !== undefined)) {
+      throw new Error(`Config is missing keys: ${JSON.stringify(options)}`)
+    }
 
     return options
   }
 
   private getArgValue(arg: string, value: string, options: IScaffold.IConfig) {
-    console.log({arg})
     switch (arg) {
-      case 'template':
+      case 'templates':
         return (options.templates || []).concat([value])
       case 'output':
         return value
@@ -59,8 +70,12 @@ class ScaffoldCmd {
     }
   }
 
-  private run(config: IScaffold.IConfig) {
-    const scf = new Scaffolder({
+  public run() {
+    const config: IScaffold.IConfig = this.config
+    console.info('Config:', config)
+
+    const scf = new SimpleScaffold({
+      name: config.name,
       templates: config.templates,
       output: config.output,
       locals: config.locals,
@@ -68,4 +83,4 @@ class ScaffoldCmd {
   }
 }
 
-new ScaffoldCmd()
+new ScaffoldCmd().run()
