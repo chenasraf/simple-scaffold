@@ -1,4 +1,4 @@
-# scaffolder
+# simple-scaffolder
 Scaffolder allows you to create your structured files based on templates.
 
 ## Install
