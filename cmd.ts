@@ -25,13 +25,14 @@ class ScaffoldCmd {
 
         if (arg.indexOf('=') >= 0) {
           value = arg.split('=').slice(1).join('')
-        } else if (args.length >= i + 1 && args[i + 1].slice(0, 2) !== '--') {
+        } else if (args.length >= i + 1 && args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
           value = args[i + 1]
         } else {
           value = 'true'
         }
 
-        options[arg] = this.getArgValue(arg.slice(2), value, options)
+        const argName = arg.slice(2)
+        options[argName] = this.getArgValue(argName, value, options)
       }
     })
 
@@ -64,3 +65,5 @@ class ScaffoldCmd {
     }).run()
   }
 }
+
+new ScaffoldCmd()

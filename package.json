@@ -12,12 +12,15 @@
     "build": "NODE_ENV=${NODE_ENV:-production} webpack -p && chmod -R +x ./dist",
     "dev": "webpack --watch",
     "start": "node dist/scaffold.js",
-    "test": "yarn build && node dist/test.js"
+    "test": "yarn build && node dist/test.js",
+    "cmd": "dist/cmd.js"
   },
   "dependencies": {
     "@types/glob": "^5.0.34",
+    "@types/handlebars": "^4.0.36",
     "@types/node": "^8.0.50",
     "glob": "^7.1.2",
+    "handlebars": "^4.0.11",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
     "webpack": "^3.8.1",

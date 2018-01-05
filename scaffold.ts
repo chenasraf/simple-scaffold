@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import IScaffold from './index'
 import * as glob from 'glob'
+import * as handlebars from 'handlebars'
 
 class SimpleScaffold {
   private config: IScaffold.IConfig
@@ -27,9 +28,10 @@ class SimpleScaffold {
   }
 
   private parseLocals(text: string): string {
-    let out = text.toString()
-    const pattern = /{[%]\s*([^%{}]+)\s*[%]}/gi
-    return out.replace(pattern, (match: string, $1: string) => this.locals[$1])
+    const template = handlebars.compile(text, {
+      noEscape: true
+    })
+    return template(this.locals)
   }
 
   private *fileList(input: string[]): IterableIterator<IScaffold.IFileRepr> {
