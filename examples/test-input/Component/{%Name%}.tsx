@@ -1,13 +1,18 @@
 import * as React from 'react'
 
-class {%Name%} extends React.Component {
+class {%Name%} extends React.Component<any> {
   private {%property%}
 
-  constructor() {
+  constructor(props: any) {
+    super(props)
     this.{%property%} = {%value%}
   }
 
-  <div className={css.{%Name%}} />
+  public render() {
+    return (
+      <div className={css.{%Name%}} />
+    )
+  }
 }
 
 export default {%Name%}
