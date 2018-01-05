@@ -12,8 +12,10 @@
     "build": "NODE_ENV=${NODE_ENV:-production} webpack -p && chmod -R +x ./dist",
     "dev": "webpack --watch",
     "start": "node dist/scaffold.js",
-    "test": "yarn build && node dist/test.js",
-    "cmd": "dist/cmd.js"
+    "test": "node dist/test.js",
+    "cmd": "dist/cmd.js",
+    "build-test": "yarn build && yarn test",
+    "build-cmd": "yarn build && yarn cmd"
   },
   "dependencies": {
     "@types/glob": "^5.0.34",

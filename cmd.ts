@@ -40,6 +40,7 @@ class ScaffoldCmd {
   }
 
   private getArgValue(arg: string, value: string, options: IScaffold.IConfig) {
+    console.log({arg})
     switch (arg) {
       case 'template':
         return (options.templates || []).concat([value])
@@ -52,6 +53,7 @@ class ScaffoldCmd {
           const [k, v] = item.split('=')
           locals[k] = v
         }
+        return locals
       default:
         throw TypeError(`arguments invalid for config: arg=\`${arg}\`, value=\`${value}\``)
     }
