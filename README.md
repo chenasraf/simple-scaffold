@@ -58,3 +58,63 @@ const scaffold = new SimpleScaffold({
   }
 }).run()
 ```
+
+## Example Scaffold Input
+Scaffolding will replace interpolations in both the file name and contents.
+
+Your context will be pre-populated with
+- `{{Name}}`: CapitalizedName of the component
+- `{{name}}`: camelCasedName of the component
+
+Any `locals` you add in the config will populate with their names wrapped in `{{` and `}}`.
+
+### Input Directory structure
+```
+- project
+    - scaffold
+        - {{Name}}.css
+    - src
+        - components
+        - ...
+```
+
+#### project/scaffold/{{Name}}.css
+```css
+.{{className}} {
+  border: 1px solid black;
+}
+
+.{{className}}-child {
+  background: red;
+}
+```
+
+### Run Example
+```bash
+simple-scaffold MyComponent \
+    --template project/scaffold/**/* \
+    --output src/components \
+    --locals 'className=my-component`
+```
+
+## Example Scaffold Output
+#### Directory structure
+```
+- project
+    - src
+        - components
+            - MyComponent
+                - MyComponent.css
+        - ...
+```
+
+#### project/src/components/MyComponent/MyComponent.css
+```css
+.my-component {
+  border: 1px solid black;
+}
+
+.my-component-child {
+  background: red;
+}
+```
