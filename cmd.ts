@@ -44,7 +44,7 @@ class ScaffoldCmd {
       }
     })
 
-    if (!['name', 'templates', 'output'].every(o => options[o] !== undefined)) {
+    if (!['name', 'templates'].every(o => options[o] !== undefined)) {
       throw new Error(`Config is missing keys: ${JSON.stringify(options)}`)
     }
 
