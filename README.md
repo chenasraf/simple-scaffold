@@ -86,7 +86,6 @@ const scaffold = new SimpleScaffold({
 - project
     - scaffold
         - {{Name}}.js
-        - {{Name}}.css
     - src
         - components
         - ...
@@ -118,7 +117,7 @@ simple-scaffold MyComponent \
     - src
         - components
             - MyComponent
-                - MyComponent.css
+                - MyComponent.js
         - ...
 ```
 
