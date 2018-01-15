@@ -5,8 +5,8 @@ import * as glob from 'glob'
 import * as handlebars from 'handlebars'
 
 class SimpleScaffold {
-  private config: IScaffold.IConfig
-  private locals = {} as any
+  public config: IScaffold.IConfig
+  public locals = {} as any
 
   constructor(config: IScaffold.IConfig) {
     const DefaultConfig: IScaffold.IConfig = {
@@ -47,6 +47,7 @@ class SimpleScaffold {
   }
 
   private getFileContents(filePath: string): string {
+    console.log(fs.readFileSync(filePath))
     return fs.readFileSync(filePath).toString()
   }
 

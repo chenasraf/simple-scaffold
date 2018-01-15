@@ -1,3 +1,333 @@
 #!/usr/bin/env node
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.library=t():e.library=t()}(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=6)}([function(e,t){e.exports=require("path")},function(e,t,n){"use strict";var r=this&&this.__generator||function(e,t){function n(e){return function(t){return r([e,t])}}function r(n){if(o)throw new TypeError("Generator is already executing.");for(;c;)try{if(o=1,i&&(s=i[2&n[0]?"return":n[0]?"throw":"next"])&&!(s=s.call(i,n[1])).done)return s;switch(i=0,s&&(n=[0,s.value]),n[0]){case 0:case 1:s=n;break;case 4:return c.label++,{value:n[1],done:!1};case 5:c.label++,i=n[1],n=[0];continue;case 7:n=c.ops.pop(),c.trys.pop();continue;default:if(s=c.trys,!(s=s.length>0&&s[s.length-1])&&(6===n[0]||2===n[0])){c=0;continue}if(3===n[0]&&(!s||n[1]>s[0]&&n[1]<s[3])){c.label=n[1];break}if(6===n[0]&&c.label<s[1]){c.label=s[1],s=n;break}if(s&&c.label<s[2]){c.label=s[2],c.ops.push(n);break}s[2]&&c.ops.pop(),c.trys.pop();continue}n=t.call(e,c)}catch(e){n=[6,e],i=0}finally{o=s=0}if(5&n[0])throw n[1];return{value:n[0]?n[1]:void 0,done:!0}}var o,i,s,a,c={label:0,sent:function(){if(1&s[0])throw s[1];return s[1]},trys:[],ops:[]};return a={next:n(0),throw:n(1),return:n(2)},"function"==typeof Symbol&&(a[Symbol.iterator]=function(){return this}),a};Object.defineProperty(t,"__esModule",{value:!0});var o=n(2),i=n(0),s=n(3),a=n(4),c=function(){function e(e){this.locals={};var t={name:"scaffold",templates:[],output:process.cwd()};this.config=Object.assign({},t,e);var n={Name:this.config.name[0].toUpperCase()+this.config.name.slice(1),name:this.config.name[0].toLowerCase()+this.config.name.slice(1)};this.locals=Object.assign({},n,e.locals)}return e.prototype.parseLocals=function(e){return a.compile(e,{noEscape:!0})(this.locals)},e.prototype.fileList=function(e){var t,n,o,a,c,u,l,f,p;return r(this,function(r){switch(r.label){case 0:t=0,n=e,r.label=1;case 1:if(!(t<n.length))return[3,6];o=n[t],a=s.sync(o).map(function(e){return"/"==e[0]?e:i.join(process.cwd(),e)}),c=o.indexOf("*"),u=o,c>=0&&(u=o.slice(0,c-1)),l=0,f=a,r.label=2;case 2:return l<f.length?(p=f[l],[4,{base:u,file:p}]):[3,5];case 3:r.sent(),r.label=4;case 4:return l++,[3,2];case 5:return t++,[3,1];case 6:return[2]}})},e.prototype.getFileContents=function(e){return o.readFileSync(e).toString()},e.prototype.getOutputPath=function(e,t){var n;if("function"==typeof this.config.output)n=this.config.output(e,t);else{var r=this.config.output+"/"+this.config.name+"/",o=e.indexOf(t),i=e;o>=0&&(i=e.slice(o+t.length+1)),n=r+i}return this.parseLocals(n)},e.prototype.writeFile=function(e,t){o.existsSync(i.dirname(e))||o.mkdirSync(i.dirname(e)),console.info("Writing file:",e),o.writeFileSync(e,t,{encoding:"utf-8"})},e.prototype.run=function(){console.log("Generating scaffold: "+this.config.name+"...");for(var e,t=this.fileList(this.config.templates),n=0;e=t.next().value;){n++;var r=e.file,o=e.base,i=this.getOutputPath(r,o),s=this.getFileContents(r),a=this.parseLocals(s);this.writeFile(i,a),console.info("Parsing:",{file:r,base:o,outputPath:i,outputContents:a.replace("\n","\\n")})}if(!n)throw new Error("No files to scaffold!");console.log("Done")},e}();t.default=c},function(e,t){e.exports=require("fs")},function(e,t){e.exports=require("glob")},function(e,t){e.exports=require("handlebars")},,function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),o=process.argv.slice(2);(new(function(){function e(){this.config=this.getOptionsFromArgs()}return e.prototype.getOptionsFromArgs=function(){var e=this,t=!1,n={};if(o.forEach(function(r,i){if(t)return void(t=!1);if("--"==r.slice(0,2)){t=!0;var s=void 0;s=r.indexOf("=")>=0?r.split("=").slice(1).join(""):o.length>=i+1&&o[i+1]&&"--"!==o[i+1].slice(0,2)?o[i+1]:"true";var a=r.slice(2);n[a]=e.getArgValue(a,s,n)}else{if(n.name)throw new TypeError("Invalid argument: "+r);n.name=r}}),!["name","templates","output"].every(function(e){return void 0!==n[e]}))throw new Error("Config is missing keys: "+JSON.stringify(n));return n},e.prototype.getArgValue=function(e,t,n){switch(e){case"templates":return(n.templates||[]).concat([t]);case"output":return t;case"locals":for(var r=t.split(","),o=n.locals||{},i=0,s=r;i<s.length;i++){var a=s[i],c=a.split("="),u=c[0],l=c[1];o[u]=l}return o;default:throw TypeError("arguments invalid for config: arg=`"+e+"`, value=`"+t+"`")}},e.prototype.run=function(){var e=this.config;console.info("Config:",e);new r.default({name:e.name,templates:e.templates,output:e.output,locals:e.locals}).run()},e}())).run()}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["library"] = factory();
+	else
+		root["library"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__(2);
+var path = __webpack_require__(0);
+var glob = __webpack_require__(3);
+var handlebars = __webpack_require__(4);
+var SimpleScaffold = /** @class */ (function () {
+    function SimpleScaffold(config) {
+        this.locals = {};
+        var DefaultConfig = {
+            name: 'scaffold',
+            templates: [],
+            output: process.cwd(),
+        };
+        this.config = Object.assign({}, DefaultConfig, config);
+        var DefaultLocals = {
+            Name: this.config.name[0].toUpperCase() + this.config.name.slice(1),
+            name: this.config.name[0].toLowerCase() + this.config.name.slice(1)
+        };
+        this.locals = Object.assign({}, DefaultLocals, config.locals);
+    }
+    SimpleScaffold.prototype.parseLocals = function (text) {
+        var template = handlebars.compile(text, {
+            noEscape: true
+        });
+        return template(this.locals);
+    };
+    SimpleScaffold.prototype.fileList = function (input) {
+        var _i, input_1, checkPath, files, idx, cleanCheckPath, _a, files_1, file;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _i = 0, input_1 = input;
+                    _b.label = 1;
+                case 1:
+                    if (!(_i < input_1.length)) return [3 /*break*/, 6];
+                    checkPath = input_1[_i];
+                    files = glob.sync(checkPath).map(function (g) { return g[0] == '/' ? g : path.join(process.cwd(), g); });
+                    idx = checkPath.indexOf('*');
+                    cleanCheckPath = checkPath;
+                    if (idx >= 0) {
+                        cleanCheckPath = checkPath.slice(0, idx - 1);
+                    }
+                    _a = 0, files_1 = files;
+                    _b.label = 2;
+                case 2:
+                    if (!(_a < files_1.length)) return [3 /*break*/, 5];
+                    file = files_1[_a];
+                    return [4 /*yield*/, { base: cleanCheckPath, file: file }];
+                case 3:
+                    _b.sent();
+                    _b.label = 4;
+                case 4:
+                    _a++;
+                    return [3 /*break*/, 2];
+                case 5:
+                    _i++;
+                    return [3 /*break*/, 1];
+                case 6: return [2 /*return*/];
+            }
+        });
+    };
+    SimpleScaffold.prototype.getFileContents = function (filePath) {
+        return fs.readFileSync(filePath).toString();
+    };
+    SimpleScaffold.prototype.getOutputPath = function (file, basePath) {
+        var out;
+        if (typeof this.config.output === 'function') {
+            out = this.config.output(file, basePath);
+        }
+        else {
+            var outputDir = this.config.output + ("/" + this.config.name + "/");
+            var idx = file.indexOf(basePath);
+            var relativeFilePath = file;
+            if (idx >= 0) {
+                relativeFilePath = file.slice(idx + basePath.length + 1);
+            }
+            out = outputDir + relativeFilePath;
+        }
+        return this.parseLocals(out);
+    };
+    SimpleScaffold.prototype.writeFile = function (filePath, fileContents) {
+        if (!fs.existsSync(path.dirname(filePath))) {
+            fs.mkdirSync(path.dirname(filePath));
+        }
+        console.info('Writing file:', filePath);
+        fs.writeFileSync(filePath, fileContents, { encoding: 'utf-8' });
+    };
+    SimpleScaffold.prototype.run = function () {
+        console.log("Generating scaffold: " + this.config.name + "...");
+        var templates = this.fileList(this.config.templates);
+        var fileConf, count = 0;
+        while (fileConf = templates.next().value) {
+            count++;
+            var file = fileConf.file, base = fileConf.base;
+            var outputPath = this.getOutputPath(file, base);
+            var contents = this.getFileContents(file);
+            var outputContents = this.parseLocals(contents);
+            this.writeFile(outputPath, outputContents);
+            console.info('Parsing:', { file: file, base: base, outputPath: outputPath, outputContents: outputContents.replace("\n", "\\n") });
+        }
+        if (!count) {
+            throw new Error('No files to scaffold!');
+        }
+        console.log('Done');
+    };
+    return SimpleScaffold;
+}());
+exports.default = SimpleScaffold;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("glob");
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("handlebars");
+
+/***/ }),
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var scaffold_1 = __webpack_require__(1);
+var args = process.argv.slice(2);
+var ScaffoldCmd = /** @class */ (function () {
+    function ScaffoldCmd() {
+        this.config = this.getOptionsFromArgs();
+    }
+    ScaffoldCmd.prototype.getOptionsFromArgs = function () {
+        var _this = this;
+        var skipNext = false;
+        var options = {};
+        args.forEach(function (arg, i) {
+            if (skipNext) {
+                skipNext = false;
+                return;
+            }
+            if (arg.slice(0, 2) == '--') {
+                skipNext = true;
+                var value = void 0;
+                if (arg.indexOf('=') >= 0) {
+                    value = arg.split('=').slice(1).join('');
+                }
+                else if (args.length >= i + 1 && args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
+                    value = args[i + 1];
+                }
+                else {
+                    value = 'true';
+                }
+                var argName = arg.slice(2);
+                options[argName] = _this.getArgValue(argName, value, options);
+            }
+            else {
+                if (!options.name) {
+                    options.name = arg;
+                }
+                else {
+                    throw new TypeError("Invalid argument: " + arg);
+                }
+            }
+        });
+        if (!['name', 'templates', 'output'].every(function (o) { return options[o] !== undefined; })) {
+            throw new Error("Config is missing keys: " + JSON.stringify(options));
+        }
+        return options;
+    };
+    ScaffoldCmd.prototype.getArgValue = function (arg, value, options) {
+        switch (arg) {
+            case 'templates':
+                return (options.templates || []).concat([value]);
+            case 'output':
+                return value;
+            case 'locals':
+                var split = value.split(',');
+                var locals = options.locals || {};
+                for (var _i = 0, split_1 = split; _i < split_1.length; _i++) {
+                    var item = split_1[_i];
+                    var _a = item.split('='), k = _a[0], v = _a[1];
+                    locals[k] = v;
+                }
+                return locals;
+            default:
+                throw TypeError("arguments invalid for config: arg=`" + arg + "`, value=`" + value + "`");
+        }
+    };
+    ScaffoldCmd.prototype.run = function () {
+        var config = this.config;
+        console.info('Config:', config);
+        var scf = new scaffold_1.default({
+            name: config.name,
+            templates: config.templates,
+            output: config.output,
+            locals: config.locals,
+        }).run();
+    };
+    return ScaffoldCmd;
+}());
+new ScaffoldCmd().run();
+
+
+/***/ })
+/******/ ]);
+});
 //# sourceMappingURL=cmd.js.map

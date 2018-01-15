@@ -7,12 +7,6 @@ declare namespace IScaffold {
     locals?: any
   }
 
-  export interface IReplacement {
-    find: string | RegExp
-    replace(): string
-    [other: string]: any
-  }
-
   export interface IFileRepr {
     base: string
     file: string
