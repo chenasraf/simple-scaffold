@@ -43,14 +43,14 @@ Any `locals` you add in the config will populate with their names wrapped in `{{
 They are all stringified, so be sure to parse them accordingly by creating a script, if necessary.
 
 ### Command line options
-##### `--template glob [--template glob2 [...]]` (required)
+##### `--template glob [--template glob2 [...]]` (required) (alias: -t)
 A glob pattern of template files to load.
 
 A template file may be of any type and extension, and supports [Handlebars](https://handlebarsjs.com) as a parsing engine for the file names and contents, so you may customize both with variables from your configuration.
 
 You can load more than one template list by simple adding more `--template` arguments.
 
-##### `--output path` (optional)
+##### `--output path` (optional) (alias -o)
 The output directory to put the new files in. They will attempt to maintain their regular structure as they are found, if possible.
 
 Your new scaffold will be placed under a directory with the scaffold name from the argumemts.
@@ -58,8 +58,13 @@ Your new scaffold will be placed under a directory with the scaffold name from t
 You may also pass a function to transform the output path for each file individually.
 This function takes 2 arguments: filename, and base glob path
 
-##### `--locals key=value[,key=value[,...]]` (optional)
+##### `--locals key=value [--locals key=value [,...]]` (optional) (alias: -l)
 Pass a KV map to the template for parsing.
+
+##### `--create-sub-folder [true|false]` (optional) (alias -S) (default: true)
+Whether to create a subfolder for the output with all the files inside, or simply dump them directly in the output folder.
+
+#####
 
 ### Use in Node.js
 You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
@@ -73,6 +78,7 @@ const scaffold = new SimpleScaffold({
   name: 'component',
   templates: [path.join(__dirname, 'scaffolds', 'component')],
   output: path.join(__dirname, 'src', 'components'),
+  createSubFolder: true,
   locals: {
     property: 'value',
   }
@@ -118,6 +124,15 @@ simple-scaffold MyComponent \
         - components
             - MyComponent
                 - MyComponent.js
+        - ...
+```
+
+With `createSubfolder = false`:
+```
+- project
+    - src
+        - components
+            - MyComponent.js
         - ...
 ```
 

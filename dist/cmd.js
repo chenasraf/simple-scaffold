@@ -8,7 +8,7 @@
 		exports["library"] = factory();
 	else
 		root["library"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -233,9 +233,9 @@ var cliArgs = __webpack_require__(7);
 var cliUsage = __webpack_require__(8);
 var path = __webpack_require__(0);
 function localsParser(content) {
-    var _a = content.split('='), key = _a[0], value = _a[1];
-    return _b = {}, _b[key] = value, _b;
-    var _b;
+    var _a;
+    var _b = content.split('='), key = _b[0], value = _b[1];
+    return _a = {}, _a[key] = value, _a;
 }
 function filePathParser(content) {
     if (content.startsWith('/')) {
@@ -248,7 +248,7 @@ var defs = [
     { name: 'templates', alias: 't', type: filePathParser, multiple: true },
     { name: 'output', alias: 'o', type: filePathParser, multiple: true },
     { name: 'locals', alias: 'l', multiple: true, type: localsParser },
-    { name: 'create-sub-folder', alias: 'S', type: Boolean },
+    { name: 'create-sub-folder', alias: 'S', type: function (text) { return text && text.trim().length ? ['true', '1', 'on'].includes(text.trim()) : true; } },
     { name: 'help', alias: 'h', type: Boolean, description: 'Display this help message' },
 ];
 var args = cliArgs(defs, { camelCase: true });
@@ -256,7 +256,10 @@ var help = [
     { header: 'Scaffold Generator', content: 'Generate scaffolds for your project based on file templates.' },
     { header: 'Options', optionList: defs }
 ];
-args.locals = args.locals.reduce(function (all, cur) { return (__assign({}, all, cur)); }, {});
+args.locals = (args.locals || []).reduce(function (all, cur) { return (__assign({}, all, cur)); }, {});
+if (args.createSubFolder === null) {
+    args.createSubFolder = true;
+}
 console.info('Config:', args);
 if (args.help || !args.name) {
     console.log(cliUsage(help));

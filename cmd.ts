@@ -24,7 +24,7 @@ const defs: Def[] = [
   { name: 'templates', alias: 't', type: filePathParser, multiple: true },
   { name: 'output', alias: 'o', type: filePathParser, multiple: true },
   { name: 'locals', alias: 'l', multiple: true, type: localsParser },
-  { name: 'create-sub-folder', alias: 'S', type: Boolean },
+  { name: 'create-sub-folder', alias: 'S', type: (text: string) => text && text.trim().length ? ['true', '1', 'on'].includes(text.trim()) : true },
   { name: 'help', alias: 'h', type: Boolean, description: 'Display this help message' },
 ]
 
@@ -35,7 +35,10 @@ const help = [
   { header: 'Options', optionList: defs }
 ]
 
-args.locals = args.locals.reduce((all: object, cur: object) => ({ ...all, ...cur }), {} as IScaffold.Config['locals'])
+args.locals = (args.locals || []).reduce((all: object, cur: object) => ({ ...all, ...cur }), {} as IScaffold.Config['locals'])
+if (args.createSubFolder === null) {
+  args.createSubFolder = true
+}
 console.info('Config:', args)
 
 if (args.help || !args.name) {
