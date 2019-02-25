@@ -1,13 +1,18 @@
 declare namespace IScaffold {
 
-  export interface IConfig {
+  export interface Config {
     name?: string
     templates: string[]
     output: string | ((path: string, base: string) => string)
-    locals?: any
+    locals?: Locals
+    createSubfolder?: boolean
   }
 
-  export interface IFileRepr {
+  export interface Locals {
+    [k: string]: string
+  }
+
+  export interface FileRepr {
     base: string
     file: string
   }

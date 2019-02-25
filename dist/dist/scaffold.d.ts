@@ -1,8 +1,8 @@
 import IScaffold from './index';
 declare class SimpleScaffold {
-    private config;
-    private locals;
-    constructor(config: IScaffold.IConfig);
+    config: IScaffold.Config;
+    locals: IScaffold.Config['locals'];
+    constructor(config: IScaffold.Config);
     private parseLocals(text);
     private fileList(input);
     private getFileContents(filePath);

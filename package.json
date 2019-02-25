@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
@@ -18,9 +18,8 @@
     "build-cmd": "yarn build && yarn cmd"
   },
   "dependencies": {
-    "@types/glob": "^5.0.34",
-    "@types/handlebars": "^4.0.36",
-    "@types/node": "^8.0.50",
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.5",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
     "ts-loader": "^3.1.1",
@@ -30,6 +29,11 @@
     "webpack-node-externals": "^1.6.0"
   },
   "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
+    "@types/command-line-usage": "^5.0.1",
+    "@types/glob": "^5.0.34",
+    "@types/handlebars": "^4.0.36",
+    "@types/node": "^8.0.50",
     "jest": "^22.0.4"
   },
   "jest": {

@@ -1,86 +1,52 @@
 import SimpleScaffold from './scaffold'
 import * as fs from 'fs'
 import IScaffold from './index'
+import * as cliArgs from 'command-line-args'
+import * as cliUsage from 'command-line-usage'
+import * as path from 'path'
 
-const args = process.argv.slice(2)
+type Def = cliArgs.OptionDefinition & { description?: string }
 
-class ScaffoldCmd {
-  private config: IScaffold.IConfig
-
-  constructor() {
-    this.config = this.getOptionsFromArgs()
-  }
-
-  private getOptionsFromArgs(): IScaffold.IConfig {
-    let skipNext = false
-    const options = {} as any
-
-    args.forEach((arg, i) => {
-      if (skipNext) {
-        skipNext = false
-        return
-      }
-
-      if (arg.slice(0, 2) == '--') {
-        skipNext = true
-        let value: string
-
-        if (arg.indexOf('=') >= 0) {
-          value = arg.split('=').slice(1).join('')
-        } else if (args.length >= i + 1 && args[i + 1] && args[i + 1].slice(0, 2) !== '--') {
-          value = args[i + 1]
-        } else {
-          value = 'true'
-        }
-
-        const argName = arg.slice(2)
-        options[argName] = this.getArgValue(argName, value, options)
-      } else {
-        if (!options.name) {
-          options.name = arg
-        } else {
-          throw new TypeError(`Invalid argument: ${arg}`)
-        }
-      }
-    })
-
-    if (!['name', 'templates'].every(o => options[o] !== undefined)) {
-      throw new Error(`Config is missing keys: ${JSON.stringify(options)}`)
-    }
-
-    return options
-  }
-
-  private getArgValue(arg: string, value: string, options: IScaffold.IConfig) {
-    switch (arg) {
-      case 'templates':
-        return (options.templates || []).concat([value])
-      case 'output':
-        return value
-      case 'locals':
-        const split = value.split(',')
-        const locals = options.locals || {}
-        for (const item of split) {
-          const [k, v] = item.split('=')
-          locals[k] = v
-        }
-        return locals
-      default:
-        throw TypeError(`arguments invalid for config: arg=\`${arg}\`, value=\`${value}\``)
-    }
-  }
-
-  public run() {
-    const config: IScaffold.IConfig = this.config
-    console.info('Config:', config)
-
-    const scf = new SimpleScaffold({
-      name: config.name,
-      templates: config.templates,
-      output: config.output,
-      locals: config.locals,
-    }).run()
-  }
+function localsParser(content: string) {
+  const [key, value] = content.split('=')
+  return { [key]: value }
 }
 
-new ScaffoldCmd().run()
+function filePathParser(content: string) {
+  if (content.startsWith('/')) {
+    return content
+  }
+  return [process.cwd(), content].join(path.sep)
+}
+
+const defs: Def[] = [
+  { name: 'name', alias: 'n', type: String, description: 'Component output name', defaultOption: true },
+  { name: 'templates', alias: 't', type: filePathParser, multiple: true },
+  { name: 'output', alias: 'o', type: filePathParser, multiple: true },
+  { name: 'locals', alias: 'l', multiple: true, type: localsParser },
+  { name: 'create-sub-folder', alias: 'S', type: Boolean },
+  { name: 'help', alias: 'h', type: Boolean, description: 'Display this help message' },
+]
+
+const args = cliArgs(defs, { camelCase: true })
+
+const help = [
+  { header: 'Scaffold Generator', content: 'Generate scaffolds for your project based on file templates.' },
+  { header: 'Options', optionList: defs }
+]
+
+args.locals = args.locals.reduce((all: object, cur: object) => ({ ...all, ...cur }), {} as IScaffold.Config['locals'])
+console.info('Config:', args)
+
+if (args.help || !args.name) {
+  console.log(cliUsage(help))
+  process.exit(0)
+}
+
+new SimpleScaffold({
+  name: args.name,
+  templates: args.templates,
+  output: args.output,
+  locals: args.locals,
+  createSubfolder: args.createSubFolder,
+}).run()

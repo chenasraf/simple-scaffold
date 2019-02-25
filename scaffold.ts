@@ -5,24 +5,25 @@ import * as glob from 'glob'
 import * as handlebars from 'handlebars'
 
 class SimpleScaffold {
-  public config: IScaffold.IConfig
-  public locals = {} as any
+  public config: IScaffold.Config
+  public locals: IScaffold.Config['locals'] = {} as any
 
-  constructor(config: IScaffold.IConfig) {
-    const DefaultConfig: IScaffold.IConfig = {
+  constructor(config: IScaffold.Config) {
+    const DefaultConfig: IScaffold.Config = {
       name: 'scaffold',
       templates: [],
       output: process.cwd(),
+      createSubfolder: true,
     }
 
-    this.config = (Object as any).assign({}, DefaultConfig, config)
+    this.config = { ...DefaultConfig, ...config }
 
     const DefaultLocals = {
       Name: this.config.name![0].toUpperCase() + this.config.name!.slice(1),
       name: this.config.name![0].toLowerCase() + this.config.name!.slice(1)
     }
 
-    this.locals = (Object as any).assign({}, DefaultLocals, config.locals)
+    this.locals = { ...DefaultLocals, ...config.locals }
   }
 
   private parseLocals(text: string): string {
@@ -32,7 +33,7 @@ class SimpleScaffold {
     return template(this.locals)
   }
 
-  private *fileList(input: string[]): IterableIterator<IScaffold.IFileRepr> {
+  private *fileList(input: string[]): IterableIterator<IScaffold.FileRepr> {
     for (const checkPath of input) {
       const files = glob.sync(checkPath).map(g => g[0] == '/' ? g : path.join(process.cwd(), g))
       const idx = checkPath.indexOf('*')
@@ -41,7 +42,7 @@ class SimpleScaffold {
         cleanCheckPath = checkPath.slice(0, idx - 1)
       }
       for (const file of files) {
-        yield {base: cleanCheckPath, file}
+        yield { base: cleanCheckPath, file }
       }
     }
   }
@@ -52,12 +53,12 @@ class SimpleScaffold {
   }
 
   private getOutputPath(file: string, basePath: string): string {
-    let out
+    let out: string
 
     if (typeof this.config.output === 'function') {
       out = this.config.output(file, basePath)
     } else {
-      const outputDir = this.config.output + `/${this.config.name}/`
+      const outputDir = this.config.output + (this.config.createSubfolder ? `/${this.config.name}/` : '/')
       const idx = file.indexOf(basePath)
       let relativeFilePath = file
       if (idx >= 0) {
@@ -84,13 +85,13 @@ class SimpleScaffold {
     let fileConf, count = 0
     while (fileConf = templates.next().value) {
       count++
-      const {file, base} = fileConf
+      const { file, base } = fileConf
       const outputPath = this.getOutputPath(file, base)
       const contents = this.getFileContents(file)
       const outputContents = this.parseLocals(contents)
 
       this.writeFile(outputPath, outputContents)
-      console.info('Parsing:', {file, base, outputPath, outputContents: outputContents.replace("\n", "\\n")})
+      console.info('Parsing:', { file, base, outputPath, outputContents: outputContents.replace("\n", "\\n") })
     }
 
     if (!count) {
