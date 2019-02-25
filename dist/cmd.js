@@ -1,3 +1,289 @@
 #!/usr/bin/env node
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.library=t():e.library=t()}(this,function(){return function(e){function t(o){if(n[o])return n[o].exports;var r=n[o]={i:o,l:!1,exports:{}};return e[o].call(r.exports,r,r.exports,t),r.l=!0,r.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:o})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=6)}([function(e,t){e.exports=require("path")},function(e,t,n){"use strict";var o=this&&this.__assign||Object.assign||function(e){for(var t,n=1,o=arguments.length;n<o;n++){t=arguments[n];for(var r in t)Object.prototype.hasOwnProperty.call(t,r)&&(e[r]=t[r])}return e},r=this&&this.__generator||function(e,t){function n(e){return function(t){return o([e,t])}}function o(n){if(r)throw new TypeError("Generator is already executing.");for(;l;)try{if(r=1,i&&(a=i[2&n[0]?"return":n[0]?"throw":"next"])&&!(a=a.call(i,n[1])).done)return a;switch(i=0,a&&(n=[0,a.value]),n[0]){case 0:case 1:a=n;break;case 4:return l.label++,{value:n[1],done:!1};case 5:l.label++,i=n[1],n=[0];continue;case 7:n=l.ops.pop(),l.trys.pop();continue;default:if(a=l.trys,!(a=a.length>0&&a[a.length-1])&&(6===n[0]||2===n[0])){l=0;continue}if(3===n[0]&&(!a||n[1]>a[0]&&n[1]<a[3])){l.label=n[1];break}if(6===n[0]&&l.label<a[1]){l.label=a[1],a=n;break}if(a&&l.label<a[2]){l.label=a[2],l.ops.push(n);break}a[2]&&l.ops.pop(),l.trys.pop();continue}n=t.call(e,l)}catch(e){n=[6,e],i=0}finally{r=a=0}if(5&n[0])throw n[1];return{value:n[0]?n[1]:void 0,done:!0}}var r,i,a,s,l={label:0,sent:function(){if(1&a[0])throw a[1];return a[1]},trys:[],ops:[]};return s={next:n(0),throw:n(1),return:n(2)},"function"==typeof Symbol&&(s[Symbol.iterator]=function(){return this}),s};Object.defineProperty(t,"__esModule",{value:!0});var i=n(2),a=n(0),s=n(3),l=n(4),c=function(){function e(e){this.locals={};var t={name:"scaffold",templates:[],output:process.cwd(),createSubfolder:!0};this.config=o({},t,e);var n={Name:this.config.name[0].toUpperCase()+this.config.name.slice(1),name:this.config.name[0].toLowerCase()+this.config.name.slice(1)};this.locals=o({},n,e.locals)}return e.prototype.parseLocals=function(e){return l.compile(e,{noEscape:!0})(this.locals)},e.prototype.fileList=function(e){var t,n,o,i,l,c,u,f,p;return r(this,function(r){switch(r.label){case 0:t=0,n=e,r.label=1;case 1:if(!(t<n.length))return[3,6];o=n[t],i=s.sync(o).map(function(e){return"/"==e[0]?e:a.join(process.cwd(),e)}),l=o.indexOf("*"),c=o,l>=0&&(c=o.slice(0,l-1)),u=0,f=i,r.label=2;case 2:return u<f.length?(p=f[u],[4,{base:c,file:p}]):[3,5];case 3:r.sent(),r.label=4;case 4:return u++,[3,2];case 5:return t++,[3,1];case 6:return[2]}})},e.prototype.getFileContents=function(e){return console.log(i.readFileSync(e)),i.readFileSync(e).toString()},e.prototype.getOutputPath=function(e,t){var n;if("function"==typeof this.config.output)n=this.config.output(e,t);else{var o=this.config.output+(this.config.createSubfolder?"/"+this.config.name+"/":"/"),r=e.indexOf(t),i=e;r>=0&&(i=e.slice(r+t.length+1)),n=o+i}return this.parseLocals(n)},e.prototype.writeFile=function(e,t){i.existsSync(a.dirname(e))||i.mkdirSync(a.dirname(e)),console.info("Writing file:",e),i.writeFileSync(e,t,{encoding:"utf-8"})},e.prototype.run=function(){console.log("Generating scaffold: "+this.config.name+"...");for(var e,t=this.fileList(this.config.templates),n=0;e=t.next().value;){n++;var o=e.file,r=e.base,i=this.getOutputPath(o,r),a=this.getFileContents(o),s=this.parseLocals(a);this.writeFile(i,s),console.info("Parsing:",{file:o,base:r,outputPath:i,outputContents:s.replace("\n","\\n")})}if(!n)throw new Error("No files to scaffold!");console.log("Done")},e}();t.default=c},function(e,t){e.exports=require("fs")},function(e,t){e.exports=require("glob")},function(e,t){e.exports=require("handlebars")},,function(e,t,n){"use strict";function o(e){var t=e.split("="),n=t[0],o=t[1];return r={},r[n]=o,r;var r}function r(e){return e.startsWith("/")?e:[process.cwd(),e].join(c.sep)}var i=this&&this.__assign||Object.assign||function(e){for(var t,n=1,o=arguments.length;n<o;n++){t=arguments[n];for(var r in t)Object.prototype.hasOwnProperty.call(t,r)&&(e[r]=t[r])}return e};Object.defineProperty(t,"__esModule",{value:!0});var a=n(1),s=n(7),l=n(8),c=n(0),u=[{name:"name",alias:"n",type:String,description:"Component output name",defaultOption:!0},{name:"templates",alias:"t",type:r,multiple:!0},{name:"output",alias:"o",type:r,multiple:!0},{name:"locals",alias:"l",multiple:!0,type:o},{name:"create-sub-folder",alias:"S",type:Boolean},{name:"help",alias:"h",type:Boolean,description:"Display this help message"}],f=s(u,{camelCase:!0}),p=[{header:"Scaffold Generator",content:"Generate scaffolds for your project based on file templates."},{header:"Options",optionList:u}];f.locals=f.locals.reduce(function(e,t){return i({},e,t)},{}),console.info("Config:",f),!f.help&&f.name||(console.log(l(p)),process.exit(0)),new a.default({name:f.name,templates:f.templates,output:f.output,locals:f.locals,createSubfolder:f.createSubFolder}).run()},function(e,t){e.exports=require("command-line-args")},function(e,t){e.exports=require("command-line-usage")}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["library"] = factory();
+	else
+		root["library"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__(2);
+var path = __webpack_require__(0);
+var glob = __webpack_require__(3);
+var handlebars = __webpack_require__(4);
+var SimpleScaffold = /** @class */ (function () {
+    function SimpleScaffold(config) {
+        this.locals = {};
+        var DefaultConfig = {
+            name: 'scaffold',
+            templates: [],
+            output: process.cwd(),
+            createSubfolder: true,
+        };
+        this.config = __assign({}, DefaultConfig, config);
+        var DefaultLocals = {
+            Name: this.config.name[0].toUpperCase() + this.config.name.slice(1),
+            name: this.config.name[0].toLowerCase() + this.config.name.slice(1)
+        };
+        this.locals = __assign({}, DefaultLocals, config.locals);
+    }
+    SimpleScaffold.prototype.parseLocals = function (text) {
+        var template = handlebars.compile(text, {
+            noEscape: true
+        });
+        return template(this.locals);
+    };
+    SimpleScaffold.prototype.fileList = function (input) {
+        var output = [];
+        for (var _i = 0, input_1 = input; _i < input_1.length; _i++) {
+            var checkPath = input_1[_i];
+            var files = glob.sync(checkPath, { dot: true })
+                .map(function (g) { return g[0] == '/' ? g : path.join(process.cwd(), g); });
+            var idx = checkPath.indexOf('*');
+            var cleanCheckPath = checkPath;
+            if (idx >= 0) {
+                cleanCheckPath = checkPath.slice(0, idx - 1);
+            }
+            for (var _a = 0, files_1 = files; _a < files_1.length; _a++) {
+                var file = files_1[_a];
+                output.push({ base: cleanCheckPath, file: file });
+            }
+        }
+        return output;
+    };
+    SimpleScaffold.prototype.getFileContents = function (filePath) {
+        console.log(fs.readFileSync(filePath));
+        return fs.readFileSync(filePath).toString();
+    };
+    SimpleScaffold.prototype.getOutputPath = function (file, basePath) {
+        var out;
+        if (typeof this.config.output === 'function') {
+            out = this.config.output(file, basePath);
+        }
+        else {
+            var outputDir = this.config.output + (this.config.createSubfolder ? "/" + this.config.name + "/" : '/');
+            var idx = file.indexOf(basePath);
+            var relativeFilePath = file;
+            if (idx >= 0) {
+                relativeFilePath = file.slice(idx + basePath.length + 1);
+            }
+            out = outputDir + relativeFilePath;
+        }
+        return this.parseLocals(out);
+    };
+    SimpleScaffold.prototype.writeFile = function (filePath, fileContents) {
+        if (!fs.existsSync(path.dirname(filePath))) {
+            fs.mkdirSync(path.dirname(filePath));
+        }
+        console.info('Writing file:', filePath);
+        fs.writeFile(filePath, fileContents, { encoding: 'utf-8' }, function (err) {
+            if (err) {
+                throw err;
+            }
+        });
+    };
+    SimpleScaffold.prototype.run = function () {
+        console.log("Generating scaffold: " + this.config.name + "...");
+        var templates = this.fileList(this.config.templates);
+        var fileConf, count = 0;
+        for (var _i = 0, templates_1 = templates; _i < templates_1.length; _i++) {
+            fileConf = templates_1[_i];
+            count++;
+            var file = fileConf.file, base = fileConf.base;
+            var outputPath = this.getOutputPath(file, base);
+            var contents = this.getFileContents(file);
+            var outputContents = this.parseLocals(contents);
+            this.writeFile(outputPath, outputContents);
+            console.info('Parsing:', { file: file, base: base, outputPath: outputPath, outputContents: outputContents.replace("\n", "\\n") });
+        }
+        if (!count) {
+            throw new Error('No files to scaffold!');
+        }
+        console.log('Done');
+    };
+    return SimpleScaffold;
+}());
+exports.default = SimpleScaffold;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("glob");
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("handlebars");
+
+/***/ }),
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var scaffold_1 = __webpack_require__(1);
+var cliArgs = __webpack_require__(7);
+var cliUsage = __webpack_require__(8);
+var path = __webpack_require__(0);
+function localsParser(content) {
+    var _a = content.split('='), key = _a[0], value = _a[1];
+    return _b = {}, _b[key] = value, _b;
+    var _b;
+}
+function filePathParser(content) {
+    if (content.startsWith('/')) {
+        return content;
+    }
+    return [process.cwd(), content].join(path.sep);
+}
+var defs = [
+    { name: 'name', alias: 'n', type: String, description: 'Component output name', defaultOption: true },
+    { name: 'templates', alias: 't', type: filePathParser, multiple: true },
+    { name: 'output', alias: 'o', type: filePathParser, multiple: true },
+    { name: 'locals', alias: 'l', multiple: true, type: localsParser },
+    { name: 'create-sub-folder', alias: 'S', type: Boolean },
+    { name: 'help', alias: 'h', type: Boolean, description: 'Display this help message' },
+];
+var args = cliArgs(defs, { camelCase: true });
+var help = [
+    { header: 'Scaffold Generator', content: 'Generate scaffolds for your project based on file templates.' },
+    { header: 'Options', optionList: defs }
+];
+args.locals = args.locals.reduce(function (all, cur) { return (__assign({}, all, cur)); }, {});
+console.info('Config:', args);
+if (args.help || !args.name) {
+    console.log(cliUsage(help));
+    process.exit(0);
+}
+new scaffold_1.default({
+    name: args.name,
+    templates: args.templates,
+    output: args.output,
+    locals: args.locals,
+    createSubfolder: args.createSubFolder,
+}).run();
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = require("command-line-args");
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = require("command-line-usage");
+
+/***/ })
+/******/ ]);
+});
 //# sourceMappingURL=cmd.js.map

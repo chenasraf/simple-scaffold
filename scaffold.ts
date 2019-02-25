@@ -33,18 +33,21 @@ class SimpleScaffold {
     return template(this.locals)
   }
 
-  private *fileList(input: string[]): IterableIterator<IScaffold.FileRepr> {
+  private fileList(input: string[]): IScaffold.FileRepr[] {
+    const output: IScaffold.FileRepr[] = []
     for (const checkPath of input) {
-      const files = glob.sync(checkPath).map(g => g[0] == '/' ? g : path.join(process.cwd(), g))
+      const files = glob.sync(checkPath, { dot: true })
+        .map(g => g[0] == '/' ? g : path.join(process.cwd(), g))
       const idx = checkPath.indexOf('*')
       let cleanCheckPath = checkPath
       if (idx >= 0) {
         cleanCheckPath = checkPath.slice(0, idx - 1)
       }
       for (const file of files) {
-        yield { base: cleanCheckPath, file }
+        output.push({ base: cleanCheckPath, file })
       }
     }
+    return output
   }
 
   private getFileContents(filePath: string): string {
@@ -75,7 +78,11 @@ class SimpleScaffold {
       fs.mkdirSync(path.dirname(filePath))
     }
     console.info('Writing file:', filePath)
-    fs.writeFileSync(filePath, fileContents, { encoding: 'utf-8' })
+    fs.writeFile(filePath, fileContents, { encoding: 'utf-8' }, (err) => {
+      if (err) {
+        throw err
+      }
+    })
   }
 
   public run(): void {
@@ -83,7 +90,7 @@ class SimpleScaffold {
     const templates = this.fileList(this.config.templates)
 
     let fileConf, count = 0
-    while (fileConf = templates.next().value) {
+    for (fileConf of templates) {
       count++
       const { file, base } = fileConf
       const outputPath = this.getOutputPath(file, base)
