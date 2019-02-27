@@ -26,7 +26,7 @@ yarn [global] add simple-scaffold
                                         A template file may be of any type and extension, and supports Handlebars as
                                         a parsing engine for the file names and contents, so you may customize both
                                         with variables from your configuration.
-      -o, --output File[]               The output directory to put the new files in. They will attempt to maintain
+      -o, --output File                 The output directory to put the new files in. They will attempt to maintain
                                         their regular structure as they are found, if possible.
       -l, --locals Key=Value[]          A key-value map for the template to use in parsing.
       -S, --create-sub-folder Boolean   Whether to create a subdirectory with {{Name}} in the output directory.

@@ -43,16 +43,15 @@ const defs: Def[] = [
     name: 'output',
     alias: 'o',
     type: filePathParser,
-    typeLabel: '{underline File}[]',
+    typeLabel: '{underline File}',
     description: `The output directory to put the new files in. They will attempt to maintain their regular structure as they are found, if possible.`,
-    multiple: true,
   },
   {
     name: 'locals',
     alias: 'l',
     description: `A key-value map for the template to use in parsing.`,
     multiple: true,
-    typeLabel: '{underline Key=Value}[]',
+    typeLabel: '{underline Key=Value}',
     type: localsParser,
   },
   {
