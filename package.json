@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
@@ -10,6 +10,7 @@
   "types": "index.d.ts",
   "scripts": {
     "build": "NODE_ENV=${NODE_ENV:-production} webpack -p && chmod -R +x ./dist",
+    "prepublishOnly": "yarn build",
     "dev": "webpack --watch",
     "start": "node dist/scaffold.js",
     "test": "jest",
