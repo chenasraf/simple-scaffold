@@ -12,14 +12,26 @@ yarn [global] add simple-scaffold
 ```
 
 ## Use as a command line tool
-The first non-token argument (that has no `--` prefix) will be used as the scaffold name.
-The rest is ignored, of course except for the available arguments below.
 
-```bash
-simple-scaffold MyComponent --template scaffolds/component/**/* \
-    --output src/components \
-    --locals myProp="propname",myVal=123
-```
+### Command Line Options
+
+    Scaffold Generator
+
+      Generate scaffolds for your project based on file templates.
+      Usage: simple-scaffold scaffold-name [options]
+
+
+      -n, --name string                 Component output name
+      -t, --templates File[]            A glob pattern of template files to load.
+                                        A template file may be of any type and extension, and supports Handlebars as
+                                        a parsing engine for the file names and contents, so you may customize both
+                                        with variables from your configuration.
+      -o, --output File[]               The output directory to put the new files in. They will attempt to maintain
+                                        their regular structure as they are found, if possible.
+      -l, --locals Key=Value[]          A key-value map for the template to use in parsing.
+      -S, --create-sub-folder Boolean   Whether to create a subdirectory with {{Name}} in the output directory.
+                                        default=true
+      -h, --help                        Display this help message
 
 You can add this as a script in your `package.json`:
 
@@ -33,7 +45,7 @@ You can add this as a script in your `package.json`:
 
 ## Scaffolding
 Scaffolding will replace {{vars}} in both the file name and its contents and put the transformed files
-in `<output>/<{{Name}}`.
+in `<output>/<{{Name}}>`, as per the Handlebars formatting rules.
 
 Your context will be pre-populated with the following:
 - `{{Name}}`: CapitalizedName of the component
@@ -41,30 +53,6 @@ Your context will be pre-populated with the following:
 
 Any `locals` you add in the config will populate with their names wrapped in `{{` and `}}`.
 They are all stringified, so be sure to parse them accordingly by creating a script, if necessary.
-
-### Command line options
-##### `--template glob [--template glob2 [...]]` (required) (alias: -t)
-A glob pattern of template files to load.
-
-A template file may be of any type and extension, and supports [Handlebars](https://handlebarsjs.com) as a parsing engine for the file names and contents, so you may customize both with variables from your configuration.
-
-You can load more than one template list by simple adding more `--template` arguments.
-
-##### `--output path` (optional) (alias -o)
-The output directory to put the new files in. They will attempt to maintain their regular structure as they are found, if possible.
-
-Your new scaffold will be placed under a directory with the scaffold name from the argumemts.
-
-You may also pass a function to transform the output path for each file individually.
-This function takes 2 arguments: filename, and base glob path
-
-##### `--locals key=value [--locals key=value [,...]]` (optional) (alias: -l)
-Pass a KV map to the template for parsing.
-
-##### `--create-sub-folder [true|false]` (optional) (alias -S) (default: true)
-Whether to create a subfolder for the output with all the files inside, or simply dump them directly in the output folder.
-
-#####
 
 ### Use in Node.js
 You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
@@ -83,6 +71,11 @@ const scaffold = new SimpleScaffold({
     property: 'value',
   }
 }).run()
+```
+
+The exception in the config is that `output`, when used in Node directly, may also be passed a function for each input file to output into a dynamic path:
+```javascript
+config.output = (filename, basePath) => [basePath, filename].join(path.sep)
 ```
 
 ## Example Scaffold Input
@@ -111,9 +104,9 @@ module.exports = class {{Name}} extends React.Component {
 ### Run Example
 ```bash
 simple-scaffold MyComponent \
-    --template project/scaffold/**/* \
-    --output src/components \
-    --locals 'className=my-component`
+    -t project/scaffold/**/* \
+    -o src/components \
+    -l className=my-component
 ```
 
 ## Example Scaffold Output

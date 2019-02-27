@@ -243,28 +243,70 @@ function filePathParser(content) {
     }
     return [process.cwd(), content].join(path.sep);
 }
+function booleanParser(text) {
+    return text && text.trim().length ? ['true', '1', 'on'].includes(text.trim()) : true;
+}
 var defs = [
-    { name: 'name', alias: 'n', type: String, description: 'Component output name', defaultOption: true },
-    { name: 'templates', alias: 't', type: filePathParser, multiple: true },
-    { name: 'output', alias: 'o', type: filePathParser, multiple: true },
-    { name: 'locals', alias: 'l', multiple: true, type: localsParser },
-    { name: 'create-sub-folder', alias: 'S', type: function (text) { return text && text.trim().length ? ['true', '1', 'on'].includes(text.trim()) : true; } },
-    { name: 'help', alias: 'h', type: Boolean, description: 'Display this help message' },
+    {
+        name: 'name',
+        alias: 'n',
+        type: String,
+        description: 'Component output name',
+        defaultOption: true,
+    },
+    {
+        name: 'templates',
+        alias: 't',
+        type: filePathParser,
+        typeLabel: '{underline File}[]',
+        description: "A glob pattern of template files to load.\nA template file may be of any type and extension, and supports Handlebars as a parsing engine for the file names and contents, so you may customize both with variables from your configuration.",
+        multiple: true,
+    },
+    {
+        name: 'output',
+        alias: 'o',
+        type: filePathParser,
+        typeLabel: '{underline File}[]',
+        description: "The output directory to put the new files in. They will attempt to maintain their regular structure as they are found, if possible.",
+        multiple: true,
+    },
+    {
+        name: 'locals',
+        alias: 'l',
+        description: "A key-value map for the template to use in parsing.",
+        multiple: true,
+        typeLabel: '{underline Key=Value}[]',
+        type: localsParser,
+    },
+    {
+        name: 'create-sub-folder',
+        alias: 'S',
+        typeLabel: '{underline Boolean}',
+        description: 'Whether to create a subdirectory with \\{\\{Name\\}\\} in the {underline output} directory. {bold default=true}',
+        type: booleanParser,
+        defaultValue: true,
+    },
+    {
+        name: 'help',
+        alias: 'h',
+        type: Boolean,
+        description: 'Display this help message',
+    },
 ];
 var args = cliArgs(defs, { camelCase: true });
 var help = [
-    { header: 'Scaffold Generator', content: 'Generate scaffolds for your project based on file templates.' },
+    { header: 'Scaffold Generator', content: "Generate scaffolds for your project based on file templates.\nUsage: {bold simple-scaffold} {underline scaffold-name} {underline [options]}" },
     { header: 'Options', optionList: defs }
 ];
 args.locals = (args.locals || []).reduce(function (all, cur) { return (__assign({}, all, cur)); }, {});
 if (args.createSubFolder === null) {
     args.createSubFolder = true;
 }
-console.info('Config:', args);
 if (args.help || !args.name) {
     console.log(cliUsage(help));
     process.exit(0);
 }
+console.info('Config:', args);
 new scaffold_1.default({
     name: args.name,
     templates: args.templates,
