@@ -1,4 +1,4 @@
-import IScaffold from './index';
+import { IScaffold } from './index.d';
 declare class SimpleScaffold {
     config: IScaffold.Config;
     locals: IScaffold.Config['locals'];

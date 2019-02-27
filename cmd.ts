@@ -1,6 +1,6 @@
 import SimpleScaffold from './scaffold'
 import * as fs from 'fs'
-import IScaffold from './index'
+import {IScaffold} from './index'
 import * as cliArgs from 'command-line-args'
 import * as cliUsage from 'command-line-usage'
 import * as path from 'path'

@@ -1,12 +1,13 @@
 const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   devtool: process.env.NODE_ENV === 'develop' ? 'inline-source-map' : 'source-map',
   target: 'node',
   entry: {
-    scaffold: './scaffold.ts',
+    index: './scaffold.ts',
     test: './test.ts',
     cmd: './cmd.ts',
   },
@@ -24,9 +25,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: [/\.tsx?$/],
         loader: 'ts-loader',
-        exclude: ['./examples', 'node_modules']
+        exclude: [/\/examples\//, /\/node_modules\//]
       }
     ]
   },
@@ -37,7 +38,8 @@ module.exports = {
     new webpack.BannerPlugin({
       banner: '#!/usr/bin/env node',
       raw: true,
-      include: /cmd\.js/,
-    })
+      include: [/cmd\.js/],
+    }),
+    new CopyPlugin(['index.d.ts']),
   ],
 }

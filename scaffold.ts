@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import IScaffold from './index'
+import {IScaffold} from './index.d'
 import * as glob from 'glob'
 import * as handlebars from 'handlebars'
 
