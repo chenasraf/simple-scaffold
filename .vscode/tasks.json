@@ -1,7 +1,47 @@
 {
-  "version": "0.1.0",
-  "command": "webpack",
-  "isShellCommand": true,
-  "args": [],
-  "showOutput": "always"
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "script": "build",
+      "label": "build",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "dev",
+      "label": "dev",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "start",
+      "label": "start",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "test",
+      "label": "test",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "cmd",
+      "label": "cmd",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "build-test",
+      "label": "build-test",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+    {
+      "script": "build-cmd",
+      "label": "build-cmd",
+      "type": "npm",
+      "problemMatcher": [],
+    },
+  ],
 }

@@ -1,7 +1,7 @@
-import { IScaffold } from './index.d';
+import { IScaffold } from "./index.d";
 declare class SimpleScaffold {
     config: IScaffold.Config;
-    locals: IScaffold.Config['locals'];
+    locals: IScaffold.Config["locals"];
     constructor(config: IScaffold.Config);
     private parseLocals;
     private fileList;
@@ -9,5 +9,6 @@ declare class SimpleScaffold {
     private getOutputPath;
     private writeFile;
     run(): void;
+    private writeDirectory;
 }
 export default SimpleScaffold;

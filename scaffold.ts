@@ -1,16 +1,16 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import {IScaffold} from './index.d'
-import * as glob from 'glob'
-import * as handlebars from 'handlebars'
+import * as fs from "fs"
+import * as path from "path"
+import { IScaffold } from "./index.d"
+import * as glob from "glob"
+import * as handlebars from "handlebars"
 
 class SimpleScaffold {
   public config: IScaffold.Config
-  public locals: IScaffold.Config['locals'] = {} as any
+  public locals: IScaffold.Config["locals"] = {} as any
 
   constructor(config: IScaffold.Config) {
     const DefaultConfig: IScaffold.Config = {
-      name: 'scaffold',
+      name: "scaffold",
       templates: [],
       output: process.cwd(),
       createSubfolder: true,
@@ -20,7 +20,7 @@ class SimpleScaffold {
 
     const DefaultLocals = {
       Name: this.config.name![0].toUpperCase() + this.config.name!.slice(1),
-      name: this.config.name![0].toLowerCase() + this.config.name!.slice(1)
+      name: this.config.name![0].toLowerCase() + this.config.name!.slice(1),
     }
 
     this.locals = { ...DefaultLocals, ...config.locals }
@@ -28,7 +28,7 @@ class SimpleScaffold {
 
   private parseLocals(text: string): string {
     const template = handlebars.compile(text, {
-      noEscape: true
+      noEscape: true,
     })
     return template(this.locals)
   }
@@ -36,9 +36,10 @@ class SimpleScaffold {
   private fileList(input: string[]): IScaffold.FileRepr[] {
     const output: IScaffold.FileRepr[] = []
     for (const checkPath of input) {
-      const files = glob.sync(checkPath, { dot: true })
-        .map(g => g[0] == '/' ? g : path.join(process.cwd(), g))
-      const idx = checkPath.indexOf('*')
+      const files = glob
+        .sync(checkPath, { dot: true })
+        .map((g) => (g[0] == "/" ? g : path.join(process.cwd(), g)))
+      const idx = checkPath.indexOf("*")
       let cleanCheckPath = checkPath
       if (idx >= 0) {
         cleanCheckPath = checkPath.slice(0, idx - 1)
@@ -58,10 +59,12 @@ class SimpleScaffold {
   private getOutputPath(file: string, basePath: string): string {
     let out: string
 
-    if (typeof this.config.output === 'function') {
+    if (typeof this.config.output === "function") {
       out = this.config.output(file, basePath)
     } else {
-      const outputDir = this.config.output + (this.config.createSubfolder ? `/${this.config.name}/` : '/')
+      const outputDir =
+        this.config.output +
+        (this.config.createSubfolder ? `/${this.config.name}/` : "/")
       const idx = file.indexOf(basePath)
       let relativeFilePath = file
       if (idx >= 0) {
@@ -74,11 +77,10 @@ class SimpleScaffold {
   }
 
   private writeFile(filePath: string, fileContents: string): void {
-    if (!fs.existsSync(path.dirname(filePath))) {
-      fs.mkdirSync(path.dirname(filePath))
-    }
-    console.info('Writing file:', filePath)
-    fs.writeFile(filePath, fileContents, { encoding: 'utf-8' }, (err) => {
+    const baseDir = path.dirname(filePath)
+    this.writeDirectory(baseDir, filePath)
+    console.info("Writing file:", filePath)
+    fs.writeFile(filePath, fileContents, { encoding: "utf-8" }, (err) => {
       if (err) {
         throw err
       }
@@ -89,23 +91,62 @@ class SimpleScaffold {
     console.log(`Generating scaffold: ${this.config.name}...`)
     const templates = this.fileList(this.config.templates)
 
-    let fileConf, count = 0
-    for (fileConf of templates) {
-      count++
-      const { file, base } = fileConf
-      const outputPath = this.getOutputPath(file, base)
-      const contents = this.getFileContents(file)
-      const outputContents = this.parseLocals(contents)
+    let fileConf,
+      count = 0
 
-      this.writeFile(outputPath, outputContents)
-      console.info('Parsing:', { file, base, outputPath, outputContents: outputContents.replace("\n", "\\n") })
+    console.log("Template files:", templates)
+    for (fileConf of templates) {
+      let outputPath, contents, outputContents, file, base
+      try {
+        count++
+        file = fileConf.file
+        base = fileConf.base
+        outputPath = this.getOutputPath(file, base)
+        if (fs.lstatSync(file).isDirectory()) {
+          this.writeDirectory(outputPath, file)
+          continue
+        }
+        contents = this.getFileContents(file)
+        outputContents = this.parseLocals(contents)
+
+        console.info("Writing:", {
+          file,
+          base,
+          outputPath,
+          outputContents: outputContents.replace("\n", "\\n"),
+        })
+        this.writeFile(outputPath, outputContents)
+      } catch (e) {
+        console.error("Error while processing file:", {
+          file,
+          base,
+          contents,
+          outputPath,
+          outputContents,
+        })
+        throw e
+      }
     }
 
     if (!count) {
-      throw new Error('No files to scaffold!')
+      throw new Error("No files to scaffold!")
     }
 
-    console.log('Done')
+    console.log("Done")
+  }
+
+  private writeDirectory(outputPath: string, file: any): void {
+    const parent = path.dirname(outputPath)
+    if (!fs.existsSync(parent)) {
+      this.writeDirectory(parent, outputPath)
+    }
+    if (!fs.existsSync(outputPath)) {
+      console.info("Creating directory:", {
+        file,
+        outputPath,
+      })
+      fs.mkdirSync(outputPath)
+    }
   }
 }
 
