@@ -9,7 +9,7 @@
   "bin": "dist/cmd.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "NODE_ENV=${NODE_ENV:-production} webpack -p && chmod -R +x ./dist",
+    "build": "NODE_ENV=${NODE_ENV:-production} webpack && chmod -R +x ./dist",
     "prepublishOnly": "yarn build",
     "dev": "webpack --watch",
     "start": "node dist/scaffold.js",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "command-line-args": "^5.0.2",
-    "command-line-usage": "^5.0.5",
+    "command-line-usage": "^6.1.1",
     "glob": "^7.1.3",
     "handlebars": "^4.1.0"
   },
@@ -28,16 +28,15 @@
     "@types/command-line-args": "^5.0.0",
     "@types/command-line-usage": "^5.0.1",
     "@types/glob": "^7.1.1",
-    "@types/handlebars": "^4.0.40",
-    "@types/node": "^11.9.5",
-    "copy-webpack-plugin": "^5.0.0",
-    "jest": "^24.1.0",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.3.3333",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3",
+    "@types/node": "^14.14.22",
+    "copy-webpack-plugin": "^7.0.0",
+    "jest": "^26.6.3",
+    "ts-loader": "^8.0.14",
+    "typescript": "^4.1.3",
+    "webpack": "^5.19.0",
+    "webpack-cli": "^4.4.0",
     "webpack-dev-server": "^3.2.1",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^2.5.2"
   },
   "jest": {
     "testPathIgnorePatterns": [
