@@ -27,10 +27,15 @@ class SimpleScaffold {
   }
 
   private parseLocals(text: string): string {
-    const template = handlebars.compile(text, {
-      noEscape: true,
-    })
-    return template(this.locals)
+    try {
+      const template = handlebars.compile(text, {
+        noEscape: true,
+      })
+      return template(this.locals)
+    } catch (e) {
+      console.warn("Problem using Handlebars, returning unmodified content")
+      return text
+    }
   }
 
   private fileList(input: string[]): IScaffold.FileRepr[] {

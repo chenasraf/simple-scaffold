@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
