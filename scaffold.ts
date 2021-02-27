@@ -14,11 +14,13 @@ class SimpleScaffold {
       templates: [],
       output: process.cwd(),
       createSubfolder: true,
+      overwrite: true,
     }
 
     this.config = { ...DefaultConfig, ...config }
 
     const DefaultLocals = {
+      // TODO improve
       Name: this.config.name![0].toUpperCase() + this.config.name!.slice(1),
       name: this.config.name![0].toLowerCase() + this.config.name!.slice(1),
     }
@@ -73,7 +75,11 @@ class SimpleScaffold {
       const idx = file.indexOf(basePath)
       let relativeFilePath = file
       if (idx >= 0) {
-        relativeFilePath = file.slice(idx + basePath.length + 1)
+        if (file !== basePath) {
+          relativeFilePath = file.slice(idx + basePath.length + 1)
+        } else {
+          relativeFilePath = path.basename(file)
+        }
       }
       out = outputDir + relativeFilePath
     }
@@ -84,12 +90,21 @@ class SimpleScaffold {
   private writeFile(filePath: string, fileContents: string): void {
     const baseDir = path.dirname(filePath)
     this.writeDirectory(baseDir, filePath)
-    console.info("Writing file:", filePath)
     fs.writeFile(filePath, fileContents, { encoding: "utf-8" }, (err) => {
       if (err) {
         throw err
       }
     })
+  }
+
+  private shouldWriteFile(filePath: string) {
+    const overwrite =
+      typeof this.config.overwrite === "boolean"
+        ? this.config.overwrite
+        : this.config.overwrite?.(filePath)
+    const exists = fs.existsSync(filePath)
+
+    return !exists || overwrite !== false
   }
 
   public run(): void {
@@ -113,14 +128,17 @@ class SimpleScaffold {
         }
         contents = this.getFileContents(file)
         outputContents = this.parseLocals(contents)
-
-        console.info("Writing:", {
-          file,
-          base,
-          outputPath,
-          outputContents: outputContents.replace("\n", "\\n"),
-        })
-        this.writeFile(outputPath, outputContents)
+        if (this.shouldWriteFile(outputPath)) {
+          console.info("Writing:", {
+            file,
+            base,
+            outputPath,
+            outputContents: outputContents.replace("\n", "\\n"),
+          })
+          this.writeFile(outputPath, outputContents)
+        } else {
+          console.log(`Skipping file ${outputPath}`)
+        }
       } catch (e) {
         console.error("Error while processing file:", {
           file,

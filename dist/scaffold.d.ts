@@ -8,6 +8,7 @@ declare class SimpleScaffold {
     private getFileContents;
     private getOutputPath;
     private writeFile;
+    private shouldWriteFile;
     run(): void;
     private writeDirectory;
 }
