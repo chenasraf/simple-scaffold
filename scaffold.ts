@@ -67,7 +67,7 @@ class SimpleScaffold {
     let out: string
 
     if (typeof this.config.output === "function") {
-      out = this.config.output(file, basePath)
+      out = this.config.output(file, basePath, path.basename(file))
     } else {
       const outputDir =
         this.config.output +

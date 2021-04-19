@@ -7,7 +7,9 @@ declare namespace IScaffold {
   export interface Config {
     name?: string
     templates: string[]
-    output: string | ((path: string, base: string) => string)
+    output:
+      | string
+      | ((fullPath: string, basedir: string, basename: string) => string)
     locals?: Locals
     createSubfolder?: boolean
     overwrite?: boolean | ((path: string) => boolean)
