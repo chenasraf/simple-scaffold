@@ -88,7 +88,7 @@ function for each input file to output into a dynamic path:
 ```javascript
 config.output = (fullPath, baseDir, baseName) => {
   console.log({ fullPath, baseDir, baseName })
-  return fullPath
+  return [baseDir, baseName].join(path.sep)
 }
 ```
 
