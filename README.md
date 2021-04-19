@@ -82,10 +82,14 @@ const scaffold = new SimpleScaffold({
 }).run()
 ```
 
-The exception in the config is that `output`, when used in Node directly, may also be passed a function for each input file to output into a dynamic path:
+The exception in the config is that `output`, when used in Node directly, may also be passed a
+function for each input file to output into a dynamic path:
 
 ```javascript
-config.output = (filename, basePath) => [basePath, filename].join(path.sep)
+config.output = (fullPath, baseDir, baseName) => {
+  console.log({ fullPath, baseDir, baseName })
+  return fullPath
+}
 ```
 
 ## Example Scaffold Input
