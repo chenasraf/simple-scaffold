@@ -1,6 +1,6 @@
 import { stat, readFile, writeFile } from "fs/promises"
 import { glob } from "glob"
-import path = require("path")
+import path from "path"
 import { promisify } from "util"
 
 import {
@@ -36,7 +36,7 @@ export async function Scaffold(config: ScaffoldConfig) {
     }
   } catch (e) {
     console.error(e)
-    process.exit(e.code ?? 1)
+    throw e
   }
 }
 
@@ -49,13 +49,13 @@ async function handleTemplateFile(
     try {
       log(options, `Parsing ${templatePath}`)
       const inputPath = path.join(process.cwd(), templatePath)
-      const outputPathOpt = getOptionValueForFile(inputPath, options.outputPath)
-      const outputDir = path.join(
+      const outputPathOpt = getOptionValueForFile(inputPath, data, options.outputPath)
+      const outputDir = path.resolve(
         process.cwd(),
         ...([outputPathOpt, options.createSubfolder ? options.name : undefined].filter(Boolean) as string[])
       )
       const outputPath = path.join(outputDir, handlebarsParse(path.basename(inputPath), data))
-      const overwrite = getOptionValueForFile(inputPath, options.overwrite ?? false)
+      const overwrite = getOptionValueForFile(inputPath, data, options.overwrite ?? false)
       const exists = await pathExists(outputPath)
 
       await createDirIfNotExists(outputDir, options)
@@ -69,10 +69,10 @@ async function handleTemplateFile(
         const outputContents = handlebarsParse(templateBuffer, data)
 
         await writeFile(outputPath, outputContents)
-        resolve()
       } else if (exists) {
         log(options, `File ${outputPath} already exists, skipping`)
       }
+      resolve()
     } catch (e) {
       handleErr(e)
       reject(e)

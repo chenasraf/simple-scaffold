@@ -2,11 +2,11 @@ import * as React from "react"
 import * as css from "./{{Name}}.css"
 
 class {{Name}} extends React.Component<any> {
-  private {{ snakeCase property }}
+  private {{ property }}
 
   constructor(props: any) {
     super(props)
-    this.{{ snakeCase property }} = {{ value }}
+    this.{{ property }} = {{ value }}
   }
 
   public render() {

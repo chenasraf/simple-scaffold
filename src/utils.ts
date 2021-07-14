@@ -52,11 +52,20 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
   }
 }
 
-export function getOptionValueForFile<T>(filePath: string, fn: FileResponse<T>, defaultValue?: T): T {
+export function getOptionValueForFile<T>(
+  filePath: string,
+  data: Record<string, string>,
+  fn: FileResponse<T>,
+  defaultValue?: T
+): T {
   if (typeof fn !== "function") {
     return defaultValue ?? (fn as T)
   }
-  return (fn as FileResponseFn<T>)(filePath, path.dirname(filePath), path.basename(filePath))
+  return (fn as FileResponseFn<T>)(
+    filePath,
+    path.dirname(handlebarsParse(filePath, data)),
+    path.basename(handlebarsParse(filePath, data))
+  )
 }
 
 export function handlebarsParse(templateBuffer: Buffer | string, data: Record<string, string>) {
