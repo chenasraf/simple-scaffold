@@ -58,4 +58,4 @@ typings/
 .env
 
 examples/test-output/**/*
-!examples/test-output/.gitkeep
+dist/

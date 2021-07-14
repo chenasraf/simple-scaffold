@@ -1,3 +1,37 @@
-#!/usr/bin/env node
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.library=t():e.library=t()}(global,(function(){return(()=>{"use strict";var e={784:(e,t,o)=>{Object.defineProperty(t,"__esModule",{value:!0});var r=o(493),i=o(127),n=o(67),a=o(622);function s(e){return e.startsWith("/")?e:[process.cwd(),e].join(a.sep)}function l(e){return!e||!e.trim().length||["true","1","on"].includes(e.trim())}var u=[{name:"name",alias:"n",type:String,description:"Component output name",defaultOption:!0},{name:"templates",alias:"t",type:s,typeLabel:"{underline File}[]",description:"A glob pattern of template files to load.\nA template file may be of any type and extension, and supports Handlebars as a parsing engine for the file names and contents, so you may customize both with variables from your configuration.",multiple:!0},{name:"output",alias:"o",type:s,typeLabel:"{underline File}",description:"The output directory to put the new files in. They will attempt to maintain their regular structure as they are found, if possible."},{name:"locals",alias:"l",description:"A JSON string for the template to use in parsing.",typeLabel:"{underline JSON string}",type:function(e){return JSON.parse(e)}},{name:"overwrite",alias:"w",description:"Whether to overwrite files when they are found to already exist. {bold Default=true}",type:l,typeLabel:"{underline Boolean}",defaultValue:!0},{name:"quiet",alias:"q",description:"When set to {bold true}, logs will not output (including warnings and errors). {bold Default=false}",type:l,typeLabel:"{underline Boolean}",defaultValue:!1},{name:"create-sub-folder",alias:"S",typeLabel:"{underline Boolean}",description:"Whether to create a subdirectory with \\{\\{Name\\}\\} in the {underline output} directory. {bold Default=true}",type:l,defaultValue:!0},{name:"help",alias:"h",type:Boolean,description:"Display this help message"}],p=i(u,{camelCase:!0}),c=[{header:"Scaffold Generator",content:"Generate scaffolds for your project based on file templates.\nUsage: {bold simple-scaffold} {underline scaffold-name} {underline [options]}"},{header:"Options",optionList:u}];null===p.createSubFolder&&(p.createSubFolder=!0),null===p.quiet&&(p.quiet=!0),!p.help&&p.name||(console.log(n(c)),process.exit(0)),p.quiet||console.info("Config:",p),new r.default({name:p.name,templates:p.templates,output:p.output,locals:p.locals,createSubfolder:p.createSubFolder,overwrite:p.overwrite,quiet:p.quiet}).run()},493:function(e,t,o){var r=this&&this.__assign||function(){return(r=Object.assign||function(e){for(var t,o=1,r=arguments.length;o<r;o++)for(var i in t=arguments[o])Object.prototype.hasOwnProperty.call(t,i)&&(e[i]=t[i]);return e}).apply(this,arguments)},i=this&&this.__spreadArrays||function(){for(var e=0,t=0,o=arguments.length;t<o;t++)e+=arguments[t].length;var r=Array(e),i=0;for(t=0;t<o;t++)for(var n=arguments[t],a=0,s=n.length;a<s;a++,i++)r[i]=n[a];return r};Object.defineProperty(t,"__esModule",{value:!0});var n=o(747),a=o(622),s=o(878),l=o(778),u=function(){function e(e){this.locals={};var t={name:"scaffold",templates:[],output:process.cwd(),createSubfolder:!0,overwrite:!0,quiet:!1};this.config=r(r({},t),e);var o={Name:this.config.name[0].toUpperCase()+this.config.name.slice(1),name:this.config.name[0].toLowerCase()+this.config.name.slice(1)};this.locals=r(r({},o),e.locals)}return e.prototype.parseLocals=function(e){try{return l.compile(e,{noEscape:!0})(this.locals)}catch(t){return this.warn("Problem using Handlebars, returning unmodified content"),e}},e.prototype.fileList=function(e){for(var t=[],o=0,r=e;o<r.length;o++){var i=r[o],n=s.sync(i,{dot:!0}).map((function(e){return"/"==e[0]?e:a.join(process.cwd(),e)})),l=i.indexOf("*"),u=i;l>=0&&(u=i.slice(0,l-1));for(var p=0,c=n;p<c.length;p++){var f=c[p];t.push({base:u,file:f})}}return t},e.prototype.getFileContents=function(e){return this.log(n.readFileSync(e)),n.readFileSync(e).toString()},e.prototype.getOutputPath=function(e,t){var o;if("function"==typeof this.config.output)o=this.config.output(e,t,a.basename(e));else{var r=this.config.output+(this.config.createSubfolder?"/"+this.config.name+"/":"/"),i=e.indexOf(t),n=e;i>=0&&(n=e!==t?e.slice(i+t.length+1):a.basename(e)),o=r+n}return this.parseLocals(o)},e.prototype.writeFile=function(e,t){var o=a.dirname(e);this.writeDirectory(o,e),n.writeFile(e,t,{encoding:"utf-8"},(function(e){if(e)throw e}))},e.prototype.shouldWriteFile=function(e){var t,o,r="boolean"==typeof this.config.overwrite?this.config.overwrite:null===(o=(t=this.config).overwrite)||void 0===o?void 0:o.call(t,e);return!n.existsSync(e)||!1!==r},e.prototype.run=function(){this.log("Generating scaffold: "+this.config.name+"...");var e,t=this.fileList(this.config.templates),o=0;this.log("Template files:",t);for(var r=0,i=t;r<i.length;r++){e=i[r];var a=void 0,s=void 0,l=void 0,u=void 0,p=void 0;try{if(o++,u=e.file,p=e.base,a=this.getOutputPath(u,p),n.lstatSync(u).isDirectory()){this.writeDirectory(a,u);continue}s=this.getFileContents(u),l=this.parseLocals(s),this.shouldWriteFile(a)?(this.info("Writing:",{file:u,base:p,outputPath:a,outputContents:l.replace("\n","\\n")}),this.writeFile(a,l)):this.log("Skipping file "+a)}catch(e){throw this.error("Error while processing file:",{file:u,base:p,contents:s,outputPath:a,outputContents:l}),e}}if(!o)throw new Error("No files to scaffold!");this.log("Done")},e.prototype.writeDirectory=function(e,t){var o=a.dirname(e);n.existsSync(o)||this.writeDirectory(o,e),n.existsSync(e)||(this.info("Creating directory:",{file:t,outputPath:e}),n.mkdirSync(e))},e.prototype._log=function(e){for(var t=[],o=1;o<arguments.length;o++)t[o-1]=arguments[o];if(!this.config.quiet){var r=console[e];r.apply(void 0,t)}},e.prototype.log=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];this._log.apply(this,i(["log"],e))},e.prototype.info=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];this._log.apply(this,i(["info"],e))},e.prototype.warn=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];this._log.apply(this,i(["warn"],e))},e.prototype.error=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];this._log.apply(this,i(["error"],e))},e}();t.default=u},127:e=>{e.exports=require("command-line-args")},67:e=>{e.exports=require("command-line-usage")},747:e=>{e.exports=require("fs")},878:e=>{e.exports=require("glob")},778:e=>{e.exports=require("handlebars")},622:e=>{e.exports=require("path")}},t={};return function o(r){if(t[r])return t[r].exports;var i=t[r]={exports:{}};return e[r].call(i.exports,i,i.exports,o),i.exports}(784)})()}));
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./scaffold"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var scaffold_1 = __importDefault(require("./scaffold"));
+    scaffold_1.default({
+        name: "sample_app",
+        outputPath: "examples/test-output",
+        templates: ["examples/test-input/Component"],
+        overwrite: true,
+        data: {
+            property: "myProp",
+            value: "10",
+        },
+    });
+    scaffold_1.default({
+        name: "sample_app_with_subdir",
+        outputPath: "examples/test-output",
+        templates: ["examples/test-input/Component"],
+        createSubfolder: true,
+        data: {
+            property: "myProp",
+            value: "10",
+        },
+    });
+});
 //# sourceMappingURL=cmd.js.map

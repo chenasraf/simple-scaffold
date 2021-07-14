@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "umd",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "lib": [
       "es2017",
       "es6"
@@ -11,9 +13,8 @@
     "strict": true,
     "sourceMap": true
   },
-  "exclude": [
-    "examples/**/*",
-    "test.ts",
-    "dist/**/*"
+  "include": [
+    "src/index.ts",
+    "src/cmd.ts"
   ]
 }
