@@ -26,7 +26,7 @@ describe("Scaffold", () => {
     test("should not create by default", async () => {
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
         silent: true,
       })
@@ -38,9 +38,9 @@ describe("Scaffold", () => {
     test("should create with config", async () => {
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
-        createSubfolder: true,
+        createSubFolder: true,
         silent: true,
       })
 
@@ -60,7 +60,7 @@ describe("Scaffold", () => {
     test("should not overwrite by default", async () => {
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
         data: { value: "1" },
         silent: true,
@@ -68,7 +68,7 @@ describe("Scaffold", () => {
 
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
         data: { value: "2" },
         silent: true,
@@ -81,7 +81,7 @@ describe("Scaffold", () => {
     test("should overwrite with config", async () => {
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
         data: { value: "1" },
         silent: true,
@@ -89,7 +89,7 @@ describe("Scaffold", () => {
 
       await Scaffold({
         name: "app_name",
-        outputPath: "output",
+        output: "output",
         templates: ["input"],
         data: { value: "2" },
         overwrite: true,
@@ -115,7 +115,7 @@ describe("Scaffold", () => {
       await expect(
         Scaffold({
           name: "app_name",
-          outputPath: "output",
+          output: "output",
           templates: ["non-existing-input"],
           data: { value: "1" },
           silent: true,
@@ -140,7 +140,7 @@ describe("Scaffold", () => {
     test("should allow override function", async () => {
       await Scaffold({
         name: "app_name",
-        outputPath: (fullPath, basedir, basename) => `custom-output/${basename.split(".")[0]}`,
+        output: (fullPath, basedir, basename) => `custom-output/${basename.split(".")[0]}`,
         templates: ["input"],
         data: { value: "1" },
         silent: true,

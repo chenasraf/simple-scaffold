@@ -17,7 +17,8 @@
     "test": "jest --verbose",
     "cmd": "node dist/cmd.js",
     "build-test": "yarn build && yarn test",
-    "build-cmd": "yarn build && yarn cmd"
+    "build-cmd": "yarn build && yarn cmd",
+    "prepack": "yarn build"
   },
   "dependencies": {
     "args": "^5.0.1",
@@ -27,6 +28,7 @@
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
+    "@types/args": "^3.0.1",
     "@types/glob": "^7.1.1",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.171",

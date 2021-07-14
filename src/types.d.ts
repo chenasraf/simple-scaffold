@@ -5,9 +5,18 @@ export type FileResponse<T> = T | FileResponseFn<T>
 export interface ScaffoldConfig {
   name: string
   templates: string[]
-  outputPath: FileResponse<string>
-  createSubfolder?: boolean
+  output: FileResponse<string>
+  createSubFolder?: boolean
   data?: Record<string, string>
   overwrite?: FileResponse<boolean>
+  silent?: boolean
+}
+export interface ScaffoldCmdConfig {
+  name: string
+  templates: string[]
+  output: string
+  createSubFolder?: boolean
+  data?: Record<string, string>
+  overwrite?: boolean
   silent?: boolean
 }

@@ -18,7 +18,15 @@ export async function Scaffold(config: ScaffoldConfig) {
   try {
     const options = { ...config }
     const data = { name: options.name, Name: pascalCase(options.name), ...options.data }
-    log(options, "Config:", options)
+    log(options, "Config:", {
+      name: options.name,
+      templates: options.templates,
+      output: options.output,
+      createSubfolder: options.createSubFolder,
+      data: options.data,
+      overwrite: options.overwrite,
+      silent: options.silent,
+    })
     log(options, "Data:", data)
     for (let template of config.templates) {
       try {
@@ -49,10 +57,10 @@ async function handleTemplateFile(
     try {
       log(options, `Parsing ${templatePath}`)
       const inputPath = path.join(process.cwd(), templatePath)
-      const outputPathOpt = getOptionValueForFile(inputPath, data, options.outputPath)
+      const outputPathOpt = getOptionValueForFile(inputPath, data, options.output)
       const outputDir = path.resolve(
         process.cwd(),
-        ...([outputPathOpt, options.createSubfolder ? options.name : undefined].filter(Boolean) as string[])
+        ...([outputPathOpt, options.createSubFolder ? options.name : undefined].filter(Boolean) as string[])
       )
       const outputPath = path.join(outputDir, handlebarsParse(path.basename(inputPath), data))
       const overwrite = getOptionValueForFile(inputPath, data, options.overwrite ?? false)
