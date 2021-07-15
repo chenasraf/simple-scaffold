@@ -76,7 +76,12 @@ async function handleTemplateFile(
         const templateBuffer = await readFile(inputPath)
         const outputContents = handlebarsParse(templateBuffer, data)
 
-        await writeFile(outputPath, outputContents)
+        if (!options.dryRun) {
+          await writeFile(outputPath, outputContents)
+        } else {
+          log(options, "Content output:")
+          log(options, outputContents)
+        }
       } else if (exists) {
         log(options, `File ${outputPath} already exists, skipping`)
       }

@@ -27,6 +27,12 @@ const options = args
   )
   .option(["s", "create-sub-folder"], "Create subfolder with the input name", false)
   .option(["q", "silent"], "Supress output logs", false)
+  .option(
+    ["d", "dry-run"],
+    "Don't emit actual files. This is good for testing your scaffolds and making sure they " +
+      "don't fail, without having to write actual files.",
+    false
+  )
   .example(
     `yarn cmd -t examples/test-input/Component -o examples/test-output -d '{"property":"myProp","value":"10"}'`,
     "Usage"

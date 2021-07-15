@@ -10,13 +10,15 @@ export interface ScaffoldConfig {
   data?: Record<string, string>
   overwrite?: FileResponse<boolean>
   silent?: boolean
+  dryRun?: boolean
 }
 export interface ScaffoldCmdConfig {
   name: string
   templates: string[]
   output: string
-  createSubFolder?: boolean
+  createSubFolder: boolean
   data?: Record<string, string>
-  overwrite?: boolean
-  silent?: boolean
+  overwrite: boolean
+  silent: boolean
+  dryRun: boolean
 }
