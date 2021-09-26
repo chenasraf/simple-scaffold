@@ -26,7 +26,7 @@ export function handleErr(err: NodeJS.ErrnoException | null) {
 }
 
 export function log(options: ScaffoldConfig, ...obj: any[]) {
-  if (options.silent) {
+  if (options.quiet) {
     return
   }
   console.log(...obj)

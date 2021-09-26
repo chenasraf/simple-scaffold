@@ -9,7 +9,7 @@ export interface ScaffoldConfig {
   createSubFolder?: boolean
   data?: Record<string, string>
   overwrite?: FileResponse<boolean>
-  silent?: boolean
+  quiet?: boolean
   dryRun?: boolean
 }
 export interface ScaffoldCmdConfig {
@@ -19,6 +19,6 @@ export interface ScaffoldCmdConfig {
   createSubFolder: boolean
   data?: Record<string, string>
   overwrite: boolean
-  silent: boolean
+  quiet: boolean
   dryRun: boolean
 }

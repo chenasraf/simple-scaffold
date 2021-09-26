@@ -17,6 +17,6 @@
     "src/cmd.ts"
   ],
   "exclude": [
-    "src/tests/*"
+    "tests/*"
   ]
 }

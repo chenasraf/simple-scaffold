@@ -26,6 +26,12 @@
       "problemMatcher": [],
     },
     {
+      "command": "yarn test --watchAll",
+      "label": "yarn test --watchAll",
+      "type": "shell",
+      "problemMatcher": [],
+    },
+    {
       "script": "cmd",
       "label": "cmd",
       "type": "npm",

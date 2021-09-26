@@ -25,15 +25,21 @@ export async function Scaffold(config: ScaffoldConfig) {
       createSubfolder: options.createSubFolder,
       data: options.data,
       overwrite: options.overwrite,
-      silent: options.silent,
+      quiet: options.quiet,
     })
     log(options, "Data:", data)
     for (let template of config.templates) {
       try {
+        // try {
         const tplStat = await stat(template)
         if (tplStat.isDirectory()) {
           template = template + "/**/*"
         }
+        // } catch (e) {
+        //   if (e.code !== "ENOENT") {
+        //     throw e
+        //   }
+        // }
         const files = await promisify(glob)(template, { dot: true })
         for (const templatePath of files) {
           await handleTemplateFile(templatePath, options, data)
