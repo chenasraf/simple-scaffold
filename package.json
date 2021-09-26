@@ -1,12 +1,12 @@
 {
   "name": "simple-scaffold",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
   "license": "MIT",
-  "main": "./dist/scaffold.js",
-  "bin": "./dist/cmd.js",
+  "main": "dist/index.js",
+  "bin": "dist/cmd.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "NODE_ENV=${NODE_ENV:-production} webpack && chmod -R +x ./dist",
