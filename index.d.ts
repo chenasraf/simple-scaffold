@@ -13,6 +13,7 @@ declare namespace IScaffold {
     locals?: Locals
     createSubfolder?: boolean
     overwrite?: boolean | ((path: string) => boolean)
+    quiet?: boolean
   }
 
   export interface Locals {

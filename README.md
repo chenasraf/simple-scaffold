@@ -25,18 +25,20 @@ Scaffold Generator
 
 Options
 
-  -n, --name string                 Component output name
-  -t, --templates File[]            A glob pattern of template files to load.
-                                    A template file may be of any type and extension, and supports Handlebars as
-                                    a parsing engine for the file names and contents, so you may customize both
-                                    with variables from your configuration.
-  -o, --output File                 The output directory to put the new files in. They will attempt to maintain
-                                    their regular structure as they are found, if possible.
-  -l, --locals Key=Value            A key-value map for the template to use in parsing.
-  -w, --overwrite Boolean           Whether to overwrite files when they are found to already exist. default=true
-  -S, --create-sub-folder Boolean   Whether to create a subdirectory with {{Name}} in the output directory.
-                                    default=true
-  -h, --help                        Display this help message
+  -n, --name string                 Component output name                                                         
+  -t, --templates File[]            A glob pattern of template files to load.                                     
+                                    A template file may be of any type and extension, and supports Handlebars as  
+                                    a parsing engine for the file names and contents, so you may customize both   
+                                    with variables from your configuration.                                       
+  -o, --output File                 The output directory to put the new files in. They will attempt to maintain   
+                                    their regular structure as they are found, if possible.                       
+  -l, --locals JSON string          A JSON string for the template to use in parsing.                             
+  -w, --overwrite Boolean           Whether to overwrite files when they are found to already exist. Default=true 
+  -q, --quiet Boolean               When set to true, logs will not output (including warnings and errors).       
+                                    Default=false                                                                 
+  -S, --create-sub-folder Boolean   Whether to create a subdirectory with {{Name}} in the output directory.       
+                                    Default=true                                                                  
+  -h, --help                        Display this help message      
 ```
 
 You can add this as a script in your `package.json`:
@@ -94,9 +96,9 @@ config.output = (fullPath, baseDir, baseName) => {
 
 ## Example Scaffold Input
 
-### Input Directory structure
+### Input directory structure
 
-```
+```plaintext
 - project
     - scaffold
         - {{Name}}.js
@@ -128,9 +130,9 @@ simple-scaffold MyComponent \
 
 ## Example Scaffold Output
 
-#### Directory structure
+### Output directory structure
 
-```
+```plaintext
 - project
     - src
         - components
@@ -141,7 +143,7 @@ simple-scaffold MyComponent \
 
 With `createSubfolder = false`:
 
-```
+```plaintext
 - project
     - src
         - components

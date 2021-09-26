@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { IScaffold } from "./index.d";
 declare class SimpleScaffold {
     config: IScaffold.Config;
@@ -11,5 +12,10 @@ declare class SimpleScaffold {
     private shouldWriteFile;
     run(): void;
     private writeDirectory;
+    _log(method: keyof typeof console, ...args: any[]): void;
+    log(...args: any[]): void;
+    info(...args: any[]): void;
+    warn(...args: any[]): void;
+    error(...args: any[]): void;
 }
 export default SimpleScaffold;

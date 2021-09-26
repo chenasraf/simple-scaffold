@@ -60,17 +60,26 @@ const defs: Def[] = [
   {
     name: "overwrite",
     alias: "w",
-    description: `Whether to overwrite files when they are found to already exist. {bold default=true}`,
+    description: `Whether to overwrite files when they are found to already exist. {bold Default=true}`,
     type: booleanParser,
     typeLabel: "{underline Boolean}",
     defaultValue: true,
+  },
+  {
+    name: "quiet",
+    alias: "q",
+    description:
+      "When set to {bold true}, logs will not output (including warnings and errors). {bold Default=false}",
+    type: booleanParser,
+    typeLabel: "{underline Boolean}",
+    defaultValue: false,
   },
   {
     name: "create-sub-folder",
     alias: "S",
     typeLabel: "{underline Boolean}",
     description:
-      "Whether to create a subdirectory with \\{\\{Name\\}\\} in the {underline output} directory. {bold default=true}",
+      "Whether to create a subdirectory with \\{\\{Name\\}\\} in the {underline output} directory. {bold Default=true}",
     type: booleanParser,
     defaultValue: true,
   },
@@ -82,7 +91,13 @@ const defs: Def[] = [
   },
 ]
 
-const args = cliArgs(defs, { camelCase: true })
+const args = cliArgs(defs, { camelCase: true }) as Omit<
+  IScaffold.Config,
+  "createSubFolder"
+> & {
+  help: boolean
+  createSubFolder: boolean
+}
 
 const help = [
   {
@@ -96,12 +111,19 @@ if (args.createSubFolder === null) {
   args.createSubFolder = true
 }
 
+if (args.quiet === null) {
+  args.quiet = true
+}
+
 if (args.help || !args.name) {
   console.log(cliUsage(help))
   process.exit(0)
 }
 
-console.info("Config:", args)
+if (!args.quiet) {
+  console.info("Config:", args)
+}
+
 new SimpleScaffold({
   name: args.name,
   templates: args.templates,
@@ -109,4 +131,5 @@ new SimpleScaffold({
   locals: args.locals,
   createSubfolder: args.createSubFolder,
   overwrite: args.overwrite,
+  quiet: args.quiet,
 }).run()

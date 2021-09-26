@@ -15,6 +15,7 @@ class SimpleScaffold {
       output: process.cwd(),
       createSubfolder: true,
       overwrite: true,
+      quiet: false,
     }
 
     this.config = { ...DefaultConfig, ...config }
@@ -35,7 +36,7 @@ class SimpleScaffold {
       })
       return template(this.locals)
     } catch (e) {
-      console.warn("Problem using Handlebars, returning unmodified content")
+      this.warn("Problem using Handlebars, returning unmodified content")
       return text
     }
   }
@@ -59,7 +60,7 @@ class SimpleScaffold {
   }
 
   private getFileContents(filePath: string): string {
-    console.log(fs.readFileSync(filePath))
+    this.log(fs.readFileSync(filePath))
     return fs.readFileSync(filePath).toString()
   }
 
@@ -108,13 +109,13 @@ class SimpleScaffold {
   }
 
   public run(): void {
-    console.log(`Generating scaffold: ${this.config.name}...`)
+    this.log(`Generating scaffold: ${this.config.name}...`)
     const templates = this.fileList(this.config.templates)
 
     let fileConf,
       count = 0
 
-    console.log("Template files:", templates)
+    this.log("Template files:", templates)
     for (fileConf of templates) {
       let outputPath, contents, outputContents, file, base
       try {
@@ -129,7 +130,7 @@ class SimpleScaffold {
         contents = this.getFileContents(file)
         outputContents = this.parseLocals(contents)
         if (this.shouldWriteFile(outputPath)) {
-          console.info("Writing:", {
+          this.info("Writing:", {
             file,
             base,
             outputPath,
@@ -137,10 +138,10 @@ class SimpleScaffold {
           })
           this.writeFile(outputPath, outputContents)
         } else {
-          console.log(`Skipping file ${outputPath}`)
+          this.log(`Skipping file ${outputPath}`)
         }
       } catch (e) {
-        console.error("Error while processing file:", {
+        this.error("Error while processing file:", {
           file,
           base,
           contents,
@@ -155,7 +156,7 @@ class SimpleScaffold {
       throw new Error("No files to scaffold!")
     }
 
-    console.log("Done")
+    this.log("Done")
   }
 
   private writeDirectory(outputPath: string, file: any): void {
@@ -164,12 +165,33 @@ class SimpleScaffold {
       this.writeDirectory(parent, outputPath)
     }
     if (!fs.existsSync(outputPath)) {
-      console.info("Creating directory:", {
+      this.info("Creating directory:", {
         file,
         outputPath,
       })
       fs.mkdirSync(outputPath)
     }
+  }
+
+  _log(method: keyof typeof console, ...args: any[]): void {
+    if (this.config.quiet) {
+      return
+    }
+    const fn = console[method] as (...a: any[]) => void
+    fn(...args)
+  }
+
+  log(...args: any[]): void {
+    this._log("log", ...args)
+  }
+  info(...args: any[]): void {
+    this._log("info", ...args)
+  }
+  warn(...args: any[]): void {
+    this._log("warn", ...args)
+  }
+  error(...args: any[]): void {
+    this._log("error", ...args)
   }
 }
 
