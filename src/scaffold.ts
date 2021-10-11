@@ -31,31 +31,42 @@ export async function Scaffold(config: ScaffoldConfig) {
     for (let template of config.templates) {
       try {
         // try {
-        const tplStat = await stat(template)
-        if (tplStat.isDirectory()) {
+        const _isDir = await isDir(template)
+        const basePath = path
+          .resolve(process.cwd(), _isDir ? template : path.dirname(template.replace("*", "").replace("//", "/")))
+          .replace(process.cwd(), ".")
+        if (_isDir) {
           template = template + "/**/*"
         }
-        // } catch (e) {
+        // } catch (e: any) {
         //   if (e.code !== "ENOENT") {
         //     throw e
         //   }
         // }
-        const files = await promisify(glob)(template, { dot: true })
+        const files = await promisify(glob)(template, { dot: true, debug: false })
         for (const templatePath of files) {
-          await handleTemplateFile(templatePath, options, data)
+          if (!(await isDir(templatePath))) {
+            await handleTemplateFile(templatePath, basePath, options, data)
+          }
         }
-      } catch (e) {
+      } catch (e: any) {
         handleErr(e)
       }
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error(e)
     throw e
   }
 }
 
+async function isDir(path: string): Promise<boolean> {
+  const tplStat = await stat(path)
+  return tplStat.isDirectory()
+}
+
 async function handleTemplateFile(
   templatePath: string,
+  basePath: string,
   options: ScaffoldConfig,
   data: Record<string, string>
 ): Promise<void> {
@@ -92,7 +103,7 @@ async function handleTemplateFile(
         log(options, `File ${outputPath} already exists, skipping`)
       }
       resolve()
-    } catch (e) {
+    } catch (e: any) {
       handleErr(e)
       reject(e)
     }

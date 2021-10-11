@@ -180,7 +180,6 @@ describe("Scaffold", () => {
       })
 
       const dir = readdirSync(process.cwd())
-      console.log({ dir })
       expect(dir).toHaveProperty("length")
     })
 

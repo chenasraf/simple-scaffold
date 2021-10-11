@@ -29,7 +29,7 @@ export function log(options: ScaffoldConfig, ...obj: any[]) {
   if (options.quiet) {
     return
   }
-  console.log(...obj)
+  console["log"](...obj)
 }
 
 export async function createDirIfNotExists(dir: string, options: ScaffoldConfig): Promise<void> {
@@ -43,7 +43,7 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
     try {
       await mkdir(dir)
       return
-    } catch (e) {
+    } catch (e: any) {
       if (e.code !== "EEXIST") {
         throw e
       }
@@ -78,7 +78,7 @@ export async function pathExists(filePath: string): Promise<boolean> {
   try {
     await access(filePath, F_OK)
     return true
-  } catch (e) {
+  } catch (e: any) {
     if (e.code === "ENOENT") {
       return false
     }

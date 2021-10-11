@@ -15,7 +15,7 @@
     "dev": "tsc --watch",
     "start": "node dist/scaffold.js",
     "test": "jest --verbose",
-    "cmd": "node dist/cmd.js",
+    "cmd": "node --trace-warnings dist/cmd.js",
     "build-test": "yarn build && yarn test",
     "build-cmd": "yarn build && yarn cmd",
     "prepack": "yarn build"
