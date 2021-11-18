@@ -35,8 +35,7 @@ Options:
 
   --templates|-t            Template files to use as input. You may provide multiple
                             files, each of which can be a relative or absolute path, or a glob
-                            pattern for multiple file matching easily. (default:
-                            )
+                            pattern for multiple file matching easily.
 
   --overwrite|-w            Enable to override output files, even if they already exist.
                             (default: false)
@@ -60,7 +59,7 @@ You can also add this as a script in your `package.json`:
 ```json
 {
   "scripts": {
-    "scaffold": "yarn simple-scaffold --template scaffolds/component/**/* --output src/components --data '{\"myProp\": \"propName\", \"myVal\": \"123\"}'"
+    "scaffold": "yarn simple-scaffold --templates scaffolds/component/**/* --output src/components --data '{\"myProp\": \"propName\", \"myVal\": \"123\"}'"
   }
 }
 ```
