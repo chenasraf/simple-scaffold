@@ -1,6 +1,5 @@
 import path from "path"
 import { F_OK } from "constants"
-import { access, mkdir } from "fs/promises"
 import { FileResponse, FileResponseFn, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
@@ -8,7 +7,7 @@ import kebabCase from "lodash/kebabCase"
 import startCase from "lodash/startCase"
 import Handlebars from "handlebars"
 import { promises as fsPromises } from "fs"
-const { stat } = fsPromises
+const { stat, access, mkdir } = fsPromises
 
 const helpers = {
   camelCase,
