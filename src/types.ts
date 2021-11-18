@@ -3,6 +3,7 @@ export type FileResponseFn<T> = (fullPath: string, basedir: string, basename: st
 export type FileResponse<T> = T | FileResponseFn<T>
 
 export interface ScaffoldConfig {
+  /** The name supplied for the output templates */
   name: string
   templates: string[]
   output: FileResponse<string>
