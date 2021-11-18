@@ -175,7 +175,7 @@ module.exports = class {{Name}} extends React.Component {
 
 ### Example Scaffold Output
 
-#### Directory structure
+### Output directory structure
 
 ```plaintext
 - project
