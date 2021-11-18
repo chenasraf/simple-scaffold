@@ -22,8 +22,7 @@ jobs:
       - name: Publish on NPM
         uses: JS-DevTools/npm-publish@v1
         with:
-          package: dist/package.json
-          debug: true
+          package: ./dist/package.json
           token: "${{ secrets.NPM_TOKEN }}"
       - name: Create Release
         if: steps.update_tag.outputs.tagname
