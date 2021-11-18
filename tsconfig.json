@@ -10,11 +10,12 @@
     "declaration": true,
     "outDir": "dist",
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "removeComments": false,
   },
   "include": [
     "src/index.ts",
-    "src/cmd.ts"
+    "src/cmd.ts",
   ],
   "exclude": [
     "tests/*"
