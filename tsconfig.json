@@ -1,19 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2019",
     "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "lib": [
-      "es2017",
-      "es6"
+      "ES2019",
     ],
     "declaration": true,
     "outDir": "dist",
     "strict": true,
     "sourceMap": true
   },
+  "include": [
+    "src/index.ts",
+    "src/cmd.ts"
+  ],
   "exclude": [
-    "examples/**/*",
-    "test.ts",
-    "dist/**/*"
+    "tests/*"
   ]
 }

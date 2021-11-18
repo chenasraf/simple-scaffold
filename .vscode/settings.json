@@ -1,4 +1,7 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "npm.packageManager": "yarn"
+  "npm.packageManager": "yarn",
+  "cSpell.words": [
+    "massarg"
+  ]
 }

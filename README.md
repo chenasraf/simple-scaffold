@@ -11,6 +11,8 @@ You can either use it as a command line tool or import into your own code and ru
 npm install [-g] simple-scaffold
 # yarn
 yarn [global] add simple-scaffold
+# run without installing
+npx simple-scaffold <...args>
 ```
 
 ## Use as a command line tool
@@ -18,53 +20,51 @@ yarn [global] add simple-scaffold
 ### Command Line Options
 
 ```plaintext
-Scaffold Generator
+Usage: simple-scaffold [options]
 
-  Generate scaffolds for your project based on file templates.
-  Usage: simple-scaffold scaffold-name [options]
+Options:
 
-Options
+  --help|-h                 Display help information
 
-  -n, --name string                 Component output name                                                         
-  -t, --templates File[]            A glob pattern of template files to load.                                     
-                                    A template file may be of any type and extension, and supports Handlebars as  
-                                    a parsing engine for the file names and contents, so you may customize both   
-                                    with variables from your configuration.                                       
-  -o, --output File                 The output directory to put the new files in. They will attempt to maintain   
-                                    their regular structure as they are found, if possible.                       
-  -l, --locals JSON string          A JSON string for the template to use in parsing.                             
-  -w, --overwrite Boolean           Whether to overwrite files when they are found to already exist. Default=true 
-  -q, --quiet Boolean               When set to true, logs will not output (including warnings and errors).       
-                                    Default=false                                                                 
-  -S, --create-sub-folder Boolean   Whether to create a subdirectory with {{Name}} in the output directory.       
-                                    Default=true                                                                  
-  -h, --help                        Display this help message      
+  --name|-n                 Name to be passed to the generated files. {{name}} and
+                            {{Name}} inside contents and file names will be replaced
+                            accordingly.
+
+  --output|-o               Path to output to. If --create-sub-folder is enabled, the
+                            subfolder will be created inside this path.
+
+  --templates|-t            Template files to use as input. You may provide multiple
+                            files, each of which can be a relative or absolute path, or a glob
+                            pattern for multiple file matching easily.
+
+  --overwrite|-w            Enable to override output files, even if they already exist.
+                            (default: false)
+
+  --data|-d                 Add custom data to the templates. By default, only your app
+                            name is included.
+
+  --create-sub-folder|-s    Create subfolder with the input name (default:
+                            false)
+
+  --quiet|-q                Suppress output logs (default:
+                            false)
+
+  --dry-run|-dr             Don't emit actual files. This is good for testing your
+                            scaffolds and making sure they don't fail, without having to write
+                            actual files. (default: false)
 ```
 
-You can add this as a script in your `package.json`:
+You can also add this as a script in your `package.json`:
 
 ```json
 {
   "scripts": {
-    "scaffold": "yarn simple-scaffold --template scaffolds/component/**/* --output src/components --locals myProp=\"propname\",myVal=123"
+    "scaffold": "yarn simple-scaffold --templates scaffolds/component/**/* --output src/components --data '{\"myProp\": \"propName\", \"myVal\": \"123\"}'"
   }
 }
 ```
 
-## Scaffolding
-
-Scaffolding will replace {{vars}} in both the file name and its contents and put the transformed files
-in `<output>/<{{Name}}>`, as per the Handlebars formatting rules.
-
-Your context will be pre-populated with the following:
-
-- `{{Name}}`: CapitalizedName of the component
-- `{{name}}`: camelCasedName of the component
-
-Any `locals` you add in the config will populate with their names wrapped in `{{` and `}}`.
-They are all stringified, so be sure to parse them accordingly by creating a script, if necessary.
-
-### Use in Node.js
+## Use in Node.js
 
 You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
 Simply pass a config object to the constructor, and invoke `run()` when you are ready to start.
@@ -94,20 +94,73 @@ config.output = (fullPath, baseDir, baseName) => {
 }
 ```
 
-## Example Scaffold Input
+## Preparing files
 
-### Input directory structure
+### Template files
+
+Put your template files anywhere, and fill them with tokens for replacement.
+
+### Variable/token replacement
+
+Scaffolding will replace `{{ varName }}` in both the file name and its contents and put the
+transformed files in the output directory.
+
+The data available for the template parser is the data you pass to the `data` config option (or
+`--data` argument in CLI).
+
+Your `data` will be pre-populated with the following:
+
+- `{{Name}}`: PascalCase of the component name
+- `{{name}}`: raw name of the component
+
+> Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents,
+> see their documentation for more information on syntax.
+> Any `data` you add in the config will be available for use with their names wrapped in
+> `{{` and `}}`.
+
+Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
+
+For example, you may use `{{ name | snakeCase }}` inside a template file or filename, and it will
+replace `My Name` with `my_name` when producing the final value.
+
+Here are the built-in helpers available for use:
+
+```plaintext
+{{ name | camelCase }}    =>    myName
+{{ name | snakeCase }}    =>    my_name
+{{ name | startCase }}    =>    My Name
+{{ name | kebabCase }}    =>    my-name
+{{ name | hyphenCase }}   =>    my-name
+{{ name | pascalCase }}   =>    MyName
+```
+
+**Note:** These helpers are available for any data property, not exclusive to `name`.
+
+## Examples
+
+### Command Example
+
+```bash
+simple-scaffold MyComponent \
+    -t project/scaffold/**/* \
+    -o src/components \
+    -d '{"className":"myClassName"}'
+```
+
+### Example Scaffold Input
+
+#### Input Directory structure
 
 ```plaintext
 - project
-    - scaffold
-        - {{Name}}.js
-    - src
-        - components
-        - ...
+  - scaffold
+    - {{Name}}.js
+  - src
+    - components
+    - ...
 ```
 
-#### project/scaffold/{{Name}}.js
+#### Contents of `project/scaffold/{{Name}}.js`
 
 ```js
 const React = require('react')
@@ -119,39 +172,30 @@ module.exports = class {{Name}} extends React.Component {
 }
 ```
 
-### Run Example
-
-```bash
-simple-scaffold MyComponent \
-    -t project/scaffold/**/* \
-    -o src/components \
-    -l className=my-component
-```
-
-## Example Scaffold Output
+### Example Scaffold Output
 
 ### Output directory structure
 
 ```plaintext
 - project
-    - src
-        - components
-            - MyComponent
-                - MyComponent.js
-        - ...
+  - src
+    - components
+      - MyComponent
+        - MyComponent.js
+    - ...
 ```
 
 With `createSubfolder = false`:
 
 ```plaintext
 - project
-    - src
-        - components
-            - MyComponent.js
-        - ...
+  - src
+    - components
+      - MyComponent.js
+    - ...
 ```
 
-#### project/scaffold/MyComponent/MyComponent.js
+#### Contents of `project/scaffold/MyComponent/MyComponent.js`
 
 ```js
 const React = require("react")
