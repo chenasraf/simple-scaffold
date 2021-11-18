@@ -14,7 +14,7 @@ jobs:
           node-version: "12.x"
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: cd ./dist && yarn pack --filename=../release.tgz
+      - run: cd ./dist && yarn pack --filename=../package.tgz
       - uses: Klemensas/action-autotag@stable
         id: update_tag
         with:
