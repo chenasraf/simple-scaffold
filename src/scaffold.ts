@@ -1,7 +1,8 @@
-import { readFile, writeFile } from "fs/promises"
 import { glob } from "glob"
 import path from "path"
 import { promisify } from "util"
+import { promises as fsPromises } from "fs"
+const { readFile, writeFile } = fsPromises
 
 import {
   createDirIfNotExists,

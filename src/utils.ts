@@ -7,7 +7,8 @@ import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
 import startCase from "lodash/startCase"
 import Handlebars from "handlebars"
-import { stat } from "fs/promises"
+import { promises as fsPromises } from "fs"
+const { stat } = fsPromises
 
 const helpers = {
   camelCase,
