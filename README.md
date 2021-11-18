@@ -202,7 +202,7 @@ const React = require("react")
 
 module.exports = class MyComponent extends React.Component {
   render() {
-    <div className="my-component">MyComponent Component</div>
+    <div className="myClassName">MyComponent Component</div>
   }
 }
 ```
