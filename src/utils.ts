@@ -7,6 +7,7 @@ import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
 import startCase from "lodash/startCase"
 import Handlebars from "handlebars"
+import { stat } from "fs/promises"
 
 const helpers = {
   camelCase,
@@ -88,4 +89,9 @@ export async function pathExists(filePath: string): Promise<boolean> {
 
 export function pascalCase(s: string): string {
   return startCase(s).replace(/\s+/g, "")
+}
+
+export async function isDir(path: string): Promise<boolean> {
+  const tplStat = await stat(path)
+  return tplStat.isDirectory()
 }

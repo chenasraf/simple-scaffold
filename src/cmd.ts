@@ -46,43 +46,24 @@ massarg<ScaffoldCmdConfig & { help: boolean; extras: string[] }>()
     defaultValue: false,
     boolean: true,
   })
-  .option({ aliases: ["q"], name: "quiet", description: "Supress output logs", defaultValue: false, boolean: true })
+  .option({ aliases: ["q"], name: "quiet", description: "Suppress output logs", defaultValue: false, boolean: true })
   .option({
     aliases: ["dr"],
     name: "dry-run",
     description:
-      "Don't emit actual files. This is good for testing your scaffolds and making sure they " +
-      "don't fail, without having to write actual files.",
+      "Don't emit files. This is good for testing your scaffolds and making sure they " +
+      "don't fail, without having to write actual file contents or create directories.",
     defaultValue: false,
     boolean: true,
   })
-  // .example(
-  //   `yarn cmd -t examples/test-input/Component -o examples/test-output -d '{"property":"myProp","value":"10"}'`,
-  //   "Usage"
-  // )
+  // .example({
+  //   input: `yarn cmd -t examples/test-input/Component -o examples/test-output -d '{"property":"myProp","value":"10"}'`,
+  //   description: "Usage",
+  //   output: "",
+  // })
   .help({
     binName: "simple-scaffold",
     useGlobalColumns: true,
     usageExample: "[options]",
   })
   .parse()
-// .parse(process.argv, {
-//   value: "name",
-//   mri: {},
-//   mainColor: "yellow",
-//   subColor: ["dim"],
-//   name: "simple-scaffold",
-//   usageFilter: (usage: string) => {
-//     usage = usage.replace("[options] [command] ", "").replace("name", "[options] name")
-//     const lines = usage.split("\n")
-//     usage = [
-//       ...lines.slice(
-//         0,
-//         lines.findIndex((l) => l.startsWith("  Commands:"))
-//       ),
-//       ...lines.slice(lines.findIndex((l) => l.startsWith("  Options:"))),
-//     ].join("\n")
-//     return usage
-//   },
-// }
-// ) as ScaffoldCmdConfig

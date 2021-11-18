@@ -1,4 +1,4 @@
-import { stat, readFile, writeFile } from "fs/promises"
+import { readFile, writeFile } from "fs/promises"
 import { glob } from "glob"
 import path from "path"
 import { promisify } from "util"
@@ -11,6 +11,7 @@ import {
   log,
   pathExists,
   pascalCase,
+  isDir,
 } from "./utils"
 import { ScaffoldConfig } from "./types"
 
@@ -30,7 +31,6 @@ export async function Scaffold(config: ScaffoldConfig) {
     log(options, "Data:", data)
     for (let template of config.templates) {
       try {
-        // try {
         const _isDir = await isDir(template)
         const basePath = path
           .resolve(process.cwd(), _isDir ? template : path.dirname(template.replace("*", "").replace("//", "/")))
@@ -38,11 +38,6 @@ export async function Scaffold(config: ScaffoldConfig) {
         if (_isDir) {
           template = template + "/**/*"
         }
-        // } catch (e: any) {
-        //   if (e.code !== "ENOENT") {
-        //     throw e
-        //   }
-        // }
         const files = await promisify(glob)(template, { dot: true, debug: false })
         for (const templatePath of files) {
           if (!(await isDir(templatePath))) {
@@ -57,11 +52,6 @@ export async function Scaffold(config: ScaffoldConfig) {
     console.error(e)
     throw e
   }
-}
-
-async function isDir(path: string): Promise<boolean> {
-  const tplStat = await stat(path)
-  return tplStat.isDirectory()
 }
 
 async function handleTemplateFile(
