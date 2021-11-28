@@ -15,7 +15,9 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: cd ./dist && yarn pack --filename=../package.tgz
+        if: "!contains(github.event.head_commit.message, '[skip publish]')"
       - uses: Klemensas/action-autotag@stable
+        if: "!contains(github.event.head_commit.message, '[skip publish]')"
         id: update_tag
         with:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
