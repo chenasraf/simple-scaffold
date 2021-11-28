@@ -28,7 +28,7 @@ export function handleErr(err: NodeJS.ErrnoException | null) {
 }
 
 export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
-  if (options.quiet || (options.verbose ?? LogLevel.Info) > level) {
+  if (options.quiet || options.verbose === LogLevel.None || (options.verbose ?? LogLevel.Info) > level) {
     return
   }
   const levelColor: Record<LogLevel, keyof typeof chalk> = {
