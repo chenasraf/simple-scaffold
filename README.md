@@ -43,15 +43,18 @@ Options:
   --data|-d                 Add custom data to the templates. By default, only your app
                             name is included.
 
-  --create-sub-folder|-s    Create subfolder with the input name (default:
-                            false)
+  --create-sub-folder|-s    Create subfolder with the input name (default: false)
 
-  --quiet|-q                Suppress output logs (default:
-                            false)
+  --quiet|-q                Suppress output logs (Same as --verbose 0) (default: false)
 
-  --dry-run|-dr             Don't emit actual files. This is good for testing your
-                            scaffolds and making sure they don't fail, without having to write
-                            actual files. (default: false)
+  --verbose|-v              Determine amount of logs to display. The values are: 0 (none)
+                            | 1 (debug) | 2 (info) | 3 (warn) | 4 (error). The provided level
+                            will display messages of the same level or higher.
+                            (default: 2)
+
+  --dry-run|-dr             Don't emit files. This is good for testing your scaffolds and
+                            making sure they don't fail, without having to write actual file
+                            contents or create directories. (default: false)
 ```
 
 You can also add this as a script in your `package.json`:
@@ -73,7 +76,7 @@ The config takes similar arguments to the command line:
 ```javascript
 const SimpleScaffold = require("simple-scaffold").default
 
-const scaffold = new SimpleScaffold({
+const scaffold = SimpleScaffold({
   name: "component",
   templates: [path.join(__dirname, "scaffolds", "component")],
   output: path.join(__dirname, "src", "components"),
@@ -81,7 +84,7 @@ const scaffold = new SimpleScaffold({
   locals: {
     property: "value",
   },
-}).run()
+})
 ```
 
 The exception in the config is that `output`, when used in Node directly, may also be passed a
@@ -120,19 +123,19 @@ Your `data` will be pre-populated with the following:
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
-For example, you may use `{{ name | snakeCase }}` inside a template file or filename, and it will
+For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
 replace `My Name` with `my_name` when producing the final value.
 
 Here are the built-in helpers available for use:
 
-```plaintext
-{{ name | camelCase }}    =>    myName
-{{ name | snakeCase }}    =>    my_name
-{{ name | startCase }}    =>    My Name
-{{ name | kebabCase }}    =>    my-name
-{{ name | hyphenCase }}   =>    my-name
-{{ name | pascalCase }}   =>    MyName
-```
+| Helper name | Example code            | Example output |
+| ----------- | ----------------------- | -------------- |
+| camelCase   | `{{ camelCase name }}`  | myName         |
+| snakeCase   | `{{ snakeCase name }}`  | my_name        |
+| startCase   | `{{ startCase name }}`  | My Name        |
+| kebabCase   | `{{ kebabCase name }}`  | my-name        |
+| hyphenCase  | `{{ hyphenCase name }}` | my-name        |
+| pascalCase  | `{{ pascalCase name }}` | MyName         |
 
 **Note:** These helpers are available for any data property, not exclusive to `name`.
 

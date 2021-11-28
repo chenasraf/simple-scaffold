@@ -1,6 +1,7 @@
 import Scaffold from "./scaffold"
 import massarg from "massarg"
 import { ScaffoldCmdConfig } from "./types"
+import { LogLevel } from "."
 
 massarg<ScaffoldCmdConfig & { help: boolean; extras: string[] }>()
   .main(Scaffold)
@@ -46,7 +47,21 @@ massarg<ScaffoldCmdConfig & { help: boolean; extras: string[] }>()
     defaultValue: false,
     boolean: true,
   })
-  .option({ aliases: ["q"], name: "quiet", description: "Suppress output logs", defaultValue: false, boolean: true })
+  .option({
+    aliases: ["q"],
+    name: "quiet",
+    description: "Suppress output logs (Same as --verbose 0)",
+    defaultValue: false,
+    boolean: true,
+  })
+  .option({
+    aliases: ["v"],
+    name: "verbose",
+    description:
+      "Determine amount of logs to display. The values are: 0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error). The provided level will display messages of the same level or higher.",
+    defaultValue: LogLevel.Info,
+    parse: Number,
+  })
   .option({
     aliases: ["dr"],
     name: "dry-run",

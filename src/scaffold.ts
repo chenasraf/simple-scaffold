@@ -13,14 +13,15 @@ import {
   pathExists,
   pascalCase,
   isDir,
+  removeGlob,
 } from "./utils"
-import { ScaffoldConfig } from "./types"
+import { LogLevel, ScaffoldConfig } from "./types"
 
 export async function Scaffold(config: ScaffoldConfig) {
   try {
     const options = { ...config }
     const data = { name: options.name, Name: pascalCase(options.name), ...options.data }
-    log(options, "Config:", {
+    log(options, LogLevel.Debug, "Full config:", {
       name: options.name,
       templates: options.templates,
       output: options.output,
@@ -29,19 +30,33 @@ export async function Scaffold(config: ScaffoldConfig) {
       overwrite: options.overwrite,
       quiet: options.quiet,
     })
-    log(options, "Data:", data)
+    log(options, LogLevel.Info, "Data:", data)
     for (let template of config.templates) {
       try {
-        const _isDir = await isDir(template)
-        const basePath = path
-          .resolve(process.cwd(), _isDir ? template : path.dirname(template.replace("*", "").replace("//", "/")))
-          .replace(process.cwd(), ".")
-        if (_isDir) {
+        const _isGlob = template.includes("*")
+        const _nonGlobTemplate = _isGlob ? removeGlob(template) : template
+        const _isDir = _isGlob ? false : await isDir(template)
+        const _shouldAddGlob = !_isGlob && !_isDir
+        if (_shouldAddGlob) {
           template = template + "/**/*"
         }
         const files = await promisify(glob)(template, { dot: true, debug: false })
         for (const templatePath of files) {
           if (!(await isDir(templatePath))) {
+            const basePath = path
+              .resolve(
+                process.cwd(),
+                _isDir
+                  ? templatePath.replace(template, "")
+                  : path.dirname(removeGlob(templatePath).replace(_nonGlobTemplate, ""))
+              )
+              .replace(process.cwd() + "/", "")
+              .replace(process.cwd(), "")
+            log(
+              options,
+              LogLevel.Debug,
+              `\ntemplate: ${template}\ntemplatePath: ${templatePath}, \nbase path: ${basePath}\n`
+            )
             await handleTemplateFile(templatePath, basePath, options, data)
           }
         }
@@ -63,23 +78,41 @@ async function handleTemplateFile(
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
-      log(options, `Parsing ${templatePath}`)
-      const inputPath = path.join(process.cwd(), templatePath)
+      const inputPath = path.resolve(process.cwd(), templatePath)
       const outputPathOpt = getOptionValueForFile(inputPath, data, options.output)
       const outputDir = path.resolve(
         process.cwd(),
-        ...([outputPathOpt, options.createSubFolder ? options.name : undefined].filter(Boolean) as string[])
+        ...([outputPathOpt, basePath, options.createSubFolder ? options.name : undefined].filter(Boolean) as string[])
+      )
+      log(
+        options,
+        LogLevel.Debug,
+        `\nParsing ${templatePath}`,
+        `\nBase path: ${basePath}`,
+        `\nFull input path: ${inputPath}`,
+        `\nFull output path: ${outputDir}\n`
       )
       const outputPath = path.join(outputDir, handlebarsParse(path.basename(inputPath), data))
       const overwrite = getOptionValueForFile(inputPath, data, options.overwrite ?? false)
       const exists = await pathExists(outputPath)
 
+      log(
+        options,
+        LogLevel.Debug,
+        "Filename parsed:",
+        handlebarsParse(path.basename(inputPath), data),
+        "Orig:",
+        path.basename(inputPath)
+        // "Test:",
+        // handlebarsParse("{{name}} {{name pascalCase}}", data)
+      )
+
       await createDirIfNotExists(outputDir, options)
 
-      log(options, `Writing to ${outputPath}`)
+      log(options, LogLevel.Info, `Writing to ${outputPath}`)
       if (!exists || overwrite) {
         if (exists && overwrite) {
-          log(options, `File ${outputPath} exists, overwriting`)
+          log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
         }
         const templateBuffer = await readFile(inputPath)
         const outputContents = handlebarsParse(templateBuffer, data)
@@ -87,11 +120,11 @@ async function handleTemplateFile(
         if (!options.dryRun) {
           await writeFile(outputPath, outputContents)
         } else {
-          log(options, "Content output:")
-          log(options, outputContents)
+          log(options, LogLevel.Info, "Content output:")
+          log(options, LogLevel.Info, outputContents)
         }
       } else if (exists) {
-        log(options, `File ${outputPath} already exists, skipping`)
+        log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)
       }
       resolve()
     } catch (e: any) {

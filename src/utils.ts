@@ -1,12 +1,13 @@
 import path from "path"
 import { F_OK } from "constants"
-import { FileResponse, FileResponseFn, ScaffoldConfig } from "./types"
+import { FileResponse, FileResponseFn, LogLevel, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
 import startCase from "lodash/startCase"
 import Handlebars from "handlebars"
 import { promises as fsPromises } from "fs"
+import chalk from "chalk"
 const { stat, access, mkdir } = fsPromises
 
 const helpers = {
@@ -26,11 +27,20 @@ export function handleErr(err: NodeJS.ErrnoException | null) {
   if (err) throw err
 }
 
-export function log(options: ScaffoldConfig, ...obj: any[]) {
-  if (options.quiet) {
+export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
+  if (options.quiet || (options.verbose ?? LogLevel.Info) > level) {
     return
   }
-  console["log"](...obj)
+  const levelColor: Record<LogLevel, keyof typeof chalk> = {
+    [LogLevel.None]: "reset",
+    [LogLevel.Debug]: "blue",
+    [LogLevel.Info]: "dim",
+    [LogLevel.Warning]: "yellow",
+    [LogLevel.Error]: "red",
+  }
+  const chalkFn: any = chalk[levelColor[level]]
+  console["log"](...obj.map((i) => (typeof i === "object" ? chalkFn(JSON.stringify(i, undefined, 1)) : chalkFn(i))))
+  // console["log"](...obj)
 }
 
 export async function createDirIfNotExists(dir: string, options: ScaffoldConfig): Promise<void> {
@@ -94,4 +104,8 @@ export function pascalCase(s: string): string {
 export async function isDir(path: string): Promise<boolean> {
   const tplStat = await stat(path)
   return tplStat.isDirectory()
+}
+
+export function removeGlob(template: string) {
+  return template.replace(/\*/g, "").replace(/\/\//g, "/")
 }
