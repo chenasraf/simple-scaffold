@@ -1,13 +1,12 @@
 {
   "name": "simple-scaffold",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
-  "types": "types.d.ts",
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./dist/ && cp ./README.md ./dist/",
