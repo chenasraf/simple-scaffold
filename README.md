@@ -22,6 +22,8 @@ npx simple-scaffold <...args>
 ```plaintext
 Usage: simple-scaffold [options]
 
+Create structured files based on templates.
+
 Options:
 
   --help|-h                 Display help information
@@ -35,7 +37,8 @@ Options:
 
   --templates|-t            Template files to use as input. You may provide multiple
                             files, each of which can be a relative or absolute path, or a glob
-                            pattern for multiple file matching easily.
+                            pattern for multiple file matching easily. (default:
+                            )
 
   --overwrite|-w            Enable to override output files, even if they already exist.
                             (default: false)
@@ -43,25 +46,30 @@ Options:
   --data|-d                 Add custom data to the templates. By default, only your app
                             name is included.
 
-  --create-sub-folder|-s    Create subfolder with the input name (default: false)
+  --create-sub-folder|-s    Create subfolder with the input name (default:
+                            false)
 
-  --quiet|-q                Suppress output logs (Same as --verbose 0) (default: false)
+  --quiet|-q                Suppress output logs (Same as --verbose 0)
+                            (default: false)
 
-  --verbose|-v              Determine amount of logs to display. The values are: 0 (none)
-                            | 1 (debug) | 2 (info) | 3 (warn) | 4 (error). The provided level
-                            will display messages of the same level or higher.
+  --verbose|-v              Determine amount of logs to display. The values are: 0
+                            (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error). The
+                            provided level will display messages of the same level or higher.
                             (default: 2)
 
   --dry-run|-dr             Don't emit files. This is good for testing your scaffolds and
                             making sure they don't fail, without having to write actual file
-                            contents or create directories. (default: false)
+                            contents or create directories. (default:
+                            false)
 ```
 
 You can also add this as a script in your `package.json`:
 
 ```json
 {
+  ...
   "scripts": {
+    ...
     "scaffold": "yarn simple-scaffold --templates scaffolds/component/**/* --output src/components --data '{\"myProp\": \"propName\", \"myVal\": \"123\"}'"
   }
 }
@@ -93,7 +101,7 @@ function for each input file to output into a dynamic path:
 ```javascript
 config.output = (fullPath, baseDir, baseName) => {
   console.log({ fullPath, baseDir, baseName })
-  return [baseDir, baseName].join(path.sep)
+  return path.resolve(baseDir, baseName)
 }
 ```
 
@@ -121,6 +129,8 @@ Your `data` will be pre-populated with the following:
 > Any `data` you add in the config will be available for use with their names wrapped in
 > `{{` and `}}`.
 
+#### Helpers
+
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
 For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
@@ -147,7 +157,8 @@ Here are the built-in helpers available for use:
 simple-scaffold MyComponent \
     -t project/scaffold/**/* \
     -o src/components \
-    -d '{"className":"myClassName"}'
+    -d '{"className": "myClassName"}'
+    MyComponent
 ```
 
 ### Example Scaffold Input
@@ -188,7 +199,7 @@ module.exports = class {{Name}} extends React.Component {
     - ...
 ```
 
-With `createSubfolder = false`:
+With `createSubFolder = false`:
 
 ```plaintext
 - project
