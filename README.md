@@ -2,6 +2,16 @@
 
 Simple Scaffold allows you to create your structured files based on templates.
 
+Simply organize your commonly-created files in their original structure, and replace any variable
+values (such as component or app name) inside the paths or contents of the files with tokens to be
+populated upon scaffolding.
+
+Then, run Simple Scaffold and it will generate your files for you in the desired structure,
+with file names and contents that contain your dynamic information.
+
+It's a simple way to easily create reusable components, common class files to start writing from,
+or even entire app structures.
+
 ## Install
 
 You can either use it as a command line tool or import into your own code and run from there.
@@ -220,3 +230,29 @@ module.exports = function MyComponent(props) {
   )
 }
 ```
+
+## Contributing
+
+I welcome any issues or pull requests on GitHub. If you find a bug, or would like a new feature,
+don't hesitate to open an appropriate issue and I will do my best to reply promptly.
+
+If you are a developer and want to contribute code, here are some starting tips:
+
+1. Fork this repository
+2. Run `yarn install`
+3. Make any changes you would like
+4. Create tests for your changes, is possible
+5. Update the relevant documentation (readme, code comments, type comments)
+6. Create a PR on upstream
+
+Some tips on getting around the code:
+
+- Use `yarn dev` for development - it runs TypeScript compile in watch mode, allowing you to make
+  changes and immediately be able to try them using `yarn cmd`.
+- Use `yarn build` to build the output
+- Use `yarn test` to run tests
+- Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory,
+  enabling you to test different behaviors. See `yarn cmd -h` for more information.
+  This requires an updated build, and does not trigger one itself. Either use `yarn dev` or
+  `yarn build` before running this, or use `yarn build-cmd` instead, which builds before running
+  the cmd with args.
