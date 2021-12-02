@@ -14,6 +14,7 @@ import {
   pascalCase,
   isDir,
   removeGlob,
+  makeRelativePath,
 } from "./utils"
 import { LogLevel, ScaffoldConfig } from "./types"
 
@@ -66,8 +67,9 @@ export async function Scaffold(config: ScaffoldConfig) {
         log(options, LogLevel.Debug, "after glob")
         for (const inputFilePath of files) {
           if (!(await isDir(inputFilePath))) {
+            const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(_nonGlobTemplate, "")))
             const basePath = path
-              .resolve(process.cwd(), path.dirname(removeGlob(inputFilePath).replace(_nonGlobTemplate, "")).slice(1))
+              .resolve(process.cwd(), relPath)
               .replace(process.cwd() + "/", "")
               .replace(process.cwd(), "")
             log(
@@ -75,13 +77,11 @@ export async function Scaffold(config: ScaffoldConfig) {
               LogLevel.Debug,
               `\nprocess.cwd(): ${process.cwd()}`,
               `\norigTemplate: ${origTemplate}`,
-              `\nremoveGlob(inputFilePath).replace(_nonGlobTemplate, "").slice(1): ${removeGlob(inputFilePath)
-                .replace(_nonGlobTemplate, "")
-                .slice(1)}`,
+              `\nrelPath: ${relPath}`,
               `\ntemplate: ${template}`,
               `\ninputFilePath: ${inputFilePath}`,
               `\nnonGlobTemplate: ${_nonGlobTemplate}`,
-              `\nbase path: ${basePath}`,
+              `\nbasePath: ${basePath}`,
               `\nisDir: ${_isDir}`,
               `\nisGlob: ${_isGlob}`,
               `\n`

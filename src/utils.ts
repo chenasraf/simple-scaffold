@@ -119,3 +119,7 @@ export async function isDir(path: string): Promise<boolean> {
 export function removeGlob(template: string) {
   return template.replace(/\*/g, "").replace(/\/\//g, "/")
 }
+
+export function makeRelativePath(str: string): string {
+  return str.startsWith("/") ? str.slice(1) : str
+}
