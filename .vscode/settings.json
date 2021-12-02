@@ -2,6 +2,11 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "npm.packageManager": "yarn",
   "cSpell.words": [
-    "massarg"
+    "massarg",
+    "nodir",
+    "nobrace",
+    "noext",
+    "nocomment",
+    "nonegate"
   ]
 }
