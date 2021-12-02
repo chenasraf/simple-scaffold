@@ -81,8 +81,8 @@ You can also build the scaffold yourself, if you want to create more complex arg
 Simply pass a config object to the constructor, and invoke `run()` when you are ready to start.
 The config takes similar arguments to the command line:
 
-```javascript
-const SimpleScaffold = require("simple-scaffold").default
+```typescript
+import Scaffold from "simple-scaffold"
 
 const scaffold = SimpleScaffold({
   name: "component",
@@ -98,7 +98,7 @@ const scaffold = SimpleScaffold({
 The exception in the config is that `output`, when used in Node directly, may also be passed a
 function for each input file to output into a dynamic path:
 
-```javascript
+```typescript
 config.output = (fullPath, baseDir, baseName) => {
   console.log({ fullPath, baseDir, baseName })
   return path.resolve(baseDir, baseName)
@@ -147,7 +147,7 @@ Here are the built-in helpers available for use:
 | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
 | pascalCase  | `{{ pascalCase name }}` | MyName         |
 
-**Note:** These helpers are available for any data property, not exclusive to `name`.
+> These helpers are available for any data property, not exclusive to `name`.
 
 ## Examples
 
@@ -174,15 +174,15 @@ simple-scaffold MyComponent \
     - ...
 ```
 
-#### Contents of `project/scaffold/{{Name}}.js`
+#### Contents of `project/scaffold/{{Name}}.jsx`
 
 ```js
 const React = require('react')
 
-module.exports = class {{Name}} extends React.Component {
-  render() {
+module.exports = function {{Name}}(props) {
+  return (
     <div className="{{className}}">{{Name}} Component</div>
-  }
+  )
 }
 ```
 
@@ -209,14 +209,14 @@ With `createSubFolder = false`:
     - ...
 ```
 
-#### Contents of `project/scaffold/MyComponent/MyComponent.js`
+#### Contents of `project/scaffold/MyComponent/MyComponent.jsx`
 
 ```js
 const React = require("react")
 
-module.exports = class MyComponent extends React.Component {
-  render() {
+module.exports = function MyComponent(props) {
+  return (
     <div className="myClassName">MyComponent Component</div>
-  }
+  )
 }
 ```
