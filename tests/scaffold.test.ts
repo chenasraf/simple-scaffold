@@ -2,6 +2,7 @@ import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import Scaffold from "../src/scaffold"
 import { readdirSync, readFileSync } from "fs"
+import { Console } from "console"
 
 const fileStructNormal = {
   input: {
@@ -19,21 +20,32 @@ const fileStructWithData = {
 
 const fileStructNested = {
   input: {
-    "{{name}}-1.text": "This should be in root",
+    "{{name}}-1.txt": "This should be in root",
     "{{Name}}": {
       "{{name}}-2.txt": "Hello, my value is {{value}}",
+      moreNesting: {
+        "{{name}}-3.txt": "Hi! My value is actually NOT {{value}}!",
+      },
     },
   },
   output: {},
 }
-
+// let logsTemp: any = []
+// let logMock: any
 function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
   return () => {
     beforeEach(() => {
+      // console.log("Mocking:", fileStruct)
+      console = new Console(process.stdout, process.stderr)
+
       mockFs(fileStruct)
+      // logMock = jest.spyOn(console, 'log').mockImplementation((...args) => {
+      //   logsTemp.push(args)
+      // })
     })
     testFn()
     afterEach(() => {
+      // console.log("Restoring mock")
       mockFs.restore()
     })
   }
@@ -48,9 +60,8 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          quiet: true,
+          verbose: 0,
         })
-
         const data = readFileSync(process.cwd() + "/output/app_name.txt")
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
@@ -61,7 +72,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           createSubFolder: true,
-          quiet: true,
+          verbose: 0,
         })
 
         const data = readFileSync(process.cwd() + "/output/app_name/app_name.txt")
@@ -79,7 +90,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          quiet: true,
+          verbose: 0,
         })
 
         await Scaffold({
@@ -87,7 +98,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "2" },
-          quiet: true,
+          verbose: 0,
         })
 
         const data = readFileSync(process.cwd() + "/output/app_name.txt")
@@ -100,7 +111,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          quiet: true,
+          verbose: 0,
         })
 
         await Scaffold({
@@ -109,7 +120,7 @@ describe("Scaffold", () => {
           templates: ["input"],
           data: { value: "2" },
           overwrite: true,
-          quiet: true,
+          verbose: 0,
         })
 
         const data = readFileSync(process.cwd() + "/output/app_name.txt")
@@ -121,9 +132,13 @@ describe("Scaffold", () => {
   describe(
     "errors",
     withMock(fileStructNormal, () => {
-      let consoleMock: jest.SpyInstance
+      let consoleMock1: jest.SpyInstance
       beforeAll(() => {
-        consoleMock = jest.spyOn(console, "error").mockImplementation(() => void 0)
+        consoleMock1 = jest.spyOn(console, "error").mockImplementation(() => void 0)
+      })
+
+      afterAll(() => {
+        consoleMock1.mockRestore()
       })
 
       test("should throw for bad input", async () => {
@@ -133,15 +148,11 @@ describe("Scaffold", () => {
             output: "output",
             templates: ["non-existing-input"],
             data: { value: "1" },
-            quiet: true,
+            verbose: 0,
           })
         ).rejects.toThrow()
 
         expect(() => readFileSync(process.cwd() + "/output/app_name.txt")).toThrow()
-      })
-
-      afterAll(() => {
-        consoleMock.mockRestore()
       })
     })
   )
@@ -155,7 +166,7 @@ describe("Scaffold", () => {
           output: (fullPath, basedir, basename) => `custom-output/${basename.split(".")[0]}`,
           templates: ["input"],
           data: { value: "1" },
-          quiet: true,
+          verbose: 0,
         })
         const data = readFileSync(process.cwd() + "/custom-output/app_name/app_name.txt")
         expect(data.toString()).toBe("Hello, my app is app_name")
@@ -169,14 +180,25 @@ describe("Scaffold", () => {
       test("should maintain input structure on output", async () => {
         await Scaffold({
           name: "app_name",
-          output: "./",
+          output: "output",
           templates: ["input"],
           data: { value: "1" },
-          quiet: true,
+          verbose: 0,
         })
 
-        const dir = readdirSync(process.cwd())
+        const rootDir = readdirSync(process.cwd() + "/output")
+        const dir = readdirSync(process.cwd() + "/output/AppName")
+        const nestedDir = readdirSync(process.cwd() + "/output/AppName/moreNesting")
+        expect(rootDir).toHaveProperty("length")
         expect(dir).toHaveProperty("length")
+        expect(nestedDir).toHaveProperty("length")
+
+        const rootFile = readFileSync(process.cwd() + "/output/app_name-1.txt")
+        const oneDeepFile = readFileSync(process.cwd() + "/output/AppName/app_name-2.txt")
+        const twoDeepFile = readFileSync(process.cwd() + "/output/AppName/moreNesting/app_name-3.txt")
+        expect(rootFile.toString()).toEqual("This should be in root")
+        expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
+        expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
       })
     })
   )

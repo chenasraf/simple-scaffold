@@ -28,7 +28,7 @@ export function handleErr(err: NodeJS.ErrnoException | null) {
 }
 
 export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
-  if (options.quiet || options.verbose === LogLevel.None || (options.verbose ?? LogLevel.Info) > level) {
+  if (options.quiet || options.verbose === LogLevel.None || level <= (options.verbose ?? LogLevel.Info)) {
     return
   }
   const levelColor: Record<LogLevel, keyof typeof chalk> = {
@@ -39,8 +39,17 @@ export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
     [LogLevel.Error]: "red",
   }
   const chalkFn: any = chalk[levelColor[level]]
-  console["log"](...obj.map((i) => (typeof i === "object" ? chalkFn(JSON.stringify(i, undefined, 1)) : chalkFn(i))))
-  // console["log"](...obj)
+  const key: "log" | "warn" | "error" = level === LogLevel.Error ? "error" : level === LogLevel.Warning ? "warn" : "log"
+  const logFn: any = console[key]
+  logFn(
+    ...obj.map((i) =>
+      i instanceof Error
+        ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
+        : typeof i === "object"
+        ? chalkFn(JSON.stringify(i, undefined, 1))
+        : chalkFn(i)
+    )
+  )
 }
 
 export async function createDirIfNotExists(dir: string, options: ScaffoldConfig): Promise<void> {
@@ -52,6 +61,7 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
 
   if (!(await pathExists(dir))) {
     try {
+      log(options, LogLevel.Debug, `Creating dir ${dir}`)
       await mkdir(dir)
       return
     } catch (e: any) {
