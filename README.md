@@ -240,10 +240,11 @@ If you are a developer and want to contribute code, here are some starting tips:
 
 1. Fork this repository
 2. Run `yarn install`
-3. Make any changes you would like
-4. Create tests for your changes, is possible
-5. Update the relevant documentation (readme, code comments, type comments)
-6. Create a PR on upstream
+3. Run `yarn dev` to start file watch mode
+4. Make any changes you would like
+5. Create tests for your changes
+6. Update the relevant documentation (readme, code comments, type comments)
+7. Create a PR on upstream
 
 Some tips on getting around the code:
 
@@ -253,6 +254,7 @@ Some tips on getting around the code:
 - Use `yarn test` to run tests
 - Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory,
   enabling you to test different behaviors. See `yarn cmd -h` for more information.
-  This requires an updated build, and does not trigger one itself. Either use `yarn dev` or
-  `yarn build` before running this, or use `yarn build-cmd` instead, which builds before running
-  the cmd with args.
+
+  > This requires an updated build, and does not trigger one itself. Either use `yarn dev` or
+  > `yarn build` before running this, or use `yarn build-cmd` instead, which triggers a build right
+  > before running the command with the rest of the given arguments.
