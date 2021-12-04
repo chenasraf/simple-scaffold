@@ -2161,10 +2161,10 @@ makeerror@1.0.x:
   dependencies:
     tmpl "1.0.x"
 
-massarg@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/massarg/-/massarg-1.0.3.tgz#228cf2d84896924b6b12021ea23ed9a9077e15b7"
-  integrity sha512-LYb4XvAQ+PbBClyfkn9B4JtfwycfpnOnGIznALt9YLnrmQaCcXXJBQsG5SA/2w+bmLOeYRoR9GqqFLyaniCn9g==
+massarg@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/massarg/-/massarg-1.0.4.tgz#8756193bee9bc7331b1f48a8840e86acf808f980"
+  integrity sha512-SakImNzZP8SN6tlcGBoC62z+12yv/To+h7KP8XapnOux5Mjiwprn4KhNHsjh2rbrKCAPqZQWYziAitSzGTkjMw==
   dependencies:
     chalk "^4.1.1"
     lodash "^4.17.21"
