@@ -84,7 +84,11 @@ export function parseCliArgs(args = process.argv.slice(2)) {
         useGlobalColumns: true,
         usageExample: "[options]",
         header: "Create structured files based on templates.",
-        footer: `Copyright © Chen Asraf 2021\nNPM: ${chalk.underline`https://npmjs.com/package/massarg`}\nGitHub: ${chalk.underline`https://github.com/chenasraf/massarg`}`,
+        footer: [
+          `Copyright © Chen Asraf 2021`,
+          `NPM: ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
+          `GitHub: ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
+        ].join("\n"),
       })
       .parse(args)
   )
