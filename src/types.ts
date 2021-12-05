@@ -61,6 +61,26 @@ export interface ScaffoldConfig {
    * actual file contents or create directories. (default: `false`)
    */
   dryRun?: boolean
+
+  /**
+   * Additional helpers to add to the template parser. Provide an object whose keys are the name of the function to add,
+   * and the value is the helper function itself. The signature of helpers is as follows:
+   * ```typescript
+   * (text: string) => string
+   * ```
+   *
+   * A full example might be:
+   *
+   * ```typescript
+   * Scaffold({
+   *   //...
+   *   helpers: {
+   *     upperCamelCase: (text) => camelCase(text).toUpperCase()
+   *   }
+   * })
+   * ```
+   */
+  helpers?: Record<string, (text: string) => string>
 }
 export interface ScaffoldCmdConfig {
   name: string

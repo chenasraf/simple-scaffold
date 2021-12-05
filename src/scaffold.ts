@@ -15,6 +15,7 @@ import {
   isDir,
   removeGlob,
   makeRelativePath,
+  registerHelpers,
 } from "./utils"
 import { LogLevel, ScaffoldConfig } from "./types"
 
@@ -30,6 +31,7 @@ export async function Scaffold(config: ScaffoldConfig) {
       data: options.data,
       overwrite: options.overwrite,
       quiet: options.quiet,
+      helpers: Object.keys(options.helpers ?? {}),
       verbose: `${options.verbose} (${Object.keys(LogLevel).find(
         (k) => (LogLevel[k as any] as unknown as number) === options.verbose!
       )})`,
@@ -37,6 +39,7 @@ export async function Scaffold(config: ScaffoldConfig) {
     log(options, LogLevel.Info, "Data:", data)
     for (let template of config.templates) {
       try {
+        registerHelpers(options)
         const _isGlob = template.includes("*")
         if (!_isGlob && !(await pathExists(template))) {
           const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)

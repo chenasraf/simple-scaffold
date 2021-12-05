@@ -3,6 +3,7 @@ import FileSystem from "mock-fs/lib/filesystem"
 import Scaffold from "../src/scaffold"
 import { readdirSync, readFileSync } from "fs"
 import { Console } from "console"
+import { defaultHelpers } from "../src/utils"
 
 const fileStructNormal = {
   input: {
@@ -26,6 +27,20 @@ const fileStructNested = {
       moreNesting: {
         "{{name}}-3.txt": "Hi! My value is actually NOT {{value}}!",
       },
+    },
+  },
+  output: {},
+}
+
+const defaultHelperNames = Object.keys(defaultHelpers)
+const fileStructHelpers = {
+  input: {
+    defaults: defaultHelperNames.reduce<Record<string, string>>(
+      (all, cur) => ({ ...all, [cur + ".txt"]: `{{ ${cur} name }}` }),
+      {}
+    ),
+    custom: {
+      "add1.txt": "{{ add1 name }}",
     },
   },
   output: {},
@@ -199,6 +214,61 @@ describe("Scaffold", () => {
         expect(rootFile.toString()).toEqual("This should be in root")
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
+      })
+    })
+  )
+
+  describe(
+    "helpers",
+    withMock(fileStructHelpers, () => {
+      const _helpers: Record<string, (text: string) => string> = {
+        add1: (text) => text + " 1",
+      }
+
+      describe("default helpers", () => {
+        test("should work", async () => {
+          await Scaffold({
+            name: "app_name",
+            output: "output",
+            templates: ["input"],
+            verbose: 0,
+            helpers: _helpers,
+          })
+
+          const results = {
+            camelCase: "appName",
+            snakeCase: "app_name",
+            startCase: "App Name",
+            kebabCase: "app-name",
+            hyphenCase: "app-name",
+            pascalCase: "AppName",
+            lowerCase: "app_name",
+            upperCase: "APP_NAME",
+          }
+          for (const key in results) {
+            const file = readFileSync(process.cwd() + `/output/defaults/${key}.txt`)
+            expect(file.toString()).toEqual(results[key as keyof typeof results])
+          }
+        })
+      })
+      describe("custom helpers", () => {
+        test("should work", async () => {
+          await Scaffold({
+            name: "app_name",
+            output: "output",
+            templates: ["input"],
+            verbose: 0,
+            helpers: _helpers,
+          })
+
+          const results = {
+            add1: "app_name 1",
+          }
+          for (const key in results) {
+            const file = readFileSync(process.cwd() + `/output/custom/${key}.txt`)
+            expect(file.toString()).toEqual(results[key as keyof typeof results])
+          }
+        })
       })
     })
   )

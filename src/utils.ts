@@ -10,17 +10,23 @@ import { promises as fsPromises } from "fs"
 import chalk from "chalk"
 const { stat, access, mkdir } = fsPromises
 
-const helpers = {
+export const defaultHelpers: Exclude<ScaffoldConfig["helpers"], undefined> = {
   camelCase,
   snakeCase,
   startCase,
   kebabCase,
   hyphenCase: kebabCase,
   pascalCase,
+  lowerCase: (text) => text.toLowerCase(),
+  upperCase: (text) => text.toUpperCase(),
 }
 
-for (const helperName in helpers) {
-  Handlebars.registerHelper(helperName, helpers[helperName as keyof typeof helpers])
+export function registerHelpers(options: ScaffoldConfig) {
+  const _helpers = { ...defaultHelpers, ...options.helpers }
+  for (const helperName in _helpers) {
+    log(options, LogLevel.Debug, `Registering helper: ${helperName}`)
+    Handlebars.registerHelper(helperName, _helpers[helperName as keyof typeof _helpers])
+  }
 }
 
 export function handleErr(err: NodeJS.ErrnoException | null) {

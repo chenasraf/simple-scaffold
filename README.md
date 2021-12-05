@@ -102,18 +102,30 @@ const scaffold = SimpleScaffold({
   locals: {
     property: "value",
   },
+  helpers: {
+    twice: (text) => [text, text].join(" ")
+  }
 })
 ```
 
-The exception in the config is that `output`, when used in Node directly, may also be passed a
-function for each input file to output into a dynamic path:
+### Additional Node.js options
 
-```typescript
-config.output = (fullPath, baseDir, baseName) => {
-  console.log({ fullPath, baseDir, baseName })
-  return path.resolve(baseDir, baseName)
-}
-```
+In addition to all the options available in the command line, there are some JS-specific options
+available:
+
+1. When `output` is used in Node directly, it may also be passed a function for each input file to
+   output into a dynamic path:
+
+    ```typescript
+    config.output = (fullPath, baseDir, baseName) => {
+      console.log({ fullPath, baseDir, baseName })
+      return path.resolve(baseDir, baseName)
+    }
+    ```
+
+2. You may add custom `helpers` to your scaffolds. Helpers are simple `(string) => string` functions
+   that transform your `data` variables into other values. See [Helpers](#helpers) for the list of
+   default helpers, or add your own to be loaded into the template parser.
 
 ## Preparing files
 
@@ -156,8 +168,20 @@ Here are the built-in helpers available for use:
 | kebabCase   | `{{ kebabCase name }}`  | my-name        |
 | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
 | pascalCase  | `{{ pascalCase name }}` | MyName         |
+| upperCase   | `{{ upperCase name }}`  | MYNAME         |
+| lowerCase   | `{{ lowerCase name }}`  | myname         |
 
 > These helpers are available for any data property, not exclusive to `name`.
+
+You may also add your own custom helpers using the `helpers` options when using the JS API (rather
+than the CLI). The `helpers` option takes an object whose keys are helper names, and values are
+the transformation functions. For example, `upperCase` is implemented like so:
+
+```typescript
+config.helpers = {
+  upperCase: (text) => text.toUpperCase(),
+}
+```
 
 ## Examples
 
