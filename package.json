@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "1.0.0-alpha.15",
+  "version": "1.0.0-alpha.16",
   "description": "Create files based on templates",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
@@ -9,7 +9,7 @@
   "bin": "cmd.js",
   "scripts": {
     "clean": "rm -rf dist/",
-    "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./dist/ && cp ./README.md ./dist/",
+    "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
     "dev": "tsc --watch",
     "start": "node dist/scaffold.js",
     "test": "jest --verbose",
