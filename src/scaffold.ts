@@ -19,8 +19,8 @@ import {
 } from "./utils"
 import { LogLevel, ScaffoldConfig } from "./types"
 
-export async function Scaffold(config: ScaffoldConfig) {
-  const options = { ...config }
+export async function Scaffold({ ...options }: ScaffoldConfig) {
+  registerHelpers(options)
   try {
     const data = { name: options.name, Name: pascalCase(options.name), ...options.data }
     log(options, LogLevel.Debug, "Full config:", {
@@ -37,9 +37,8 @@ export async function Scaffold(config: ScaffoldConfig) {
       )})`,
     })
     log(options, LogLevel.Info, "Data:", data)
-    for (let template of config.templates) {
+    for (let template of options.templates) {
       try {
-        registerHelpers(options)
         const _isGlob = template.includes("*")
         if (!_isGlob && !(await pathExists(template))) {
           const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
