@@ -20,9 +20,11 @@ import {
 import { LogLevel, ScaffoldConfig } from "./types"
 
 export async function Scaffold({ ...options }: ScaffoldConfig) {
+  options.output ??= process.cwd()
+
   registerHelpers(options)
   try {
-    const data = { name: options.name, Name: pascalCase(options.name), ...options.data }
+    options.data = { name: options.name, Name: pascalCase(options.name), ...options.data }
     log(options, LogLevel.Debug, "Full config:", {
       name: options.name,
       templates: options.templates,
@@ -36,7 +38,7 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
         (k) => (LogLevel[k as any] as unknown as number) === options.verbose!
       )})`,
     })
-    log(options, LogLevel.Info, "Data:", data)
+    log(options, LogLevel.Info, "Data:", options.data)
     for (let template of options.templates) {
       try {
         const _isGlob = template.includes("*")
@@ -88,7 +90,7 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
               `\nisGlob: ${_isGlob}`,
               `\n`
             )
-            await handleTemplateFile(inputFilePath, basePath, options, data)
+            await handleTemplateFile(inputFilePath, basePath, options, options.data)
           }
         }
       } catch (e: any) {

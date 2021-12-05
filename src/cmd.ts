@@ -19,8 +19,7 @@ export function parseCliArgs(args = process.argv.slice(2)) {
       .option({
         name: "output",
         aliases: ["o"],
-        description:
-          "Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path.",
+        description: `Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path. ${chalk.reset`${chalk.white`(default: current dir)`}`}`,
         required: true,
       })
       .option({

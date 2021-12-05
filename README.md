@@ -47,8 +47,7 @@ Options:
 
   --templates|-t            Template files to use as input. You may provide multiple
                             files, each of which can be a relative or absolute path, or a glob
-                            pattern for multiple file matching easily. (default:
-                            )
+                            pattern for multiple file matching easily. (default: current dir)
 
   --overwrite|-w            Enable to override output files, even if they already exist.
                             (default: false)
@@ -88,13 +87,13 @@ You can also add this as a script in your `package.json`:
 ## Use in Node.js
 
 You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
-Simply pass a config object to the constructor, and invoke `run()` when you are ready to start.
+Simply pass a config object to the Scaffold function when you are ready to start.
 The config takes similar arguments to the command line:
 
 ```typescript
 import Scaffold from "simple-scaffold"
 
-const scaffold = SimpleScaffold({
+const config = {
   name: "component",
   templates: [path.join(__dirname, "scaffolds", "component")],
   output: path.join(__dirname, "src", "components"),
@@ -105,7 +104,9 @@ const scaffold = SimpleScaffold({
   helpers: {
     twice: (text) => [text, text].join(" ")
   }
-})
+}
+
+const scaffold = Scaffold(config)
 ```
 
 ### Additional Node.js options
