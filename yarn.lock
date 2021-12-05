@@ -932,7 +932,7 @@ chalk@2.4.2, chalk@^2.0.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^4.0.0, chalk@^4.1.1:
+chalk@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.1.tgz#c80b3fab28bf6371e6863325eee67e618b77e6ad"
   integrity sha512-diHzdDKxcU+bAsUboHLPEDQiw0qEe0qd7SYUn3HgcFlWgbDcfLGswOHYeGrHKzG9z6UYf01d9VFMfZxPM1xZSg==
@@ -2161,12 +2161,12 @@ makeerror@1.0.x:
   dependencies:
     tmpl "1.0.x"
 
-massarg@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/massarg/-/massarg-1.0.4.tgz#8756193bee9bc7331b1f48a8840e86acf808f980"
-  integrity sha512-SakImNzZP8SN6tlcGBoC62z+12yv/To+h7KP8XapnOux5Mjiwprn4KhNHsjh2rbrKCAPqZQWYziAitSzGTkjMw==
+massarg@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/massarg/-/massarg-1.0.5.tgz#3dfd49bb63bfca4b0371a2f0ffc7580a9a6cc7a0"
+  integrity sha512-gkJHZsNfeMurpVPKojCiT2lnG2cSxHPAXZSg+gCLIgCf5bGn7pKOsoeu4qVAc5mlBxV2l/hA1yojt+ZsJd8SDg==
   dependencies:
-    chalk "^4.1.1"
+    chalk "^4.1.2"
     lodash "^4.17.21"
 
 merge-stream@^2.0.0:
