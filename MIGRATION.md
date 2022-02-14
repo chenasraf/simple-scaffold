@@ -5,6 +5,7 @@ between versions. With these notable exceptions:
 
 - Some of the argument names have changed
 - Template syntax has been improved
+- The command to run Scaffold has been simplified from `new SimpleScaffold(opts).run()` to `SimpleScaffold(opts)`, which now returns a promise that you can await to know when the process has been completed.
 
 ## Argument changes
 
