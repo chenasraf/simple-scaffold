@@ -80,6 +80,7 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
 }
 
 export function getOptionValueForFile<T>(
+  options: ScaffoldConfig,
   filePath: string,
   data: Record<string, string>,
   fn: FileResponse<T>,
@@ -90,15 +91,24 @@ export function getOptionValueForFile<T>(
   }
   return (fn as FileResponseFn<T>)(
     filePath,
-    path.dirname(handlebarsParse(filePath, data)),
-    path.basename(handlebarsParse(filePath, data))
+    path.dirname(handlebarsParse(options, filePath, data).toString()),
+    path.basename(handlebarsParse(options, filePath, data).toString())
   )
 }
 
-export function handlebarsParse(templateBuffer: Buffer | string, data: Record<string, string>) {
-  const parser = Handlebars.compile(templateBuffer.toString(), { noEscape: true })
-  const outputContents = parser(data)
-  return outputContents
+export function handlebarsParse(
+  options: ScaffoldConfig,
+  templateBuffer: Buffer | string,
+  data: Record<string, string>
+) {
+  try {
+    const parser = Handlebars.compile(templateBuffer.toString(), { noEscape: true })
+    const outputContents = parser(data)
+    return outputContents
+  } catch {
+    log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
+    return templateBuffer
+  }
 }
 
 export async function pathExists(filePath: string): Promise<boolean> {
