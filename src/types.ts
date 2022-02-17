@@ -10,6 +10,20 @@ export type FileResponseFn<T> = (fullPath: string, basedir: string, basename: st
 
 export type FileResponse<T> = T | FileResponseFn<T>
 
+export type DefaultHelperKeys =
+  | "camelCase"
+  | "snakeCase"
+  | "startCase"
+  | "kebabCase"
+  | "hyphenCase"
+  | "pascalCase"
+  | "lowerCase"
+  | "upperCase"
+
+export type HelperKeys<T> = DefaultHelperKeys | T
+
+export type Helper = (text: string) => string
+
 export interface ScaffoldConfig {
   /**
    * Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
@@ -79,8 +93,26 @@ export interface ScaffoldConfig {
    *   }
    * })
    * ```
+   *
+   * Here are the built-in helpers available for use:
+   * | Helper name | Example code            | Example output |
+   * | ----------- | ----------------------- | -------------- |
+   * | camelCase   | `{{ camelCase name }}`  | myName         |
+   * | snakeCase   | `{{ snakeCase name }}`  | my_name        |
+   * | startCase   | `{{ startCase name }}`  | My Name        |
+   * | kebabCase   | `{{ kebabCase name }}`  | my-name        |
+   * | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
+   * | pascalCase  | `{{ pascalCase name }}` | MyName         |
+   * | upperCase   | `{{ upperCase name }}`  | MYNAME         |
+   * | lowerCase   | `{{ lowerCase name }}`  | myname         |
    */
-  helpers?: Record<string, (text: string) => string>
+  helpers?: Record<string, Helper>
+
+  /**
+   * Default transformer to apply to subfolder name when using `createSubFolder: true`. Can be one of the default
+   * helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
+   */
+  subFolderNameHelper?: DefaultHelperKeys | string
 }
 export interface ScaffoldCmdConfig {
   name: string

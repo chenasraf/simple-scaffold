@@ -112,7 +112,15 @@ async function handleTemplateFile(
       const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
       const outputDir = path.resolve(
         process.cwd(),
-        ...([outputPathOpt, basePath, options.createSubFolder ? options.name : undefined].filter(Boolean) as string[])
+        ...([
+          outputPathOpt,
+          basePath,
+          options.createSubFolder
+            ? options.subFolderNameHelper
+              ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`, data)
+              : options.name
+            : undefined,
+        ].filter(Boolean) as string[])
       )
       const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data).toString()
       log(

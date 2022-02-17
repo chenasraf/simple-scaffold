@@ -52,6 +52,11 @@ export function parseCliArgs(args = process.argv.slice(2)) {
         description: "Create subfolder with the input name",
       })
       .option({
+        name: "sub-folder-name-helper",
+        aliases: ["sh"],
+        description: "Default helper to apply to subfolder name when using `--create-sub-folder true`.",
+      })
+      .option({
         name: "quiet",
         aliases: ["q"],
         boolean: true,
