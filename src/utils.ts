@@ -1,6 +1,6 @@
 import path from "path"
 import { F_OK } from "constants"
-import { FileResponse, FileResponseFn, LogLevel, ScaffoldConfig } from "./types"
+import { DefaultHelperKeys, FileResponse, FileResponseFn, Helper, LogLevel, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
@@ -10,7 +10,11 @@ import { promises as fsPromises } from "fs"
 import chalk from "chalk"
 const { stat, access, mkdir } = fsPromises
 
-export const defaultHelpers: Exclude<ScaffoldConfig["helpers"], undefined> = {
+import { glob } from "glob"
+import { promisify } from "util"
+const { readFile, writeFile } = fsPromises
+
+export const defaultHelpers: Record<DefaultHelperKeys, Helper> = {
   camelCase,
   snakeCase,
   startCase,
@@ -138,4 +142,178 @@ export function removeGlob(template: string) {
 
 export function makeRelativePath(str: string): string {
   return str.startsWith("/") ? str.slice(1) : str
+}
+
+export function getBasePath(relPath: string) {
+  return path
+    .resolve(process.cwd(), relPath)
+    .replace(process.cwd() + "/", "")
+    .replace(process.cwd(), "")
+}
+
+export async function getFileList(options: ScaffoldConfig, template: string) {
+  return await promisify(glob)(template, {
+    dot: true,
+    debug: options.verbose === LogLevel.Debug,
+    nodir: true,
+  })
+}
+
+export interface GlobInfo {
+  nonGlobTemplate: string
+  origTemplate: string
+  isDirOrGlob: boolean
+  isGlob: boolean
+  template: string
+}
+
+export async function getTemplateGlobInfo(options: ScaffoldConfig, template: string): Promise<GlobInfo> {
+  const isGlob = glob.hasMagic(template)
+  log(options, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
+  let _template = template
+  const nonGlobTemplate = isGlob ? removeGlob(template) : template
+  const isDirOrGlob = isGlob ? true : await isDir(template)
+  log(options, LogLevel.Debug, "after isDir", isDirOrGlob)
+  const _shouldAddGlob = !isGlob && isDirOrGlob
+  const origTemplate = template
+  if (_shouldAddGlob) {
+    _template = template + "/**/*"
+  }
+  return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
+}
+
+export async function ensureFileExists(template: string, isGlob: boolean) {
+  if (!isGlob && !(await pathExists(template))) {
+    const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
+    err.code = "ENOENT"
+    err.path = template
+    err.errno = -2
+    throw err
+  }
+}
+
+export interface OutputFileInfo {
+  inputPath: string
+  outputPathOpt: string
+  outputDir: string
+  outputPath: string
+  exists: boolean
+}
+
+export async function getTemplateFileInfo(
+  options: ScaffoldConfig,
+  data: Record<string, string>,
+  { templatePath, basePath }: { templatePath: string; basePath: string }
+): Promise<OutputFileInfo> {
+  const inputPath = path.resolve(process.cwd(), templatePath)
+  const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
+  const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
+  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data).toString()
+  const exists = await pathExists(outputPath)
+  return { inputPath, outputPathOpt, outputDir, outputPath, exists }
+}
+
+export async function copyFileTransformed(
+  options: ScaffoldConfig,
+  data: Record<string, string>,
+  {
+    exists,
+    overwrite,
+    outputPath,
+    inputPath,
+  }: { exists: boolean; overwrite: boolean; outputPath: string; inputPath: string }
+) {
+  if (!exists || overwrite) {
+    if (exists && overwrite) {
+      log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
+    }
+    const templateBuffer = await readFile(inputPath)
+    const outputContents = handlebarsParse(options, templateBuffer, data)
+
+    if (!options.dryRun) {
+      await writeFile(outputPath, outputContents)
+      log(options, LogLevel.Info, "Done.")
+    } else {
+      log(options, LogLevel.Info, "Content output:")
+      log(options, LogLevel.Info, outputContents)
+    }
+  } else if (exists) {
+    log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)
+  }
+}
+
+export function getOutputDir(
+  options: ScaffoldConfig,
+  data: Record<string, string>,
+  outputPathOpt: string,
+  basePath: string
+) {
+  return path.resolve(
+    process.cwd(),
+    ...([
+      outputPathOpt,
+      basePath,
+      options.createSubFolder
+        ? options.subFolderNameHelper
+          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`, data)
+          : options.name
+        : undefined,
+    ].filter(Boolean) as string[])
+  )
+}
+
+export function logInputFile(
+  options: ScaffoldConfig,
+  {
+    origTemplate,
+    relPath,
+    template,
+    inputFilePath,
+    nonGlobTemplate,
+    basePath,
+    isDirOrGlob,
+    isGlob,
+  }: {
+    origTemplate: string
+    relPath: string
+    template: string
+    inputFilePath: string
+    nonGlobTemplate: string
+    basePath: string
+    isDirOrGlob: boolean
+    isGlob: boolean
+  }
+) {
+  log(
+    options,
+    LogLevel.Debug,
+    `\nprocess.cwd(): ${process.cwd()}`,
+    `\norigTemplate: ${origTemplate}`,
+    `\nrelPath: ${relPath}`,
+    `\ntemplate: ${template}`,
+    `\ninputFilePath: ${inputFilePath}`,
+    `\nnonGlobTemplate: ${nonGlobTemplate}`,
+    `\nbasePath: ${basePath}`,
+    `\nisDirOrGlob: ${isDirOrGlob}`,
+    `\nisGlob: ${isGlob}`,
+    `\n`
+  )
+}
+
+export function logInitStep(options: ScaffoldConfig) {
+  log(options, LogLevel.Debug, "Full config:", {
+    name: options.name,
+    templates: options.templates,
+    output: options.output,
+    createSubfolder: options.createSubFolder,
+    data: options.data,
+    overwrite: options.overwrite,
+    quiet: options.quiet,
+    subFolderTransformHelper: options.subFolderNameHelper,
+    helpers: Object.keys(options.helpers ?? {}),
+    verbose: `${options.verbose} (${Object.keys(LogLevel).find(
+      (k) => (LogLevel[k as any] as unknown as number) === options.verbose!
+    )})`,
+  })
+  log(options, LogLevel.Info, "Data:", options.data)
 }
