@@ -3,10 +3,11 @@
   "npm.packageManager": "yarn",
   "cSpell.words": [
     "massarg",
-    "nodir",
     "nobrace",
-    "noext",
     "nocomment",
-    "nonegate"
+    "nodir",
+    "noext",
+    "nonegate",
+    "subdir"
   ]
 }

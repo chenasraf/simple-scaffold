@@ -16,79 +16,81 @@ import {
   removeGlob,
   makeRelativePath,
   registerHelpers,
+  getTemplateGlobInfo,
+  ensureFileExists,
+  getFileList,
+  getBasePath,
+  copyFileTransformed,
+  getTemplateFileInfo,
+  logInitStep,
+  logInputFile,
+  GlobInfo,
+  OutputFileInfo,
 } from "./utils"
-import { LogLevel, ScaffoldConfig } from "./types"
+import { FileResponse, LogLevel, ScaffoldConfig } from "./types"
 
+/**
+ * Create a scaffold using given `options`.
+ *
+ * #### Create files
+ * To create a file structure to output, use any directory and file structure you would like.
+ * Inside folder names, file names or file contents, you may place `{{ var }}` where `var` is either
+ * `name` which is the scaffold name you provided or one of the keys you provided in the `data` option.
+ *
+ * The contents and names will be replaced with the transformed values so you can use your original structure as a
+ * boilerplate for other projects, components, modules, or even single files.
+ *
+ * #### Helpers
+ * Helpers are functions you can use to transform your `{{ var }}` contents into other values without having to
+ * pre-define the data and use a duplicated key. Common cases are transforming name-case format
+ * (e.g. `MyName` &rarr; `my_name`), so these have been provided as defaults:
+ *
+ * | Helper name | Example code            | Example output |
+ * | ----------- | ----------------------- | -------------- |
+ * | camelCase   | `{{ camelCase name }}`  | myName         |
+ * | snakeCase   | `{{ snakeCase name }}`  | my_name        |
+ * | startCase   | `{{ startCase name }}`  | My Name        |
+ * | kebabCase   | `{{ kebabCase name }}`  | my-name        |
+ * | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
+ * | pascalCase  | `{{ pascalCase name }}` | MyName         |
+ * | upperCase   | `{{ upperCase name }}`  | MYNAME         |
+ * | lowerCase   | `{{ lowerCase name }}`  | myname         |
+ *
+ * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
+ * (for example, formatting a date)
+ */
 export async function Scaffold({ ...options }: ScaffoldConfig) {
   options.output ??= process.cwd()
 
   registerHelpers(options)
   try {
     options.data = { name: options.name, Name: pascalCase(options.name), ...options.data }
-    log(options, LogLevel.Debug, "Full config:", {
-      name: options.name,
-      templates: options.templates,
-      output: options.output,
-      createSubfolder: options.createSubFolder,
-      data: options.data,
-      overwrite: options.overwrite,
-      quiet: options.quiet,
-      helpers: Object.keys(options.helpers ?? {}),
-      verbose: `${options.verbose} (${Object.keys(LogLevel).find(
-        (k) => (LogLevel[k as any] as unknown as number) === options.verbose!
-      )})`,
-    })
-    log(options, LogLevel.Info, "Data:", options.data)
-    for (let template of options.templates) {
+    logInitStep(options)
+    for (let _template of options.templates) {
       try {
-        const _isGlob = glob.hasMagic(template)
-        if (!_isGlob && !(await pathExists(template))) {
-          const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
-          err.code = "ENOENT"
-          err.path = "non-existing-input"
-          err.errno = -2
-          throw err
-        }
-        const _nonGlobTemplate = _isGlob ? removeGlob(template) : template
-        log(options, LogLevel.Debug, "before isDir", "isGlob:", _isGlob, template)
-        const _isDir = _isGlob ? true : await isDir(template)
-        log(options, LogLevel.Debug, "after isDir", _isDir)
-        const _shouldAddGlob = !_isGlob && _isDir
-        const origTemplate = template
-        if (_shouldAddGlob) {
-          template = template + "/**/*"
-        }
-        log(options, LogLevel.Debug, "before glob")
-        const files = await promisify(glob)(template, {
-          dot: true,
-          debug: options.verbose === LogLevel.Debug,
-          nodir: true,
-        })
-        log(options, LogLevel.Debug, "after glob")
+        const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
+          options,
+          _template
+        )
+        await ensureFileExists(template, isDirOrGlob)
+        const files = await getFileList(options, template)
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {
             continue
           }
-          const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(_nonGlobTemplate, "")))
-          const basePath = path
-            .resolve(process.cwd(), relPath)
-            .replace(process.cwd() + "/", "")
-            .replace(process.cwd(), "")
-          log(
-            options,
-            LogLevel.Debug,
-            `\nprocess.cwd(): ${process.cwd()}`,
-            `\norigTemplate: ${origTemplate}`,
-            `\nrelPath: ${relPath}`,
-            `\ntemplate: ${template}`,
-            `\ninputFilePath: ${inputFilePath}`,
-            `\nnonGlobTemplate: ${_nonGlobTemplate}`,
-            `\nbasePath: ${basePath}`,
-            `\nisDir: ${_isDir}`,
-            `\nisGlob: ${_isGlob}`,
-            `\n`
-          )
-          await handleTemplateFile(inputFilePath, basePath, options, options.data)
+          const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(nonGlobTemplate, "")))
+          const basePath = getBasePath(relPath)
+          logInputFile(options, {
+            origTemplate,
+            relPath,
+            template,
+            inputFilePath,
+            nonGlobTemplate,
+            basePath,
+            isDirOrGlob,
+            isGlob,
+          })
+          await handleTemplateFile(options, options.data, { templatePath: inputFilePath, basePath })
         }
       } catch (e: any) {
         handleErr(e)
@@ -99,22 +101,19 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
     throw e
   }
 }
-
 async function handleTemplateFile(
-  templatePath: string,
-  basePath: string,
   options: ScaffoldConfig,
-  data: Record<string, string>
+  data: Record<string, string>,
+  { templatePath, basePath }: { templatePath: string; basePath: string }
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
-      const inputPath = path.resolve(process.cwd(), templatePath)
-      const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
-      const outputDir = path.resolve(
-        process.cwd(),
-        ...([outputPathOpt, basePath, options.createSubFolder ? options.name : undefined].filter(Boolean) as string[])
-      )
-      const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data).toString()
+      const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(options, data, {
+        templatePath,
+        basePath,
+      })
+      const overwrite = getOptionValueForFile(options, inputPath, data, options.overwrite ?? false)
+
       log(
         options,
         LogLevel.Debug,
@@ -126,29 +125,11 @@ async function handleTemplateFile(
         `\nFull output path: ${outputPath}`,
         `\n`
       )
-      const overwrite = getOptionValueForFile(options, inputPath, data, options.overwrite ?? false)
-      const exists = await pathExists(outputPath)
 
       await createDirIfNotExists(path.dirname(outputPath), options)
 
       log(options, LogLevel.Info, `Writing to ${outputPath}`)
-      if (!exists || overwrite) {
-        if (exists && overwrite) {
-          log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
-        }
-        const templateBuffer = await readFile(inputPath)
-        const outputContents = handlebarsParse(options, templateBuffer, data)
-
-        if (!options.dryRun) {
-          await writeFile(outputPath, outputContents)
-          log(options, LogLevel.Info, "Done.")
-        } else {
-          log(options, LogLevel.Info, "Content output:")
-          log(options, LogLevel.Info, outputContents)
-        }
-      } else if (exists) {
-        log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)
-      }
+      await copyFileTransformed(options, data, { exists, overwrite, outputPath, inputPath })
       resolve()
     } catch (e: any) {
       handleErr(e)

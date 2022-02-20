@@ -36,40 +36,45 @@ Create structured files based on templates.
 
 Options:
 
-  --help|-h                 Display help information
+  --help|-h                       Display help information
 
-  --name|-n                 Name to be passed to the generated files. {{name}} and
-                            {{Name}} inside contents and file names will be replaced
-                            accordingly.
+  --name|-n                       Name to be passed to the generated files. {{name}} and
+                                  {{Name}} inside contents and file names will be replaced
+                                  accordingly.
 
-  --output|-o               Path to output to. If --create-sub-folder is enabled, the
-                            subfolder will be created inside this path.
+  --output|-o                     Path to output to. If --create-sub-folder is enabled,
+                                  the subfolder will be created inside this path.
+                                  (default: current dir)
 
-  --templates|-t            Template files to use as input. You may provide multiple
-                            files, each of which can be a relative or absolute path, or a glob
-                            pattern for multiple file matching easily. (default: current dir)
+  --templates|-t                  Template files to use as input. You may provide multiple
+                                  files, each of which can be a relative or absolute path, or a
+                                  glob pattern for multiple file matching easily.
 
-  --overwrite|-w            Enable to override output files, even if they already exist.
-                            (default: false)
+  --overwrite|-w                  Enable to override output files, even if they already
+                                  exist. (default: false)
 
-  --data|-d                 Add custom data to the templates. By default, only your app
-                            name is included.
+  --data|-d                       Add custom data to the templates. By default, only your
+                                  app name is included.
 
-  --create-sub-folder|-s    Create subfolder with the input name (default:
-                            false)
+  --create-sub-folder|-s          Create subfolder with the input name
+                                  (default: false)
 
-  --quiet|-q                Suppress output logs (Same as --verbose 0)
-                            (default: false)
+  --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
+                                  `--create-sub-folder true`.
 
-  --verbose|-v              Determine amount of logs to display. The values are: 0
-                            (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error). The
-                            provided level will display messages of the same level or higher.
-                            (default: 2)
+  --quiet|-q                      Suppress output logs (Same as --verbose 0)
+                                  (default: false)
 
-  --dry-run|-dr             Don't emit files. This is good for testing your scaffolds and
-                            making sure they don't fail, without having to write actual file
-                            contents or create directories. (default:
-                            false)
+  --verbose|-v                    Determine amount of logs to display. The values are:
+                                  0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4
+                                  (error). The provided level will display messages of
+                                  the same level or higher. (default:
+                                  2)
+
+  --dry-run|-dr                   Don't emit files. This is good for testing your
+                                  scaffolds and making sure they don't fail, without having to
+                                  write actual file contents or create directories.
+                                  (default: false)
 ```
 
 You can also add this as a script in your `package.json`:
@@ -98,6 +103,7 @@ const config = {
   templates: [path.join(__dirname, "scaffolds", "component")],
   output: path.join(__dirname, "src", "components"),
   createSubFolder: true,
+  subFolderNameHelper: "upperCase"
   locals: {
     property: "value",
   },
@@ -183,6 +189,9 @@ config.helpers = {
   upperCase: (text) => text.toUpperCase(),
 }
 ```
+
+These helpers will also be available to you when using `subFolderNameHelper` or
+`--sub-folder-name-helper` as a possible value.
 
 ## Examples
 

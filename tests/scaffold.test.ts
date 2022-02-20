@@ -31,6 +31,12 @@ const fileStructNested = {
   },
   output: {},
 }
+const fileStructSubdirTransformer = {
+  input: {
+    "{{name}}.txt": "Hello, my app is {{name}}",
+  },
+  output: {},
+}
 
 const defaultHelperNames = Object.keys(defaultHelpers)
 const fileStructHelpers = {
@@ -269,6 +275,54 @@ describe("Scaffold", () => {
             expect(file.toString()).toEqual(results[key as keyof typeof results])
           }
         })
+      })
+    })
+  )
+  describe(
+    "transform subfolder",
+    withMock(fileStructSubdirTransformer, () => {
+      test("should work with no helper", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          createSubFolder: true,
+          verbose: 0,
+        })
+
+        const data = readFileSync(process.cwd() + "/output/app_name/app_name.txt")
+        expect(data.toString()).toBe("Hello, my app is app_name")
+      })
+
+      test("should work with default helper", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          createSubFolder: true,
+          verbose: 0,
+          subFolderNameHelper: "upperCase",
+        })
+
+        const data = readFileSync(process.cwd() + "/output/APP_NAME/app_name.txt")
+        expect(data.toString()).toBe("Hello, my app is app_name")
+      })
+
+      test("should work with custom helper", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          createSubFolder: true,
+          verbose: 0,
+          subFolderNameHelper: "test",
+          helpers: {
+            test: () => "REPLACED",
+          },
+        })
+
+        const data = readFileSync(process.cwd() + "/output/REPLACED/app_name.txt")
+        expect(data.toString()).toBe("Hello, my app is app_name")
       })
     })
   )
