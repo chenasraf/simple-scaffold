@@ -95,19 +95,27 @@ export function getOptionValueForFile<T>(
   }
   return (fn as FileResponseFn<T>)(
     filePath,
-    path.dirname(handlebarsParse(options, filePath, data).toString()),
-    path.basename(handlebarsParse(options, filePath, data).toString())
+    path.dirname(handlebarsParse(options, filePath, { isPath: true }).toString()),
+    path.basename(handlebarsParse(options, filePath, { isPath: true }).toString())
   )
 }
 
 export function handlebarsParse(
   options: ScaffoldConfig,
   templateBuffer: Buffer | string,
-  data: Record<string, string>
+  { isPath = false }: { isPath?: boolean } = {}
 ) {
+  const { data } = options
   try {
-    const parser = Handlebars.compile(templateBuffer.toString(), { noEscape: true })
-    const outputContents = parser(data)
+    let str = templateBuffer.toString()
+    if (isPath) {
+      str = str.replace(/\\/g, "/")
+    }
+    const parser = Handlebars.compile(str, { noEscape: true })
+    let outputContents = parser(data)
+    if (isPath && path.sep !== "/") {
+      outputContents = outputContents.replace(/\//g, "\\")
+    }
     return outputContents
   } catch {
     log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
@@ -137,26 +145,28 @@ export async function isDir(path: string): Promise<boolean> {
 }
 
 export function removeGlob(template: string) {
-  return template.replace(/\*/g, "").replace(/\/\//g, "/")
+  return template.replace(/\*/g, "").replace(/(\/\/|\\\\)/g, path.sep)
 }
 
 export function makeRelativePath(str: string): string {
-  return str.startsWith("/") ? str.slice(1) : str
+  return str.startsWith(path.sep) ? str.slice(1) : str
 }
 
 export function getBasePath(relPath: string) {
   return path
     .resolve(process.cwd(), relPath)
-    .replace(process.cwd() + "/", "")
+    .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
 
 export async function getFileList(options: ScaffoldConfig, template: string) {
-  return await promisify(glob)(template, {
-    dot: true,
-    debug: options.verbose === LogLevel.Debug,
-    nodir: true,
-  })
+  return (
+    await promisify(glob)(template, {
+      dot: true,
+      debug: options.verbose === LogLevel.Debug,
+      nodir: true,
+    })
+  ).map((f) => f.replace(/\//g, path.sep))
 }
 
 export interface GlobInfo {
@@ -177,7 +187,7 @@ export async function getTemplateGlobInfo(options: ScaffoldConfig, template: str
   const _shouldAddGlob = !isGlob && isDirOrGlob
   const origTemplate = template
   if (_shouldAddGlob) {
-    _template = template + "/**/*"
+    _template = path.join(template, "**", "*")
   }
   return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
 }
@@ -208,7 +218,9 @@ export async function getTemplateFileInfo(
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
   const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
-  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data).toString()
+  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), {
+    isPath: true,
+  }).toString()
   const exists = await pathExists(outputPath)
   return { inputPath, outputPathOpt, outputDir, outputPath, exists }
 }
@@ -228,7 +240,7 @@ export async function copyFileTransformed(
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const outputContents = handlebarsParse(options, templateBuffer, data)
+    const outputContents = handlebarsParse(options, templateBuffer)
 
     if (!options.dryRun) {
       await writeFile(outputPath, outputContents)
@@ -255,7 +267,7 @@ export function getOutputDir(
       basePath,
       options.createSubFolder
         ? options.subFolderNameHelper
-          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`, data)
+          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`)
           : options.name
         : undefined,
     ].filter(Boolean) as string[])
