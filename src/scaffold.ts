@@ -1,16 +1,11 @@
-import { glob } from "glob"
 import path from "path"
-import { promisify } from "util"
 import { promises as fsPromises } from "fs"
-const { readFile, writeFile } = fsPromises
 
 import {
   createDirIfNotExists,
   getOptionValueForFile,
   handleErr,
-  handlebarsParse,
   log,
-  pathExists,
   pascalCase,
   isDir,
   removeGlob,
@@ -24,10 +19,8 @@ import {
   getTemplateFileInfo,
   logInitStep,
   logInputFile,
-  GlobInfo,
-  OutputFileInfo,
 } from "./utils"
-import { FileResponse, LogLevel, ScaffoldConfig } from "./types"
+import { LogLevel, ScaffoldConfig } from "./types"
 
 /**
  * Create a scaffold using given `options`.

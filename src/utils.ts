@@ -95,19 +95,27 @@ export function getOptionValueForFile<T>(
   }
   return (fn as FileResponseFn<T>)(
     filePath,
-    path.dirname(handlebarsParse(options, filePath, data).toString()),
-    path.basename(handlebarsParse(options, filePath, data).toString())
+    path.dirname(handlebarsParse(options, filePath, data, { isPath: true }).toString()),
+    path.basename(handlebarsParse(options, filePath, data, { isPath: true }).toString())
   )
 }
 
 export function handlebarsParse(
   options: ScaffoldConfig,
   templateBuffer: Buffer | string,
-  data: Record<string, string>
+  data: Record<string, string>,
+  { isPath = false }: { isPath?: boolean } = {}
 ) {
   try {
-    const parser = Handlebars.compile(templateBuffer.toString(), { noEscape: true })
-    const outputContents = parser(data)
+    let str = templateBuffer.toString()
+    if (isPath) {
+      str = str.replace(/\\/g, "/")
+    }
+    const parser = Handlebars.compile(str, { noEscape: true })
+    let outputContents = parser(data)
+    if (isPath && path.sep !== "/") {
+      outputContents = outputContents.replace(/\//g, "\\")
+    }
     return outputContents
   } catch {
     log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
@@ -208,7 +216,9 @@ export async function getTemplateFileInfo(
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
   const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
-  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data).toString()
+  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data, {
+    isPath: true,
+  }).toString()
   const exists = await pathExists(outputPath)
   return { inputPath, outputPathOpt, outputDir, outputPath, exists }
 }
