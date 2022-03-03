@@ -4,6 +4,7 @@ import Scaffold from "../src/scaffold"
 import { readdirSync, readFileSync } from "fs"
 import { Console } from "console"
 import { defaultHelpers } from "../src/utils"
+import { join } from "path"
 
 const fileStructNormal = {
   input: {
@@ -83,7 +84,7 @@ describe("Scaffold", () => {
           templates: ["input"],
           verbose: 0,
         })
-        const data = readFileSync(process.cwd() + "/output/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
 
@@ -96,7 +97,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(process.cwd() + "/output/app_name/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
     })
@@ -122,7 +123,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(process.cwd() + "/output/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my value is 1")
       })
 
@@ -144,7 +145,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(process.cwd() + "/output/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my value is 2")
       })
     })
@@ -173,7 +174,7 @@ describe("Scaffold", () => {
           })
         ).rejects.toThrow()
 
-        expect(() => readFileSync(process.cwd() + "/output/app_name.txt")).toThrow()
+        expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
     })
   )
@@ -184,12 +185,12 @@ describe("Scaffold", () => {
       test("should allow override function", async () => {
         await Scaffold({
           name: "app_name",
-          output: (fullPath, basedir, basename) => `custom-output/${basename.split(".")[0]}`,
+          output: (fullPath, basedir, basename) => join("custom-output", `${basename.split(".")[0]}`),
           templates: ["input"],
           data: { value: "1" },
           verbose: 0,
         })
-        const data = readFileSync(process.cwd() + "/custom-output/app_name/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "/custom-output/app_name/app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
     })
@@ -207,16 +208,16 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const rootDir = readdirSync(process.cwd() + "/output")
-        const dir = readdirSync(process.cwd() + "/output/AppName")
-        const nestedDir = readdirSync(process.cwd() + "/output/AppName/moreNesting")
+        const rootDir = readdirSync(join(process.cwd(), "output"))
+        const dir = readdirSync(join(process.cwd(), "output", "AppName"))
+        const nestedDir = readdirSync(join(process.cwd(), "output", "AppName", "moreNesting"))
         expect(rootDir).toHaveProperty("length")
         expect(dir).toHaveProperty("length")
         expect(nestedDir).toHaveProperty("length")
 
-        const rootFile = readFileSync(process.cwd() + "/output/app_name-1.txt")
-        const oneDeepFile = readFileSync(process.cwd() + "/output/AppName/app_name-2.txt")
-        const twoDeepFile = readFileSync(process.cwd() + "/output/AppName/moreNesting/app_name-3.txt")
+        const rootFile = readFileSync(join(process.cwd(), "output", "app_name-1.txt"))
+        const oneDeepFile = readFileSync(join(process.cwd(), "output", "AppName/app_name-2.txt"))
+        const twoDeepFile = readFileSync(join(process.cwd(), "output", "AppName/moreNesting/app_name-3.txt"))
         expect(rootFile.toString()).toEqual("This should be in root")
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
@@ -252,7 +253,7 @@ describe("Scaffold", () => {
             upperCase: "APP_NAME",
           }
           for (const key in results) {
-            const file = readFileSync(process.cwd() + `/output/defaults/${key}.txt`)
+            const file = readFileSync(join(process.cwd(), "output", "defaults", `${key}.txt`))
             expect(file.toString()).toEqual(results[key as keyof typeof results])
           }
         })
@@ -271,7 +272,7 @@ describe("Scaffold", () => {
             add1: "app_name 1",
           }
           for (const key in results) {
-            const file = readFileSync(process.cwd() + `/output/custom/${key}.txt`)
+            const file = readFileSync(join(process.cwd(), "output", "custom", `${key}.txt`))
             expect(file.toString()).toEqual(results[key as keyof typeof results])
           }
         })
@@ -290,7 +291,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(process.cwd() + "/output/app_name/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "app_name/app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
 
@@ -304,7 +305,7 @@ describe("Scaffold", () => {
           subFolderNameHelper: "upperCase",
         })
 
-        const data = readFileSync(process.cwd() + "/output/APP_NAME/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "APP_NAME/app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
 
@@ -321,7 +322,7 @@ describe("Scaffold", () => {
           },
         })
 
-        const data = readFileSync(process.cwd() + "/output/REPLACED/app_name.txt")
+        const data = readFileSync(join(process.cwd(), "output", "REPLACED/app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
     })
