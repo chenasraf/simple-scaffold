@@ -40,9 +40,15 @@ describe("Utils", () => {
       })
     })
     test("should not do path escaping on non-path compiles", async () => {
-      expect(handlebarsParse(blankConf, "/home/test/{{name}} \\{{escaped}}.txt", { isPath: false })).toEqual(
-        "/home/test/test {{escaped}}.txt"
-      )
+      expect(
+        handlebarsParse(
+          { ...blankConf, data: { ...blankConf.data, escaped: "value" } },
+          "/home/test/{{name}} \\{{escaped}}.txt",
+          {
+            isPath: false,
+          }
+        )
+      ).toEqual("/home/test/test {{escaped}}.txt")
     })
   })
 })
