@@ -1,5 +1,14 @@
 import { handlebarsParse } from "../src/utils"
+import { ScaffoldConfig } from "../src/types"
 import path from "path"
+
+const blankConf: ScaffoldConfig = {
+  verbose: 0,
+  name: "",
+  output: "",
+  templates: [],
+  data: { name: "test" },
+}
 
 describe("Utils", () => {
   describe("handlebarsParse", () => {
@@ -13,50 +22,18 @@ describe("Utils", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for windows paths", async () => {
-        expect(
-          handlebarsParse(
-            {
-              verbose: 0,
-              name: "",
-              output: "",
-              templates: [],
-            },
-            "C:\\exports\\{{name}}.txt",
-            { name: "test" },
-            { isPath: true }
-          )
-        ).toEqual("C:\\exports\\test.txt")
+        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
+          "C:\\exports\\test.txt"
+        )
       })
     })
     test("should work for non-windows paths", async () => {
-      expect(
-        handlebarsParse(
-          {
-            verbose: 0,
-            name: "",
-            output: "",
-            templates: [],
-          },
-          "/home/test/{{name}}.txt",
-          { name: "test" },
-          { isPath: true }
-        )
-      ).toEqual("/home/test/test.txt")
+      expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual("/home/test/test.txt")
     })
     test("should not do path escaping on non-path compiles", async () => {
-      expect(
-        handlebarsParse(
-          {
-            verbose: 0,
-            name: "",
-            output: "",
-            templates: [],
-          },
-          "/home/test/{{name}} \\{{escaped}}.txt",
-          { name: "test" },
-          { isPath: false }
-        )
-      ).toEqual("/home/test/test {{escaped}}.txt")
+      expect(handlebarsParse(blankConf, "/home/test/{{name}} \\{{escaped}}.txt", { isPath: false })).toEqual(
+        "/home/test/test {{escaped}}.txt"
+      )
     })
   })
 })

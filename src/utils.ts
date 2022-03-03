@@ -95,17 +95,17 @@ export function getOptionValueForFile<T>(
   }
   return (fn as FileResponseFn<T>)(
     filePath,
-    path.dirname(handlebarsParse(options, filePath, data, { isPath: true }).toString()),
-    path.basename(handlebarsParse(options, filePath, data, { isPath: true }).toString())
+    path.dirname(handlebarsParse(options, filePath, { isPath: true }).toString()),
+    path.basename(handlebarsParse(options, filePath, { isPath: true }).toString())
   )
 }
 
 export function handlebarsParse(
   options: ScaffoldConfig,
   templateBuffer: Buffer | string,
-  data: Record<string, string>,
   { isPath = false }: { isPath?: boolean } = {}
 ) {
+  const { data } = options
   try {
     let str = templateBuffer.toString()
     if (isPath) {
@@ -216,7 +216,7 @@ export async function getTemplateFileInfo(
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
   const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
-  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), data, {
+  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), {
     isPath: true,
   }).toString()
   const exists = await pathExists(outputPath)
@@ -238,7 +238,7 @@ export async function copyFileTransformed(
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const outputContents = handlebarsParse(options, templateBuffer, data)
+    const outputContents = handlebarsParse(options, templateBuffer)
 
     if (!options.dryRun) {
       await writeFile(outputPath, outputContents)
@@ -265,7 +265,7 @@ export function getOutputDir(
       basePath,
       options.createSubFolder
         ? options.subFolderNameHelper
-          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`, data)
+          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`)
           : options.name
         : undefined,
     ].filter(Boolean) as string[])
