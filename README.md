@@ -104,7 +104,7 @@ const config = {
   output: path.join(__dirname, "src", "components"),
   createSubFolder: true,
   subFolderNameHelper: "upperCase"
-  locals: {
+  data: {
     property: "value",
   },
   helpers: {
@@ -290,5 +290,5 @@ Some tips on getting around the code:
   enabling you to test different behaviors. See `yarn cmd -h` for more information.
 
   > This requires an updated build, and does not trigger one itself. Either use `yarn dev` to watch
-  > for changes and build, or `yarn build` before running this, or use `yarn build-cmd` instead, 
+  > for changes and build, or `yarn build` before running this, or use `yarn build-cmd` instead,
   > which triggers a build right before running the command with the rest of the given arguments.
