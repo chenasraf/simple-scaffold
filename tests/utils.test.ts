@@ -27,8 +27,17 @@ describe("Utils", () => {
         )
       })
     })
-    test("should work for non-windows paths", async () => {
-      expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual("/home/test/test.txt")
+    describe("non-windows paths", () => {
+      beforeAll(() => {
+        origSep = path.sep
+        Object.defineProperty(path, "sep", { value: "/" })
+      })
+      afterAll(() => {
+        Object.defineProperty(path, "sep", { value: origSep })
+      })
+      test("should work for non-windows paths", async () => {
+        expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual("/home/test/test.txt")
+      })
     })
     test("should not do path escaping on non-path compiles", async () => {
       expect(handlebarsParse(blankConf, "/home/test/{{name}} \\{{escaped}}.txt", { isPath: false })).toEqual(

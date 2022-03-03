@@ -145,26 +145,28 @@ export async function isDir(path: string): Promise<boolean> {
 }
 
 export function removeGlob(template: string) {
-  return template.replace(/\*/g, "").replace(/\/\//g, "/")
+  return template.replace(/\*/g, "").replace(/(\/\/|\\\\)/g, path.sep)
 }
 
 export function makeRelativePath(str: string): string {
-  return str.startsWith("/") ? str.slice(1) : str
+  return str.startsWith(path.sep) ? str.slice(1) : str
 }
 
 export function getBasePath(relPath: string) {
   return path
     .resolve(process.cwd(), relPath)
-    .replace(process.cwd() + "/", "")
+    .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
 
 export async function getFileList(options: ScaffoldConfig, template: string) {
-  return await promisify(glob)(template, {
-    dot: true,
-    debug: options.verbose === LogLevel.Debug,
-    nodir: true,
-  })
+  return (
+    await promisify(glob)(template, {
+      dot: true,
+      debug: options.verbose === LogLevel.Debug,
+      nodir: true,
+    })
+  ).map((f) => f.replace(/\//g, path.sep))
 }
 
 export interface GlobInfo {
@@ -185,7 +187,7 @@ export async function getTemplateGlobInfo(options: ScaffoldConfig, template: str
   const _shouldAddGlob = !isGlob && isDirOrGlob
   const origTemplate = template
   if (_shouldAddGlob) {
-    _template = template + "/**/*"
+    _template = path.join(template, "**", "*")
   }
   return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
 }
