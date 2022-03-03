@@ -1,5 +1,4 @@
 import path from "path"
-import { promises as fsPromises } from "fs"
 
 import {
   createDirIfNotExists,
