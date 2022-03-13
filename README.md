@@ -1,16 +1,13 @@
 # simple-scaffold
 
-Simple Scaffold allows you to create your structured files based on templates.
+Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
 
-Simply organize your commonly-created files in their original structure, and replace any variable
-values (such as component or app name) inside the paths or contents of the files with tokens to be
-populated upon scaffolding.
+It is completely framework agnostic so you can use it for anything from a few simple files to an
+entire app boilerplate setup.
 
-Then, run Simple Scaffold and it will generate your files for you in the desired structure,
-with file names and contents that contain your dynamic information.
-
-It's a simple way to easily create reusable components, common class files to start writing from,
-or even entire app structures.
+Simply organize your commonly-created files in their original structure, and running Simple Scaffold
+will copy the files to the output path, while replacing values (such as component or app name, or
+other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
 ## Install
 
@@ -22,7 +19,7 @@ npm install [-g] simple-scaffold
 # yarn
 yarn [global] add simple-scaffold
 # run without installing
-npx simple-scaffold <...args>
+npx simple-scaffold@latest <...args>
 ```
 
 ## Use as a command line tool
@@ -81,10 +78,10 @@ You can also add this as a script in your `package.json`:
 
 ```json
 {
-  ...
+  // ...
   "scripts": {
-    ...
-    "scaffold": "yarn simple-scaffold --templates scaffolds/component/**/* --output src/components --data '{\"myProp\": \"propName\", \"myVal\": \"123\"}'"
+    // ...
+    "scaffold": "yarn simple-scaffold -t scaffolds/component/**/* -o src/components -d '{\"myProp\": \"propName\", \"myVal\": 123}'"
   }
 }
 ```
@@ -148,15 +145,29 @@ transformed files in the output directory.
 The data available for the template parser is the data you pass to the `data` config option (or
 `--data` argument in CLI).
 
+For example, using the following command:
+
+```bash
+npx simple-scaffold@latest --templates templates/components/{{name}}.jsx --output src/components -create-sub-folder true MyComponent
+```
+
+Will output a file with the path:
+
+```plaintext
+<working_dir>/src/components/MyComponent.jsx
+```
+
+The contents of the file will be transformed in a similar fashion.
+
 Your `data` will be pre-populated with the following:
 
 - `{{Name}}`: PascalCase of the component name
-- `{{name}}`: raw name of the component
+- `{{name}}`: raw name of the component as you entered it
 
-> Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents,
-> see their documentation for more information on syntax.
+> Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
 > Any `data` you add in the config will be available for use with their names wrapped in
-> `{{` and `}}`.
+> `{{` and `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
+> [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more information.
 
 #### Helpers
 
@@ -169,14 +180,15 @@ Here are the built-in helpers available for use:
 
 | Helper name | Example code            | Example output |
 | ----------- | ----------------------- | -------------- |
+| [None]      | `{{ name }}`            | my name        |
 | camelCase   | `{{ camelCase name }}`  | myName         |
 | snakeCase   | `{{ snakeCase name }}`  | my_name        |
 | startCase   | `{{ startCase name }}`  | My Name        |
 | kebabCase   | `{{ kebabCase name }}`  | my-name        |
 | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
 | pascalCase  | `{{ pascalCase name }}` | MyName         |
-| upperCase   | `{{ upperCase name }}`  | MYNAME         |
-| lowerCase   | `{{ lowerCase name }}`  | myname         |
+| upperCase   | `{{ upperCase name }}`  | MY NAME        |
+| lowerCase   | `{{ lowerCase name }}`  | my name        |
 
 > These helpers are available for any data property, not exclusive to `name`.
 
@@ -220,12 +232,12 @@ simple-scaffold MyComponent \
 
 #### Contents of `project/scaffold/{{Name}}.jsx`
 
-```js
-const React = require('react')
+```typescriptreact
+import React from 'react'
 
-module.exports = function {{Name}}(props) {
+export default {{camelCase ame}}: React.FC = (props) => {
   return (
-    <div className="{{className}}">{{Name}} Component</div>
+    <div className="{{className}}">{{camelCase name}} Component</div>
   )
 }
 ```
@@ -255,10 +267,10 @@ With `createSubFolder = false`:
 
 #### Contents of `project/scaffold/MyComponent/MyComponent.jsx`
 
-```js
-const React = require("react")
+```typescriptreact
+import React from 'react'
 
-module.exports = function MyComponent(props) {
+export default MyComponent: React.FC = (props) => {
   return (
     <div className="myClassName">MyComponent Component</div>
   )
