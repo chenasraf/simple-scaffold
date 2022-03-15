@@ -78,10 +78,8 @@ You can also add this as a script in your `package.json`:
 
 ```json
 {
-  // ...
   "scripts": {
-    // ...
-    "scaffold": "yarn simple-scaffold -t scaffolds/component/**/* -o src/components -d '{\"myProp\": \"propName\", \"myVal\": 123}'"
+    "scaffold": "npx simple-scaffold@latest -t scaffolds/component/**/* -o src/components -d '{\"myProp\": \"propName\", \"myVal\": 123}'"
   }
 }
 ```
