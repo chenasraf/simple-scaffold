@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
+  "keywords": ["javascript", "cli", "template", "files", "typescript", "generator", "scaffold", "file", "scaffolding"],
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
