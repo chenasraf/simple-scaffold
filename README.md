@@ -135,6 +135,22 @@ available:
 
 Put your template files anywhere, and fill them with tokens for replacement.
 
+Each template (not file) in the config array is parsed individually, and copied to the output
+directory. If a single template path contains multiple files (e.g. if you use a folder path or a
+glob pattern), the first directory up the tree of that template will become the base inside the
+defined output path for that template, while copying files recursively and maintaining their
+relative structure.
+
+Examples:
+
+> In the following examples, the config `name` is `AppName`, and the config `output` is `src`.
+
+| Input template                                                                                                                                       | Output path(s)                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `./templates/{{ name }}.txt`                                                                                                                         | `src/AppName.txt`                                            |
+| `./templates/directory`  <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.txt`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol>      | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
+| `./templates/others/**/*.txt` <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.jpg`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol> | `src/outer2/inner/AppName.txt`                               |
+
 ### Variable/token replacement
 
 Scaffolding will replace `{{ varName }}` in both the file name and its contents and put the
@@ -146,7 +162,11 @@ The data available for the template parser is the data you pass to the `data` co
 For example, using the following command:
 
 ```bash
-npx simple-scaffold@latest --templates templates/components/{{name}}.jsx --output src/components -create-sub-folder true MyComponent
+npx simple-scaffold@latest \
+  --templates templates/components/{{name}}.jsx \
+  --output src/components \
+  -create-sub-folder true \
+  MyComponent
 ```
 
 Will output a file with the path:
@@ -165,7 +185,8 @@ Your `data` will be pre-populated with the following:
 > Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
 > Any `data` you add in the config will be available for use with their names wrapped in
 > `{{` and `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
-> [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more information.
+> [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
+> information.
 
 #### Helpers
 
