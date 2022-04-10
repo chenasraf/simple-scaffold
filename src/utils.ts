@@ -117,7 +117,8 @@ export function handlebarsParse(
       outputContents = outputContents.replace(/\//g, "\\")
     }
     return outputContents
-  } catch {
+  } catch (e) {
+    log(options, LogLevel.Debug, e)
     log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
     return templateBuffer
   }
