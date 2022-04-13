@@ -7,7 +7,17 @@
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
-  "keywords": ["javascript", "cli", "template", "files", "typescript", "generator", "scaffold", "file", "scaffolding"],
+  "keywords": [
+    "javascript",
+    "cli",
+    "template",
+    "files",
+    "typescript",
+    "generator",
+    "scaffold",
+    "file",
+    "scaffolding"
+  ],
   "scripts": {
     "clean": "rimraf dist/",
     "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
@@ -27,7 +37,6 @@
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
-    "@types/args": "^3.0.1",
     "@types/glob": "^7.1.1",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.171",

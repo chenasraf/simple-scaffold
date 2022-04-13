@@ -537,11 +537,6 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
   integrity sha512-FTgBI767POY/lKNDNbIzgAX6miIDBs6NTCbdlDb8TrWovHsSvaVIZDlTqym29C6UqhzwcJx4CYr+AlrMywA0cA==
 
-"@types/args@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@types/args/-/args-3.0.1.tgz#59e8e787ed8a810408dd9a324157cc20b7001468"
-  integrity sha512-Mfre8T2comeJbw2D6W8mzQP+0Q8fpS7nkbHgatzU31tWsLs0Lkyc+ObdYfgV4SuMZn/n5MEWlxh2rc25125s0Q==
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.15"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.15.tgz#2ccfb1ad55a02c83f8e0ad327cbc332f55eb1024"
