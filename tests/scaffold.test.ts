@@ -94,7 +94,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should create with config", async () => {
@@ -107,7 +107,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )
@@ -133,7 +133,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my value is 1")
+        expect(data.toString()).toEqual("Hello, my value is 1")
       })
 
       test("should overwrite with config", async () => {
@@ -155,7 +155,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my value is 2")
+        expect(data.toString()).toEqual("Hello, my value is 2")
       })
     })
   )
@@ -189,6 +189,33 @@ describe("Scaffold", () => {
   )
 
   describe(
+    "dry run",
+    withMock(fileStructNormal, () => {
+      let consoleMock1: jest.SpyInstance
+      beforeAll(() => {
+        consoleMock1 = jest.spyOn(console, "error").mockImplementation(() => void 0)
+      })
+
+      afterAll(() => {
+        consoleMock1.mockRestore()
+      })
+
+      test("should not write to disk", async () => {
+        Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          data: { value: "1" },
+          verbose: 0,
+          dryRun: true,
+        })
+
+        expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
+      })
+    })
+  )
+
+  describe(
     "outputPath override",
     withMock(fileStructNormal, () => {
       test("should allow override function", async () => {
@@ -200,7 +227,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
         const data = readFileSync(join(process.cwd(), "/custom-output/app_name/app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )
@@ -344,7 +371,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should work with default helper", async () => {
@@ -358,7 +385,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "APP_NAME", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should work with custom helper", async () => {
@@ -375,7 +402,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "REPLACED", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )
@@ -394,7 +421,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should work with custom callback", async () => {
@@ -411,13 +438,28 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe(
+        expect(data.toString()).toEqual(
           [
             "Hello, my app is app_name".toUpperCase(),
             fileStructNormal.input["{{name}}.txt"],
             join(process.cwd(), "output", "app_name.txt"),
           ].join(", ")
         )
+      })
+      test("should work with undefined response custom callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+          beforeWrite: () => undefined,
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )

@@ -130,7 +130,11 @@ export interface ScaffoldConfig {
    * @returns `String | Buffer | undefined` The final output of the file contents-only, after further modifications -
    * or `undefined` to use the original content (i.e. `content.toString()`)
    */
-  beforeWrite?(content: Buffer, rawContent: Buffer, outputPath: string): string | Buffer | undefined
+  beforeWrite?(
+    content: Buffer,
+    rawContent: Buffer,
+    outputPath: string
+  ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 }
 export interface ScaffoldCmdConfig {
   name: string

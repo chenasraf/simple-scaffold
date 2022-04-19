@@ -299,7 +299,7 @@ export async function copyFileTransformed(
     const templateBuffer = await readFile(inputPath)
     const unprocessedOutputContents = handlebarsParse(options, templateBuffer)
     const finalOutputContents = (
-      options.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath) ?? unprocessedOutputContents
+      (await options.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
     ).toString()
 
     if (!options.dryRun) {
