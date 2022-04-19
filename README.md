@@ -9,7 +9,6 @@ Simply organize your commonly-created files in their original structure, and run
 will copy the files to the output path, while replacing values (such as component or app name, or
 other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
-
 <br />
 
 <details>
@@ -24,7 +23,10 @@ other custom data) inside the paths or contents of the files using Handlebars.js
   - [Preparing files](#preparing-files)
     - [Template files](#template-files)
     - [Variable/token replacement](#variabletoken-replacement)
-    - [Helpers](#helpers)
+    - [Built-in Helpers](#built-in-helpers)
+      - [Capitalization Helpers](#capitalization-helpers)
+      - [Date helpers](#date-helpers)
+    - [Custom Helpers](#custom-helpers)
   - [Examples](#examples)
     - [Command Example](#command-example)
     - [Example Scaffold Input](#example-scaffold-input)
@@ -211,28 +213,58 @@ Your `data` will be pre-populated with the following:
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
-### Helpers
+### Built-in Helpers
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
 For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
 replace `My Name` with `my_name` when producing the final value.
 
-Here are the built-in helpers available for use:
+#### Capitalization Helpers
 
-| Helper name | Example code            | Example output |
-| ----------- | ----------------------- | -------------- |
-| [None]      | `{{ name }}`            | my name        |
-| camelCase   | `{{ camelCase name }}`  | myName         |
-| snakeCase   | `{{ snakeCase name }}`  | my_name        |
-| startCase   | `{{ startCase name }}`  | My Name        |
-| kebabCase   | `{{ kebabCase name }}`  | my-name        |
-| hyphenCase  | `{{ hyphenCase name }}` | my-name        |
-| pascalCase  | `{{ pascalCase name }}` | MyName         |
-| upperCase   | `{{ upperCase name }}`  | MY NAME        |
-| lowerCase   | `{{ lowerCase name }}`  | my name        |
+| Helper name  | Example code            | Example output |
+| ------------ | ----------------------- | -------------- |
+| [None]       | `{{ name }}`            | my name        |
+| `camelCase`  | `{{ camelCase name }}`  | myName         |
+| `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
+| `startCase`  | `{{ startCase name }}`  | My Name        |
+| `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
+| `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
+| `pascalCase` | `{{ pascalCase name }}` | MyName         |
+| `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
+| `lowerCase`  | `{{ lowerCase name }}`  | my name        |
 
-> These helpers are available for any data property, not exclusive to `name`.
+#### Date helpers
+
+| Helper name                      | Description                                                      | Example code                                                     | Example output   |
+| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------- |
+| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | 2042-01-01 15:00 |
+| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | 2042-01-01 14:00 |
+| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | 2042-01-01 15:00 |
+| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | 2041-31-12 15:00 |
+| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | 2042-01-01 12:00 |
+
+Further details:
+
+- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates.
+  If you want more information on the date tokens to use, refer to
+  [their format documentation](https://date-fns.org/docs/format).
+
+- The date helper format takes the following arguments:
+
+    ```typescript
+    (
+      date: string,
+      format: string,
+      offsetAmount?: number,
+      offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+    )
+    ```
+
+- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
+  it is implicitly the current date.
+
+### Custom Helpers
 
 You may also add your own custom helpers using the `helpers` options when using the JS API (rather
 than the CLI). The `helpers` option takes an object whose keys are helper names, and values are
@@ -244,8 +276,8 @@ config.helpers = {
 }
 ```
 
-These helpers will also be available to you when using `subFolderNameHelper` or
-`--sub-folder-name-helper` as a possible value.
+All of the above helpers (built in and custom) will also be available to you when using
+`subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
 
 ## Examples
 
@@ -325,7 +357,11 @@ I am developing this package on my free time, so any support, whether code, issu
 is very helpful to sustaining its life. If you would like to donate a bit to help keep the project
 alive, I would be very thankful!
 
-<a href='https://ko-fi.com/casraf' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/casraf' target='_blank'>
+  <img height='36' style='border:0px;height:36px;'
+    src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3'
+    alt='Buy Me a Coffee at ko-fi.com' />
+</a>
 
 I welcome any issues or pull requests on GitHub. If you find a bug, or would like a new feature,
 don't hesitate to open an appropriate issue and I will do my best to reply promptly.
