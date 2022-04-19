@@ -113,6 +113,22 @@ export interface ScaffoldConfig {
    * helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
    */
   subFolderNameHelper?: DefaultHelperKeys | string
+
+  /**
+   * This callback runs right before content is being written to the disk. If you supply this function, you may return
+   * a string that represents the final content of your file, you may process the content as you see fit. For example,
+   * you may run formatters on a file, fix output in edge-cases not supported by helpers or data, etc.
+   *
+   * If the return value of this function is `undefined`, the original content will be used.
+   *
+   * @param content The original template after token replacement
+   * @param rawContent The original template before token replacement
+   * @param outputPath The final output path of the processed file
+   *
+   * @returns `String | Buffer | undefined` The final output of the file contents-only, after further modifications -
+   * or `undefined` to use the original content (i.e. `content.toString()`)
+   */
+  beforeWrite?(content: Buffer, rawContent: Buffer, outputPath: string): string | Buffer | undefined
 }
 export interface ScaffoldCmdConfig {
   name: string

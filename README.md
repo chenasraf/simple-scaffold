@@ -9,6 +9,35 @@ Simply organize your commonly-created files in their original structure, and run
 will copy the files to the output path, while replacing values (such as component or app name, or
 other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
+<br />
+
+<details>
+  <summary>Table of contents</summary>
+
+- [simple-scaffold](#simple-scaffold)
+  - [Install](#install)
+  - [Use as a command line tool](#use-as-a-command-line-tool)
+    - [Command Line Options](#command-line-options)
+  - [Use in Node.js](#use-in-nodejs)
+    - [Node-specific options](#node-specific-options)
+  - [Preparing files](#preparing-files)
+    - [Template files](#template-files)
+    - [Variable/token replacement](#variabletoken-replacement)
+    - [Helpers](#helpers)
+  - [Examples](#examples)
+    - [Command Example](#command-example)
+    - [Example Scaffold Input](#example-scaffold-input)
+      - [Input Directory structure](#input-directory-structure)
+      - [Contents of `project/scaffold/{{Name}}.jsx`](#contents-of-projectscaffoldnamejsx)
+    - [Example Scaffold Output](#example-scaffold-output)
+    - [Output directory structure](#output-directory-structure)
+      - [Contents of `project/scaffold/MyComponent/MyComponent.jsx`](#contents-of-projectscaffoldmycomponentmycomponentjsx)
+  - [Contributing](#contributing)
+
+</details>
+
+---
+
 ## Install
 
 You can either use it as a command line tool or import into your own code and run from there.
@@ -104,30 +133,23 @@ const config = {
   },
   helpers: {
     twice: (text) => [text, text].join(" ")
-  }
+  },
+  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
 }
 
 const scaffold = Scaffold(config)
 ```
 
-### Additional Node.js options
+### Node-specific options
 
-In addition to all the options available in the command line, there are some JS-specific options
-available:
+In addition to all the options available in the command line, there are some Node/JS-specific
+options available:
 
-1. When `output` is used in Node directly, it may also be passed a function for each input file to
-   output into a dynamic path:
-
-    ```typescript
-    config.output = (fullPath, baseDir, baseName) => {
-      console.log({ fullPath, baseDir, baseName })
-      return path.resolve(baseDir, baseName)
-    }
-    ```
-
-2. You may add custom `helpers` to your scaffolds. Helpers are simple `(string) => string` functions
-   that transform your `data` variables into other values. See [Helpers](#helpers) for the list of
-   default helpers, or add your own to be loaded into the template parser.
+| Option        | Type                                                                                         | Description                                                                                                                                                                                                                                         |
+| ------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `output`      |                                                                                              | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                     |
+| `helpers`     | `Record<string, (string) => string>`                                                         | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                |
+| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
 
 ## Preparing files
 
@@ -188,7 +210,7 @@ Your `data` will be pre-populated with the following:
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
-#### Helpers
+### Helpers
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 

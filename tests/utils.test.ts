@@ -23,7 +23,7 @@ describe("Utils", () => {
       })
       test("should work for windows paths", async () => {
         expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
-          "C:\\exports\\test.txt"
+          Buffer.from("C:\\exports\\test.txt")
         )
       })
     })
@@ -36,7 +36,9 @@ describe("Utils", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for non-windows paths", async () => {
-        expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual("/home/test/test.txt")
+        expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual(
+          Buffer.from("/home/test/test.txt")
+        )
       })
     })
     test("should not do path escaping on non-path compiles", async () => {
@@ -48,7 +50,7 @@ describe("Utils", () => {
             isPath: false,
           }
         )
-      ).toEqual("/home/test/test {{escaped}}.txt")
+      ).toEqual(Buffer.from("/home/test/test {{escaped}}.txt"))
     })
   })
 })
