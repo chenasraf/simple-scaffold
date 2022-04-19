@@ -170,11 +170,11 @@ Examples:
 
 > In the following examples, the config `name` is `AppName`, and the config `output` is `src`.
 
-| Input template                                                                                                                                       | Output path(s)                                               |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `./templates/{{ name }}.txt`                                                                                                                         | `src/AppName.txt`                                            |
-| `./templates/directory`  <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.txt`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol>      | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
-| `./templates/others/**/*.txt` <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.jpg`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol> | `src/outer2/inner/AppName.txt`                               |
+| Input template                | Files in template                                      | Output path(s)                                               |
+| ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| `./templates/{{ name }}.txt`  | `./templates/{{ name }}.txt`                           | `src/AppName.txt`                                            |
+| `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name.txt}}` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
+| `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name.txt}}` | `src/outer2/inner/AppName.txt`                               |
 
 ### Variable/token replacement
 
@@ -190,7 +190,7 @@ For example, using the following command:
 npx simple-scaffold@latest \
   --templates templates/components/{{name}}.jsx \
   --output src/components \
-  -create-sub-folder true \
+  --create-sub-folder true \
   MyComponent
 ```
 
@@ -309,7 +309,7 @@ simple-scaffold MyComponent \
 ```typescriptreact
 import React from 'react'
 
-export default {{camelCase ame}}: React.FC = (props) => {
+export default {{camelCase name}}: React.FC = (props) => {
   return (
     <div className="{{className}}">{{camelCase name}} Component</div>
   )
