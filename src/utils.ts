@@ -9,6 +9,15 @@ import Handlebars from "handlebars"
 import { promises as fsPromises } from "fs"
 import chalk from "chalk"
 const { stat, access, mkdir } = fsPromises
+import dtAdd from "date-fns/add"
+import dtFormat from "date-fns/format"
+import dtParseISO from "date-fns/parseISO"
+
+const dateFns = {
+  add: dtAdd,
+  format: dtFormat,
+  parseISO: dtParseISO,
+}
 
 import { glob } from "glob"
 import { promisify } from "util"
@@ -23,6 +32,50 @@ export const defaultHelpers: Record<DefaultHelperKeys, Helper> = {
   pascalCase,
   lowerCase: (text) => text.toLowerCase(),
   upperCase: (text) => text.toUpperCase(),
+  now: nowHelper,
+  date: dateHelper,
+}
+
+export function _dateHelper(date: Date, formatString: string): string
+export function _dateHelper(
+  date: Date,
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration
+): string
+export function _dateHelper(
+  date: Date,
+  formatString: string,
+  durationDifference?: number,
+  durationType?: keyof Duration
+): string {
+  if (durationType && durationDifference !== undefined) {
+    return dateFns.format(dateFns.add(date, { [durationType]: durationDifference }), formatString)
+  }
+  return dateFns.format(date, formatString)
+}
+
+export function nowHelper(formatString: string): string
+export function nowHelper(formatString: string, durationDifference: number, durationType: keyof Duration): string
+export function nowHelper(formatString: string, durationDifference?: number, durationType?: keyof Duration): string {
+  return _dateHelper(new Date(), formatString, durationDifference!, durationType!)
+}
+
+export function dateHelper(date: string, formatString: string): string
+export function dateHelper(
+  date: string,
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration
+): string
+
+export function dateHelper(
+  date: string,
+  formatString: string,
+  durationDifference?: number,
+  durationType?: keyof Duration
+): string {
+  return _dateHelper(dateFns.parseISO(date), formatString, durationDifference!, durationType!)
 }
 
 export function registerHelpers(options: ScaffoldConfig): void {

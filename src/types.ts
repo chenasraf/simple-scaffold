@@ -12,17 +12,19 @@ export type FileResponse<T> = T | FileResponseFn<T>
 
 export type DefaultHelperKeys =
   | "camelCase"
+  | "date"
+  | "hyphenCase"
+  | "kebabCase"
+  | "lowerCase"
+  | "now"
+  | "pascalCase"
   | "snakeCase"
   | "startCase"
-  | "kebabCase"
-  | "hyphenCase"
-  | "pascalCase"
-  | "lowerCase"
   | "upperCase"
 
 export type HelperKeys<T> = DefaultHelperKeys | T
 
-export type Helper = (text: string) => string
+export type Helper = Handlebars.HelperDelegate
 
 export interface ScaffoldConfig {
   /**
