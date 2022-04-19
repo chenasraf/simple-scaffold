@@ -244,15 +244,17 @@ export async function copyFileTransformed(
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const preOutputContents = handlebarsParse(options, templateBuffer)
-    const outputContents = options.beforeWrite?.(preOutputContents, templateBuffer, outputPath) ?? preOutputContents
+    const unprocessedOutputContents = handlebarsParse(options, templateBuffer)
+    const finalOutputContents = (
+      options.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath) ?? unprocessedOutputContents
+    ).toString()
 
     if (!options.dryRun) {
-      await writeFile(outputPath, outputContents)
+      await writeFile(outputPath, finalOutputContents)
       log(options, LogLevel.Info, "Done.")
     } else {
       log(options, LogLevel.Info, "Content output:")
-      log(options, LogLevel.Info, outputContents)
+      log(options, LogLevel.Info, finalOutputContents)
     }
   } else if (exists) {
     log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)

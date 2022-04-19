@@ -104,30 +104,23 @@ const config = {
   },
   helpers: {
     twice: (text) => [text, text].join(" ")
-  }
+  },
+  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
 }
 
 const scaffold = Scaffold(config)
 ```
 
-### Additional Node.js options
+### Node-specific options
 
-In addition to all the options available in the command line, there are some JS-specific options
-available:
+In addition to all the options available in the command line, there are some Node/JS-specific
+options available:
 
-1. When `output` is used in Node directly, it may also be passed a function for each input file to
-   output into a dynamic path:
-
-    ```typescript
-    config.output = (fullPath, baseDir, baseName) => {
-      console.log({ fullPath, baseDir, baseName })
-      return path.resolve(baseDir, baseName)
-    }
-    ```
-
-2. You may add custom `helpers` to your scaffolds. Helpers are simple `(string) => string` functions
-   that transform your `data` variables into other values. See [Helpers](#helpers) for the list of
-   default helpers, or add your own to be loaded into the template parser.
+| Option        | Type                                                                                         | Description                                                                                                                                                                                                                                         |
+| ------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `output`      |                                                                                              | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                     |
+| `helpers`     | `Record<string, (string) => string>`                                                         | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                |
+| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
 
 ## Preparing files
 

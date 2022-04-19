@@ -121,11 +121,14 @@ export interface ScaffoldConfig {
    *
    * If the return value of this function is `undefined`, the original content will be used.
    *
-   * @param content The original template after modification
-   * @param rawContent The original template before modification
-   * @param outputPath The full output path of the processed file
+   * @param content The original template after token replacement
+   * @param rawContent The original template before token replacement
+   * @param outputPath The final output path of the processed file
+   *
+   * @returns `String | Buffer | undefined` The final output of the file contents-only, after further modifications -
+   * or `undefined` to use the original content (i.e. `content.toString()`)
    */
-  beforeWrite?(content: Buffer, rawContent: Buffer, outputPath: string): string | undefined
+  beforeWrite?(content: Buffer, rawContent: Buffer, outputPath: string): string | Buffer | undefined
 }
 export interface ScaffoldCmdConfig {
   name: string
