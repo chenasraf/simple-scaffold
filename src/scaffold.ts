@@ -51,7 +51,7 @@ import { LogLevel, ScaffoldConfig } from "./types"
  * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
  * (for example, formatting a date)
  */
-export async function Scaffold({ ...options }: ScaffoldConfig) {
+export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
   options.output ??= process.cwd()
 
   registerHelpers(options)

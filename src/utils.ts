@@ -25,7 +25,7 @@ export const defaultHelpers: Record<DefaultHelperKeys, Helper> = {
   upperCase: (text) => text.toUpperCase(),
 }
 
-export function registerHelpers(options: ScaffoldConfig) {
+export function registerHelpers(options: ScaffoldConfig): void {
   const _helpers = { ...defaultHelpers, ...options.helpers }
   for (const helperName in _helpers) {
     log(options, LogLevel.Debug, `Registering helper: ${helperName}`)
@@ -33,11 +33,11 @@ export function registerHelpers(options: ScaffoldConfig) {
   }
 }
 
-export function handleErr(err: NodeJS.ErrnoException | null) {
+export function handleErr(err: NodeJS.ErrnoException | null): void {
   if (err) throw err
 }
 
-export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
+export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]): void {
   if (options.quiet || options.verbose === LogLevel.None || level < (options.verbose ?? LogLevel.Info)) {
     return
   }
@@ -144,7 +144,7 @@ export async function isDir(path: string): Promise<boolean> {
   return tplStat.isDirectory()
 }
 
-export function removeGlob(template: string) {
+export function removeGlob(template: string): string {
   return template.replace(/\*/g, "").replace(/(\/\/|\\\\)/g, path.sep)
 }
 
@@ -152,14 +152,14 @@ export function makeRelativePath(str: string): string {
   return str.startsWith(path.sep) ? str.slice(1) : str
 }
 
-export function getBasePath(relPath: string) {
+export function getBasePath(relPath: string): string {
   return path
     .resolve(process.cwd(), relPath)
     .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
 
-export async function getFileList(options: ScaffoldConfig, template: string) {
+export async function getFileList(options: ScaffoldConfig, template: string): Promise<string[]> {
   return (
     await promisify(glob)(template, {
       dot: true,
@@ -192,7 +192,7 @@ export async function getTemplateGlobInfo(options: ScaffoldConfig, template: str
   return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
 }
 
-export async function ensureFileExists(template: string, isGlob: boolean) {
+export async function ensureFileExists(template: string, isGlob: boolean): Promise<void> {
   if (!isGlob && !(await pathExists(template))) {
     const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
     err.code = "ENOENT"
@@ -238,7 +238,7 @@ export async function copyFileTransformed(
     outputPath: string
     inputPath: string
   }
-) {
+): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
@@ -261,7 +261,7 @@ export async function copyFileTransformed(
   }
 }
 
-export function getOutputDir(options: ScaffoldConfig, outputPathOpt: string, basePath: string) {
+export function getOutputDir(options: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
   return path.resolve(
     process.cwd(),
     ...([
@@ -297,7 +297,7 @@ export function logInputFile(
     isDirOrGlob: boolean
     isGlob: boolean
   }
-) {
+): void {
   log(
     options,
     LogLevel.Debug,
@@ -314,7 +314,7 @@ export function logInputFile(
   )
 }
 
-export function logInitStep(options: ScaffoldConfig) {
+export function logInitStep(options: ScaffoldConfig): void {
   log(options, LogLevel.Debug, "Full config:", {
     name: options.name,
     templates: options.templates,
