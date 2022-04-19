@@ -9,6 +9,7 @@ Simply organize your commonly-created files in their original structure, and run
 will copy the files to the output path, while replacing values (such as component or app name, or
 other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
+
 <br />
 
 <details>
@@ -319,6 +320,12 @@ export default MyComponent: React.FC = (props) => {
 ```
 
 ## Contributing
+
+I am developing this package on my free time, so any support, whether code, issues, or just stars
+is very helpful to sustaining its life. If you would like to donate a bit to help keep the project
+alive, I would be very thankful!
+
+<a href='https://ko-fi.com/casraf' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 I welcome any issues or pull requests on GitHub. If you find a bug, or would like a new feature,
 don't hesitate to open an appropriate issue and I will do my best to reply promptly.
