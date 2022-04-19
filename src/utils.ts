@@ -245,16 +245,6 @@ export async function getTemplateGlobInfo(options: ScaffoldConfig, template: str
   return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
 }
 
-export async function ensureFileExists(template: string, isGlob: boolean): Promise<void> {
-  if (!isGlob && !(await pathExists(template))) {
-    const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
-    err.code = "ENOENT"
-    err.path = template
-    err.errno = -2
-    throw err
-  }
-}
-
 export interface OutputFileInfo {
   inputPath: string
   outputPathOpt: string

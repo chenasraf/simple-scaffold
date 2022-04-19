@@ -11,7 +11,6 @@ import {
   makeRelativePath,
   registerHelpers,
   getTemplateGlobInfo,
-  ensureFileExists,
   getFileList,
   getBasePath,
   copyFileTransformed,
@@ -64,7 +63,6 @@ export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
           options,
           _template
         )
-        await ensureFileExists(template, isDirOrGlob)
         const files = await getFileList(options, template)
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {

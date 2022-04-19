@@ -183,6 +183,16 @@ describe("Scaffold", () => {
           })
         ).rejects.toThrow()
 
+        await expect(
+          Scaffold({
+            name: "app_name",
+            output: "output",
+            templates: ["non-existing-input/non-existing-file.txt"],
+            data: { value: "1" },
+            verbose: 0,
+          })
+        ).rejects.toThrow()
+
         expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
     })
