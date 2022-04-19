@@ -236,26 +236,33 @@ replace `My Name` with `my_name` when producing the final value.
 
 #### Date helpers
 
-| Helper name          | Description                               | Example code                                                     | Example output   |
-| -------------------- | ----------------------------------------- | ---------------------------------------------------------------- | ---------------- |
-| `now`                | Current date with format                  | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | 2042-01-01 15:00 |
-| `now` (with offset)  | Current date with format, and with offset | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | 2042-01-01 14:00 |
-| `date`               | Custom date with format                   | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | 2042-01-01 15:00 |
-| `date` (with offset) | Custom date with format, and with offset  | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | 2041-31-12 15:00 |
+| Helper name                      | Description                                                      | Example code                                                     | Example output   |
+| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------- |
+| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | 2042-01-01 15:00 |
+| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | 2042-01-01 14:00 |
+| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | 2042-01-01 15:00 |
+| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | 2041-31-12 15:00 |
+| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | 2042-01-01 12:00 |
 
-The date helper format takes the following arguments:
+Further details:
 
-```typescript
-(
-  date: string,
-  format: string,
-  offsetAmount?: number,
-  offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
-)
-```
+- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates.
+  If you want more information on the date tokens to use, refer to
+  [their format documentation](https://date-fns.org/docs/format).
 
-The now helper (for current time) takes the same arguments, minus the first one (`date`) as it is
-implicitly the current date.
+- The date helper format takes the following arguments:
+
+    ```typescript
+    (
+      date: string,
+      format: string,
+      offsetAmount?: number,
+      offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+    )
+    ```
+
+- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
+  it is implicitly the current date.
 
 ### Custom Helpers
 
@@ -269,8 +276,8 @@ config.helpers = {
 }
 ```
 
-These helpers will also be available to you when using `subFolderNameHelper` or
-`--sub-folder-name-helper` as a possible value.
+All of the above helpers (built in and custom) will also be available to you when using
+`subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
 
 ## Examples
 
