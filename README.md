@@ -1,4 +1,4 @@
-# simple-scaffold
+# Simple Scaffold
 
 Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
 
@@ -15,7 +15,7 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <details>
   <summary>Table of contents</summary>
 
-- [simple-scaffold](#simple-scaffold)
+- [Simple Scaffold](#simple-scaffold)
   - [Install](#install)
   - [Use as a command line tool](#use-as-a-command-line-tool)
     - [Command Line Options](#command-line-options)
