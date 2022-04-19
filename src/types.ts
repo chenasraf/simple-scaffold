@@ -1,3 +1,5 @@
+import { HelperDelegate } from "handlebars/runtime"
+
 export enum LogLevel {
   None = 0,
   Debug = 1,
@@ -24,7 +26,7 @@ export type DefaultHelperKeys =
 
 export type HelperKeys<T> = DefaultHelperKeys | T
 
-export type Helper = Handlebars.HelperDelegate
+export type Helper = HelperDelegate
 
 export interface ScaffoldConfig {
   /**
