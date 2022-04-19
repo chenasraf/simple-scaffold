@@ -86,7 +86,6 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
 export function getOptionValueForFile<T>(
   options: ScaffoldConfig,
   filePath: string,
-  data: Record<string, string>,
   fn: FileResponse<T>,
   defaultValue?: T
 ): T {
@@ -104,7 +103,7 @@ export function handlebarsParse(
   options: ScaffoldConfig,
   templateBuffer: Buffer | string,
   { isPath = false }: { isPath?: boolean } = {}
-) {
+): Buffer {
   const { data } = options
   try {
     let str = templateBuffer.toString()
@@ -116,11 +115,11 @@ export function handlebarsParse(
     if (isPath && path.sep !== "/") {
       outputContents = outputContents.replace(/\//g, "\\")
     }
-    return outputContents
+    return Buffer.from(outputContents)
   } catch (e) {
     log(options, LogLevel.Debug, e)
     log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
-    return templateBuffer
+    return Buffer.from(templateBuffer)
   }
 }
 
@@ -217,8 +216,8 @@ export async function getTemplateFileInfo(
   { templatePath, basePath }: { templatePath: string; basePath: string }
 ): Promise<OutputFileInfo> {
   const inputPath = path.resolve(process.cwd(), templatePath)
-  const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
-  const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
+  const outputPathOpt = getOptionValueForFile(options, inputPath, options.output)
+  const outputDir = getOutputDir(options, outputPathOpt, basePath)
   const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), {
     isPath: true,
   }).toString()
@@ -228,20 +227,25 @@ export async function getTemplateFileInfo(
 
 export async function copyFileTransformed(
   options: ScaffoldConfig,
-  data: Record<string, string>,
   {
     exists,
     overwrite,
     outputPath,
     inputPath,
-  }: { exists: boolean; overwrite: boolean; outputPath: string; inputPath: string }
+  }: {
+    exists: boolean
+    overwrite: boolean
+    outputPath: string
+    inputPath: string
+  }
 ) {
   if (!exists || overwrite) {
     if (exists && overwrite) {
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const outputContents = handlebarsParse(options, templateBuffer)
+    const preOutputContents = handlebarsParse(options, templateBuffer)
+    const outputContents = options.beforeWrite?.(preOutputContents, templateBuffer, outputPath) ?? preOutputContents
 
     if (!options.dryRun) {
       await writeFile(outputPath, outputContents)
@@ -255,12 +259,7 @@ export async function copyFileTransformed(
   }
 }
 
-export function getOutputDir(
-  options: ScaffoldConfig,
-  data: Record<string, string>,
-  outputPathOpt: string,
-  basePath: string
-) {
+export function getOutputDir(options: ScaffoldConfig, outputPathOpt: string, basePath: string) {
   return path.resolve(
     process.cwd(),
     ...([
@@ -268,7 +267,7 @@ export function getOutputDir(
       basePath,
       options.createSubFolder
         ? options.subFolderNameHelper
-          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`)
+          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`).toString()
           : options.name
         : undefined,
     ].filter(Boolean) as string[])

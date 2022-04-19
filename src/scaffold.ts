@@ -82,7 +82,10 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
             isDirOrGlob,
             isGlob,
           })
-          await handleTemplateFile(options, options.data, { templatePath: inputFilePath, basePath })
+          await handleTemplateFile(options, options.data, {
+            templatePath: inputFilePath,
+            basePath,
+          })
         }
       } catch (e: any) {
         handleErr(e)
@@ -104,7 +107,7 @@ async function handleTemplateFile(
         templatePath,
         basePath,
       })
-      const overwrite = getOptionValueForFile(options, inputPath, data, options.overwrite ?? false)
+      const overwrite = getOptionValueForFile(options, inputPath, options.overwrite ?? false)
 
       log(
         options,
@@ -121,7 +124,7 @@ async function handleTemplateFile(
       await createDirIfNotExists(path.dirname(outputPath), options)
 
       log(options, LogLevel.Info, `Writing to ${outputPath}`)
-      await copyFileTransformed(options, data, { exists, overwrite, outputPath, inputPath })
+      await copyFileTransformed(options, { exists, overwrite, outputPath, inputPath })
       resolve()
     } catch (e: any) {
       handleErr(e)

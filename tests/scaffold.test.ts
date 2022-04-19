@@ -291,7 +291,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "app_name/app_name.txt"))
+        const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
 
@@ -305,7 +305,7 @@ describe("Scaffold", () => {
           subFolderNameHelper: "upperCase",
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "APP_NAME/app_name.txt"))
+        const data = readFileSync(join(process.cwd(), "output", "APP_NAME", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
       })
 
@@ -322,8 +322,50 @@ describe("Scaffold", () => {
           },
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "REPLACED/app_name.txt"))
+        const data = readFileSync(join(process.cwd(), "output", "REPLACED", "app_name.txt"))
         expect(data.toString()).toBe("Hello, my app is app_name")
+      })
+    })
+  )
+  describe(
+    "before write",
+    withMock(fileStructNormal, () => {
+      test("should work with no callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toBe("Hello, my app is app_name")
+      })
+
+      test("should work with custom callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+          beforeWrite: (content, beforeContent, outputPath) =>
+            [content.toString().toUpperCase(), beforeContent, outputPath].join(", "),
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toBe(
+          [
+            "Hello, my app is app_name".toUpperCase(),
+            fileStructNormal.input["{{name}}.txt"],
+            join(process.cwd(), "output", "app_name.txt"),
+          ].join(", ")
+        )
       })
     })
   )
