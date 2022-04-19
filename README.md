@@ -9,6 +9,35 @@ Simply organize your commonly-created files in their original structure, and run
 will copy the files to the output path, while replacing values (such as component or app name, or
 other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
+<br />
+
+<details>
+  <summary>Table of contents</summary>
+
+- [simple-scaffold](#simple-scaffold)
+  - [Install](#install)
+  - [Use as a command line tool](#use-as-a-command-line-tool)
+    - [Command Line Options](#command-line-options)
+  - [Use in Node.js](#use-in-nodejs)
+    - [Node-specific options](#node-specific-options)
+  - [Preparing files](#preparing-files)
+    - [Template files](#template-files)
+    - [Variable/token replacement](#variabletoken-replacement)
+    - [Helpers](#helpers)
+  - [Examples](#examples)
+    - [Command Example](#command-example)
+    - [Example Scaffold Input](#example-scaffold-input)
+      - [Input Directory structure](#input-directory-structure)
+      - [Contents of `project/scaffold/{{Name}}.jsx`](#contents-of-projectscaffoldnamejsx)
+    - [Example Scaffold Output](#example-scaffold-output)
+    - [Output directory structure](#output-directory-structure)
+      - [Contents of `project/scaffold/MyComponent/MyComponent.jsx`](#contents-of-projectscaffoldmycomponentmycomponentjsx)
+  - [Contributing](#contributing)
+
+</details>
+
+---
+
 ## Install
 
 You can either use it as a command line tool or import into your own code and run from there.
@@ -181,7 +210,7 @@ Your `data` will be pre-populated with the following:
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
-#### Helpers
+### Helpers
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
