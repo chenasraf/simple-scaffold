@@ -11,7 +11,6 @@ import {
   makeRelativePath,
   registerHelpers,
   getTemplateGlobInfo,
-  ensureFileExists,
   getFileList,
   getBasePath,
   copyFileTransformed,
@@ -51,7 +50,7 @@ import { LogLevel, ScaffoldConfig } from "./types"
  * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
  * (for example, formatting a date)
  */
-export async function Scaffold({ ...options }: ScaffoldConfig) {
+export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
   options.output ??= process.cwd()
 
   registerHelpers(options)
@@ -64,7 +63,6 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
           options,
           _template
         )
-        await ensureFileExists(template, isDirOrGlob)
         const files = await getFileList(options, template)
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {
@@ -82,7 +80,10 @@ export async function Scaffold({ ...options }: ScaffoldConfig) {
             isDirOrGlob,
             isGlob,
           })
-          await handleTemplateFile(options, options.data, { templatePath: inputFilePath, basePath })
+          await handleTemplateFile(options, options.data, {
+            templatePath: inputFilePath,
+            basePath,
+          })
         }
       } catch (e: any) {
         handleErr(e)
@@ -104,7 +105,7 @@ async function handleTemplateFile(
         templatePath,
         basePath,
       })
-      const overwrite = getOptionValueForFile(options, inputPath, data, options.overwrite ?? false)
+      const overwrite = getOptionValueForFile(options, inputPath, options.overwrite ?? false)
 
       log(
         options,
@@ -121,7 +122,7 @@ async function handleTemplateFile(
       await createDirIfNotExists(path.dirname(outputPath), options)
 
       log(options, LogLevel.Info, `Writing to ${outputPath}`)
-      await copyFileTransformed(options, data, { exists, overwrite, outputPath, inputPath })
+      await copyFileTransformed(options, { exists, overwrite, outputPath, inputPath })
       resolve()
     } catch (e: any) {
       handleErr(e)

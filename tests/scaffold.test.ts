@@ -5,6 +5,7 @@ import { readdirSync, readFileSync } from "fs"
 import { Console } from "console"
 import { defaultHelpers } from "../src/utils"
 import { join } from "path"
+import * as dateFns from "date-fns"
 
 const fileStructNormal = {
   input: {
@@ -52,8 +53,16 @@ const fileStructHelpers = {
   },
   output: {},
 }
-// let logsTemp: any = []
-// let logMock: any
+
+const fileStructDates = {
+  input: {
+    "now.txt": "Today is {{ now 'mmm' }}, time is {{ now 'HH:mm' }}",
+    "offset.txt": "Yesterday was {{ now 'mmm' -1 'days' }}, time is {{ now 'HH:mm' -1 'days' }}",
+    "custom.txt": "Custom date is {{ date customDate 'mmm' }}, time is {{ date customDate 'HH:mm' }}",
+  },
+  output: {},
+}
+
 function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
   return () => {
     beforeEach(() => {
@@ -85,7 +94,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should create with config", async () => {
@@ -98,7 +107,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )
@@ -124,7 +133,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my value is 1")
+        expect(data.toString()).toEqual("Hello, my value is 1")
       })
 
       test("should overwrite with config", async () => {
@@ -146,7 +155,7 @@ describe("Scaffold", () => {
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(data.toString()).toBe("Hello, my value is 2")
+        expect(data.toString()).toEqual("Hello, my value is 2")
       })
     })
   )
@@ -174,6 +183,43 @@ describe("Scaffold", () => {
           })
         ).rejects.toThrow()
 
+        await expect(
+          Scaffold({
+            name: "app_name",
+            output: "output",
+            templates: ["non-existing-input/non-existing-file.txt"],
+            data: { value: "1" },
+            verbose: 0,
+          })
+        ).rejects.toThrow()
+
+        expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
+      })
+    })
+  )
+
+  describe(
+    "dry run",
+    withMock(fileStructNormal, () => {
+      let consoleMock1: jest.SpyInstance
+      beforeAll(() => {
+        consoleMock1 = jest.spyOn(console, "error").mockImplementation(() => void 0)
+      })
+
+      afterAll(() => {
+        consoleMock1.mockRestore()
+      })
+
+      test("should not write to disk", async () => {
+        Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          data: { value: "1" },
+          verbose: 0,
+          dryRun: true,
+        })
+
         expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
     })
@@ -191,7 +237,7 @@ describe("Scaffold", () => {
           verbose: 0,
         })
         const data = readFileSync(join(process.cwd(), "/custom-output/app_name/app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )
@@ -226,56 +272,99 @@ describe("Scaffold", () => {
   )
 
   describe(
-    "helpers",
+    "capitalization helpers",
     withMock(fileStructHelpers, () => {
       const _helpers: Record<string, (text: string) => string> = {
         add1: (text) => text + " 1",
       }
 
-      describe("default helpers", () => {
-        test("should work", async () => {
-          await Scaffold({
-            name: "app_name",
-            output: "output",
-            templates: ["input"],
-            verbose: 0,
-            helpers: _helpers,
-          })
-
-          const results = {
-            camelCase: "appName",
-            snakeCase: "app_name",
-            startCase: "App Name",
-            kebabCase: "app-name",
-            hyphenCase: "app-name",
-            pascalCase: "AppName",
-            lowerCase: "app_name",
-            upperCase: "APP_NAME",
-          }
-          for (const key in results) {
-            const file = readFileSync(join(process.cwd(), "output", "defaults", `${key}.txt`))
-            expect(file.toString()).toEqual(results[key as keyof typeof results])
-          }
+      test("should work", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          helpers: _helpers,
         })
+
+        const results = {
+          camelCase: "appName",
+          snakeCase: "app_name",
+          startCase: "App Name",
+          kebabCase: "app-name",
+          hyphenCase: "app-name",
+          pascalCase: "AppName",
+          lowerCase: "app_name",
+          upperCase: "APP_NAME",
+        }
+        for (const key in results) {
+          const file = readFileSync(join(process.cwd(), "output", "defaults", `${key}.txt`))
+          expect(file.toString()).toEqual(results[key as keyof typeof results])
+        }
       })
-      describe("custom helpers", () => {
-        test("should work", async () => {
-          await Scaffold({
-            name: "app_name",
-            output: "output",
-            templates: ["input"],
-            verbose: 0,
-            helpers: _helpers,
-          })
+    })
+  )
+  describe(
+    "date helpers",
+    withMock(fileStructDates, () => {
+      test("should work", async () => {
+        const now = new Date()
+        const yesterday = dateFns.add(new Date(), { days: -1 })
+        const customDate = dateFns.formatISO(dateFns.add(new Date(), { days: -1 }))
 
-          const results = {
-            add1: "app_name 1",
-          }
-          for (const key in results) {
-            const file = readFileSync(join(process.cwd(), "output", "custom", `${key}.txt`))
-            expect(file.toString()).toEqual(results[key as keyof typeof results])
-          }
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: { customDate },
         })
+
+        const nowFile = readFileSync(join(process.cwd(), "output", "now.txt"))
+        const offsetFile = readFileSync(join(process.cwd(), "output", "offset.txt"))
+        const customFile = readFileSync(join(process.cwd(), "output", "custom.txt"))
+
+        // "now.txt": "Today is {{ now 'mmm' }}, time is {{ now 'HH:mm' }}",
+        // "offset.txt": "Yesterday was {{ now 'mmm' -1 'days' }}, time is {{ now 'HH:mm' -1 'days' }}",
+        // "custom.txt": "Custom date is {{ date customDate 'mmm' }}, time is {{ date customDate 'HH:mm' }}",
+
+        expect(nowFile.toString()).toEqual(
+          `Today is ${dateFns.format(now, "mmm")}, time is ${dateFns.format(now, "HH:mm")}`
+        )
+        expect(offsetFile.toString()).toEqual(
+          `Yesterday was ${dateFns.format(yesterday, "mmm")}, time is ${dateFns.format(yesterday, "HH:mm")}`
+        )
+        expect(customFile.toString()).toEqual(
+          `Custom date is ${dateFns.format(dateFns.parseISO(customDate), "mmm")}, time is ${dateFns.format(
+            dateFns.parseISO(customDate),
+            "HH:mm"
+          )}`
+        )
+      })
+    })
+  )
+  describe(
+    "custom helpers",
+    withMock(fileStructHelpers, () => {
+      const _helpers: Record<string, (text: string) => string> = {
+        add1: (text) => text + " 1",
+      }
+      test("should work", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          helpers: _helpers,
+        })
+
+        const results = {
+          add1: "app_name 1",
+        }
+        for (const key in results) {
+          const file = readFileSync(join(process.cwd(), "output", "custom", `${key}.txt`))
+          expect(file.toString()).toEqual(results[key as keyof typeof results])
+        }
       })
     })
   )
@@ -291,8 +380,8 @@ describe("Scaffold", () => {
           verbose: 0,
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "app_name/app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should work with default helper", async () => {
@@ -305,8 +394,8 @@ describe("Scaffold", () => {
           subFolderNameHelper: "upperCase",
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "APP_NAME/app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        const data = readFileSync(join(process.cwd(), "output", "APP_NAME", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
 
       test("should work with custom helper", async () => {
@@ -322,8 +411,65 @@ describe("Scaffold", () => {
           },
         })
 
-        const data = readFileSync(join(process.cwd(), "output", "REPLACED/app_name.txt"))
-        expect(data.toString()).toBe("Hello, my app is app_name")
+        const data = readFileSync(join(process.cwd(), "output", "REPLACED", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
+      })
+    })
+  )
+  describe(
+    "before write",
+    withMock(fileStructNormal, () => {
+      test("should work with no callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
+      })
+
+      test("should work with custom callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+          beforeWrite: (content, beforeContent, outputPath) =>
+            [content.toString().toUpperCase(), beforeContent, outputPath].join(", "),
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toEqual(
+          [
+            "Hello, my app is app_name".toUpperCase(),
+            fileStructNormal.input["{{name}}.txt"],
+            join(process.cwd(), "output", "app_name.txt"),
+          ].join(", ")
+        )
+      })
+      test("should work with undefined response custom callback", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+          data: {
+            value: "value",
+          },
+          beforeWrite: () => undefined,
+        })
+
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
       })
     })
   )

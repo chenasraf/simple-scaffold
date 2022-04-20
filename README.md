@@ -1,4 +1,4 @@
-# simple-scaffold
+# Simple Scaffold
 
 Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
 
@@ -8,6 +8,38 @@ entire app boilerplate setup.
 Simply organize your commonly-created files in their original structure, and running Simple Scaffold
 will copy the files to the output path, while replacing values (such as component or app name, or
 other custom data) inside the paths or contents of the files using Handlebars.js syntax.
+
+<br />
+
+<details>
+  <summary>Table of contents</summary>
+
+- [Simple Scaffold](#simple-scaffold)
+  - [Install](#install)
+  - [Use as a command line tool](#use-as-a-command-line-tool)
+    - [Command Line Options](#command-line-options)
+  - [Use in Node.js](#use-in-nodejs)
+    - [Node-specific options](#node-specific-options)
+  - [Preparing files](#preparing-files)
+    - [Template files](#template-files)
+    - [Variable/token replacement](#variabletoken-replacement)
+    - [Built-in Helpers](#built-in-helpers)
+      - [Capitalization Helpers](#capitalization-helpers)
+      - [Date helpers](#date-helpers)
+    - [Custom Helpers](#custom-helpers)
+  - [Examples](#examples)
+    - [Command Example](#command-example)
+    - [Example Scaffold Input](#example-scaffold-input)
+      - [Input Directory structure](#input-directory-structure)
+      - [Contents of `project/scaffold/{{Name}}.jsx`](#contents-of-projectscaffoldnamejsx)
+    - [Example Scaffold Output](#example-scaffold-output)
+    - [Output directory structure](#output-directory-structure)
+      - [Contents of `project/scaffold/MyComponent/MyComponent.jsx`](#contents-of-projectscaffoldmycomponentmycomponentjsx)
+  - [Contributing](#contributing)
+
+</details>
+
+---
 
 ## Install
 
@@ -86,8 +118,9 @@ You can also add this as a script in your `package.json`:
 
 ## Use in Node.js
 
-You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
-Simply pass a config object to the Scaffold function when you are ready to start.
+You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
+groups - simply pass a config object to the Scaffold function when you are ready to start.
+
 The config takes similar arguments to the command line:
 
 ```typescript
@@ -104,30 +137,23 @@ const config = {
   },
   helpers: {
     twice: (text) => [text, text].join(" ")
-  }
+  },
+  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
 }
 
 const scaffold = Scaffold(config)
 ```
 
-### Additional Node.js options
+### Node-specific options
 
-In addition to all the options available in the command line, there are some JS-specific options
-available:
+In addition to all the options available in the command line, there are some Node/JS-specific
+options available:
 
-1. When `output` is used in Node directly, it may also be passed a function for each input file to
-   output into a dynamic path:
-
-    ```typescript
-    config.output = (fullPath, baseDir, baseName) => {
-      console.log({ fullPath, baseDir, baseName })
-      return path.resolve(baseDir, baseName)
-    }
-    ```
-
-2. You may add custom `helpers` to your scaffolds. Helpers are simple `(string) => string` functions
-   that transform your `data` variables into other values. See [Helpers](#helpers) for the list of
-   default helpers, or add your own to be loaded into the template parser.
+| Option        | Type                                                                                                                                   | Description                                                                                                                                                                                                                                                                                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `output`      |                                                                                                                                        | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                                                                                         |
+| `helpers`     | `Record<string, (string) => string>`                                                                                                   | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                                                                                    |
+| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => Promise<String \| Buffer \| undefined> \| String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files, allowing you to add more pre-processing to your generator pipeline. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
 
 ## Preparing files
 
@@ -145,11 +171,11 @@ Examples:
 
 > In the following examples, the config `name` is `AppName`, and the config `output` is `src`.
 
-| Input template                                                                                                                                       | Output path(s)                                               |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `./templates/{{ name }}.txt`                                                                                                                         | `src/AppName.txt`                                            |
-| `./templates/directory`  <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.txt`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol>      | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
-| `./templates/others/**/*.txt` <br /><br /> Directory contents:<br /> <ol><li>`outer/{{name}}.jpg`</li></li><li>`outer2/inner/{{name.txt}}`</li></ol> | `src/outer2/inner/AppName.txt`                               |
+| Input template                | Files in template                                      | Output path(s)                                               |
+| ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| `./templates/{{ name }}.txt`  | `./templates/{{ name }}.txt`                           | `src/AppName.txt`                                            |
+| `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name.txt}}` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
+| `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name.txt}}` | `src/outer2/inner/AppName.txt`                               |
 
 ### Variable/token replacement
 
@@ -165,7 +191,7 @@ For example, using the following command:
 npx simple-scaffold@latest \
   --templates templates/components/{{name}}.jsx \
   --output src/components \
-  -create-sub-folder true \
+  --create-sub-folder true \
   MyComponent
 ```
 
@@ -188,28 +214,58 @@ Your `data` will be pre-populated with the following:
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
-#### Helpers
+### Built-in Helpers
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
 For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
 replace `My Name` with `my_name` when producing the final value.
 
-Here are the built-in helpers available for use:
+#### Capitalization Helpers
 
-| Helper name | Example code            | Example output |
-| ----------- | ----------------------- | -------------- |
-| [None]      | `{{ name }}`            | my name        |
-| camelCase   | `{{ camelCase name }}`  | myName         |
-| snakeCase   | `{{ snakeCase name }}`  | my_name        |
-| startCase   | `{{ startCase name }}`  | My Name        |
-| kebabCase   | `{{ kebabCase name }}`  | my-name        |
-| hyphenCase  | `{{ hyphenCase name }}` | my-name        |
-| pascalCase  | `{{ pascalCase name }}` | MyName         |
-| upperCase   | `{{ upperCase name }}`  | MY NAME        |
-| lowerCase   | `{{ lowerCase name }}`  | my name        |
+| Helper name  | Example code            | Example output |
+| ------------ | ----------------------- | -------------- |
+| [None]       | `{{ name }}`            | my name        |
+| `camelCase`  | `{{ camelCase name }}`  | myName         |
+| `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
+| `startCase`  | `{{ startCase name }}`  | My Name        |
+| `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
+| `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
+| `pascalCase` | `{{ pascalCase name }}` | MyName         |
+| `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
+| `lowerCase`  | `{{ lowerCase name }}`  | my name        |
 
-> These helpers are available for any data property, not exclusive to `name`.
+#### Date helpers
+
+| Helper name                      | Description                                                      | Example code                                                     | Example output     |
+| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
+| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
+| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
+| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
+| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
+| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
+
+Further details:
+
+- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates.
+  If you want more information on the date tokens to use, refer to
+  [their format documentation](https://date-fns.org/docs/format).
+
+- The date helper format takes the following arguments:
+
+    ```typescript
+    (
+      date: string,
+      format: string,
+      offsetAmount?: number,
+      offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+    )
+    ```
+
+- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
+  it is implicitly the current date.
+
+### Custom Helpers
 
 You may also add your own custom helpers using the `helpers` options when using the JS API (rather
 than the CLI). The `helpers` option takes an object whose keys are helper names, and values are
@@ -221,8 +277,11 @@ config.helpers = {
 }
 ```
 
-These helpers will also be available to you when using `subFolderNameHelper` or
-`--sub-folder-name-helper` as a possible value.
+All of the above helpers (built in and custom) will also be available to you when using
+`subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
+
+> To see more information on how helpers work and more features, see
+> [Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).
 
 ## Examples
 
@@ -254,7 +313,7 @@ simple-scaffold MyComponent \
 ```typescriptreact
 import React from 'react'
 
-export default {{camelCase ame}}: React.FC = (props) => {
+export default {{camelCase name}}: React.FC = (props) => {
   return (
     <div className="{{className}}">{{camelCase name}} Component</div>
   )
@@ -297,6 +356,16 @@ export default MyComponent: React.FC = (props) => {
 ```
 
 ## Contributing
+
+I am developing this package on my free time, so any support, whether code, issues, or just stars
+is very helpful to sustaining its life. If you would like to donate a bit to help keep the project
+alive, I would be very thankful!
+
+<a href='https://ko-fi.com/casraf' target='_blank'>
+  <img height='36' style='border:0px;height:36px;'
+    src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3'
+    alt='Buy Me a Coffee at ko-fi.com' />
+</a>
 
 I welcome any issues or pull requests on GitHub. If you find a bug, or would like a new feature,
 don't hesitate to open an appropriate issue and I will do my best to reply promptly.

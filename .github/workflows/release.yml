@@ -1,8 +1,8 @@
-name: Alpha Releases
+name: Release
 
 on:
   push:
-    branches: [alpha]
+    branches: [master]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +25,6 @@ jobs:
           tag_prefix: "v"
       - name: Publish on NPM
         uses: JS-DevTools/npm-publish@v1
-        if: "!contains(github.event.head_commit.message, '[skip publish]')"
         with:
           package: ./dist/package.json
           token: "${{ secrets.NPM_TOKEN }}"
@@ -36,7 +35,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          prerelease: true
           tag_name: ${{ steps.update_tag.outputs.tagname }}
           release_name: Release ${{ steps.update_tag.outputs.tagname }}
       - name: Upload Release Asset

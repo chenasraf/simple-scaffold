@@ -1,3 +1,5 @@
+import { HelperDelegate } from "handlebars/runtime"
+
 export enum LogLevel {
   None = 0,
   Debug = 1,
@@ -12,17 +14,19 @@ export type FileResponse<T> = T | FileResponseFn<T>
 
 export type DefaultHelperKeys =
   | "camelCase"
+  | "date"
+  | "hyphenCase"
+  | "kebabCase"
+  | "lowerCase"
+  | "now"
+  | "pascalCase"
   | "snakeCase"
   | "startCase"
-  | "kebabCase"
-  | "hyphenCase"
-  | "pascalCase"
-  | "lowerCase"
   | "upperCase"
 
 export type HelperKeys<T> = DefaultHelperKeys | T
 
-export type Helper = (text: string) => string
+export type Helper = HelperDelegate
 
 export interface ScaffoldConfig {
   /**
@@ -94,17 +98,7 @@ export interface ScaffoldConfig {
    * })
    * ```
    *
-   * Here are the built-in helpers available for use:
-   * | Helper name | Example code            | Example output |
-   * | ----------- | ----------------------- | -------------- |
-   * | camelCase   | `{{ camelCase name }}`  | myName         |
-   * | snakeCase   | `{{ snakeCase name }}`  | my_name        |
-   * | startCase   | `{{ startCase name }}`  | My Name        |
-   * | kebabCase   | `{{ kebabCase name }}`  | my-name        |
-   * | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
-   * | pascalCase  | `{{ pascalCase name }}` | MyName         |
-   * | upperCase   | `{{ upperCase name }}`  | MYNAME         |
-   * | lowerCase   | `{{ lowerCase name }}`  | myname         |
+   * See the list of all the built-in available helpers, or how to define your own in the [readme](https://github.com/chenasraf/simple-scaffold#built-in-helpers).
    */
   helpers?: Record<string, Helper>
 
@@ -113,6 +107,26 @@ export interface ScaffoldConfig {
    * helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
    */
   subFolderNameHelper?: DefaultHelperKeys | string
+
+  /**
+   * This callback runs right before content is being written to the disk. If you supply this function, you may return
+   * a string that represents the final content of your file, you may process the content as you see fit. For example,
+   * you may run formatters on a file, fix output in edge-cases not supported by helpers or data, etc.
+   *
+   * If the return value of this function is `undefined`, the original content will be used.
+   *
+   * @param content The original template after token replacement
+   * @param rawContent The original template before token replacement
+   * @param outputPath The final output path of the processed file
+   *
+   * @returns `String | Buffer | undefined` The final output of the file contents-only, after further modifications -
+   * or `undefined` to use the original content (i.e. `content.toString()`)
+   */
+  beforeWrite?(
+    content: Buffer,
+    rawContent: Buffer,
+    outputPath: string
+  ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 }
 export interface ScaffoldCmdConfig {
   name: string

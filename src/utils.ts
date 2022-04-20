@@ -9,6 +9,15 @@ import Handlebars from "handlebars"
 import { promises as fsPromises } from "fs"
 import chalk from "chalk"
 const { stat, access, mkdir } = fsPromises
+import dtAdd from "date-fns/add"
+import dtFormat from "date-fns/format"
+import dtParseISO from "date-fns/parseISO"
+
+const dateFns = {
+  add: dtAdd,
+  format: dtFormat,
+  parseISO: dtParseISO,
+}
 
 import { glob } from "glob"
 import { promisify } from "util"
@@ -23,9 +32,53 @@ export const defaultHelpers: Record<DefaultHelperKeys, Helper> = {
   pascalCase,
   lowerCase: (text) => text.toLowerCase(),
   upperCase: (text) => text.toUpperCase(),
+  now: nowHelper,
+  date: dateHelper,
 }
 
-export function registerHelpers(options: ScaffoldConfig) {
+export function _dateHelper(date: Date, formatString: string): string
+export function _dateHelper(
+  date: Date,
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration
+): string
+export function _dateHelper(
+  date: Date,
+  formatString: string,
+  durationDifference?: number,
+  durationType?: keyof Duration
+): string {
+  if (durationType && durationDifference !== undefined) {
+    return dateFns.format(dateFns.add(date, { [durationType]: durationDifference }), formatString)
+  }
+  return dateFns.format(date, formatString)
+}
+
+export function nowHelper(formatString: string): string
+export function nowHelper(formatString: string, durationDifference: number, durationType: keyof Duration): string
+export function nowHelper(formatString: string, durationDifference?: number, durationType?: keyof Duration): string {
+  return _dateHelper(new Date(), formatString, durationDifference!, durationType!)
+}
+
+export function dateHelper(date: string, formatString: string): string
+export function dateHelper(
+  date: string,
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration
+): string
+
+export function dateHelper(
+  date: string,
+  formatString: string,
+  durationDifference?: number,
+  durationType?: keyof Duration
+): string {
+  return _dateHelper(dateFns.parseISO(date), formatString, durationDifference!, durationType!)
+}
+
+export function registerHelpers(options: ScaffoldConfig): void {
   const _helpers = { ...defaultHelpers, ...options.helpers }
   for (const helperName in _helpers) {
     log(options, LogLevel.Debug, `Registering helper: ${helperName}`)
@@ -33,11 +86,11 @@ export function registerHelpers(options: ScaffoldConfig) {
   }
 }
 
-export function handleErr(err: NodeJS.ErrnoException | null) {
+export function handleErr(err: NodeJS.ErrnoException | null): void {
   if (err) throw err
 }
 
-export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]) {
+export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]): void {
   if (options.quiet || options.verbose === LogLevel.None || level < (options.verbose ?? LogLevel.Info)) {
     return
   }
@@ -86,7 +139,6 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
 export function getOptionValueForFile<T>(
   options: ScaffoldConfig,
   filePath: string,
-  data: Record<string, string>,
   fn: FileResponse<T>,
   defaultValue?: T
 ): T {
@@ -104,7 +156,7 @@ export function handlebarsParse(
   options: ScaffoldConfig,
   templateBuffer: Buffer | string,
   { isPath = false }: { isPath?: boolean } = {}
-) {
+): Buffer {
   const { data } = options
   try {
     let str = templateBuffer.toString()
@@ -116,11 +168,11 @@ export function handlebarsParse(
     if (isPath && path.sep !== "/") {
       outputContents = outputContents.replace(/\//g, "\\")
     }
-    return outputContents
+    return Buffer.from(outputContents)
   } catch (e) {
     log(options, LogLevel.Debug, e)
     log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
-    return templateBuffer
+    return Buffer.from(templateBuffer)
   }
 }
 
@@ -145,7 +197,7 @@ export async function isDir(path: string): Promise<boolean> {
   return tplStat.isDirectory()
 }
 
-export function removeGlob(template: string) {
+export function removeGlob(template: string): string {
   return template.replace(/\*/g, "").replace(/(\/\/|\\\\)/g, path.sep)
 }
 
@@ -153,14 +205,14 @@ export function makeRelativePath(str: string): string {
   return str.startsWith(path.sep) ? str.slice(1) : str
 }
 
-export function getBasePath(relPath: string) {
+export function getBasePath(relPath: string): string {
   return path
     .resolve(process.cwd(), relPath)
     .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
 
-export async function getFileList(options: ScaffoldConfig, template: string) {
+export async function getFileList(options: ScaffoldConfig, template: string): Promise<string[]> {
   return (
     await promisify(glob)(template, {
       dot: true,
@@ -193,16 +245,6 @@ export async function getTemplateGlobInfo(options: ScaffoldConfig, template: str
   return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
 }
 
-export async function ensureFileExists(template: string, isGlob: boolean) {
-  if (!isGlob && !(await pathExists(template))) {
-    const err: NodeJS.ErrnoException = new Error(`ENOENT, no such file or directory ${template}`)
-    err.code = "ENOENT"
-    err.path = template
-    err.errno = -2
-    throw err
-  }
-}
-
 export interface OutputFileInfo {
   inputPath: string
   outputPathOpt: string
@@ -217,8 +259,8 @@ export async function getTemplateFileInfo(
   { templatePath, basePath }: { templatePath: string; basePath: string }
 ): Promise<OutputFileInfo> {
   const inputPath = path.resolve(process.cwd(), templatePath)
-  const outputPathOpt = getOptionValueForFile(options, inputPath, data, options.output)
-  const outputDir = getOutputDir(options, data, outputPathOpt, basePath)
+  const outputPathOpt = getOptionValueForFile(options, inputPath, options.output)
+  const outputDir = getOutputDir(options, outputPathOpt, basePath)
   const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), {
     isPath: true,
   }).toString()
@@ -228,39 +270,41 @@ export async function getTemplateFileInfo(
 
 export async function copyFileTransformed(
   options: ScaffoldConfig,
-  data: Record<string, string>,
   {
     exists,
     overwrite,
     outputPath,
     inputPath,
-  }: { exists: boolean; overwrite: boolean; outputPath: string; inputPath: string }
-) {
+  }: {
+    exists: boolean
+    overwrite: boolean
+    outputPath: string
+    inputPath: string
+  }
+): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
       log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const outputContents = handlebarsParse(options, templateBuffer)
+    const unprocessedOutputContents = handlebarsParse(options, templateBuffer)
+    const finalOutputContents = (
+      (await options.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
+    ).toString()
 
     if (!options.dryRun) {
-      await writeFile(outputPath, outputContents)
+      await writeFile(outputPath, finalOutputContents)
       log(options, LogLevel.Info, "Done.")
     } else {
       log(options, LogLevel.Info, "Content output:")
-      log(options, LogLevel.Info, outputContents)
+      log(options, LogLevel.Info, finalOutputContents)
     }
   } else if (exists) {
     log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)
   }
 }
 
-export function getOutputDir(
-  options: ScaffoldConfig,
-  data: Record<string, string>,
-  outputPathOpt: string,
-  basePath: string
-) {
+export function getOutputDir(options: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
   return path.resolve(
     process.cwd(),
     ...([
@@ -268,7 +312,7 @@ export function getOutputDir(
       basePath,
       options.createSubFolder
         ? options.subFolderNameHelper
-          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`)
+          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`).toString()
           : options.name
         : undefined,
     ].filter(Boolean) as string[])
@@ -296,7 +340,7 @@ export function logInputFile(
     isDirOrGlob: boolean
     isGlob: boolean
   }
-) {
+): void {
   log(
     options,
     LogLevel.Debug,
@@ -313,7 +357,7 @@ export function logInputFile(
   )
 }
 
-export function logInitStep(options: ScaffoldConfig) {
+export function logInitStep(options: ScaffoldConfig): void {
   log(options, LogLevel.Debug, "Full config:", {
     name: options.name,
     templates: options.templates,
