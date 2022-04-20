@@ -118,8 +118,9 @@ You can also add this as a script in your `package.json`:
 
 ## Use in Node.js
 
-You can also build the scaffold yourself, if you want to create more complex arguments or scaffold groups.
-Simply pass a config object to the Scaffold function when you are ready to start.
+You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
+groups - simply pass a config object to the Scaffold function when you are ready to start.
+
 The config takes similar arguments to the command line:
 
 ```typescript
@@ -148,11 +149,11 @@ const scaffold = Scaffold(config)
 In addition to all the options available in the command line, there are some Node/JS-specific
 options available:
 
-| Option        | Type                                                                                                                                   | Description                                                                                                                                                                                                                                         |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `output`      |                                                                                                                                        | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                     |
-| `helpers`     | `Record<string, (string) => string>`                                                                                                   | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                |
-| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => Promise<String \| Buffer \| undefined> \| String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
+| Option        | Type                                                                                                                                   | Description                                                                                                                                                                                                                                                                                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `output`      |                                                                                                                                        | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                                                                                         |
+| `helpers`     | `Record<string, (string) => string>`                                                                                                   | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                                                                                    |
+| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => Promise<String \| Buffer \| undefined> \| String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files, allowing you to add more pre-processing to your generator pipeline. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
 
 ## Preparing files
 
@@ -236,13 +237,13 @@ replace `My Name` with `my_name` when producing the final value.
 
 #### Date helpers
 
-| Helper name                      | Description                                                      | Example code                                                     | Example output   |
-| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------- |
-| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | 2042-01-01 15:00 |
-| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | 2042-01-01 14:00 |
-| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | 2042-01-01 15:00 |
-| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | 2041-31-12 15:00 |
-| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | 2042-01-01 12:00 |
+| Helper name                      | Description                                                      | Example code                                                     | Example output     |
+| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
+| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
+| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
+| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
+| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
+| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
 
 Further details:
 
@@ -278,6 +279,9 @@ config.helpers = {
 
 All of the above helpers (built in and custom) will also be available to you when using
 `subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
+
+> To see more information on how helpers work and more features, see
+> [Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).
 
 ## Examples
 

@@ -98,17 +98,7 @@ export interface ScaffoldConfig {
    * })
    * ```
    *
-   * Here are the built-in helpers available for use:
-   * | Helper name | Example code            | Example output |
-   * | ----------- | ----------------------- | -------------- |
-   * | camelCase   | `{{ camelCase name }}`  | myName         |
-   * | snakeCase   | `{{ snakeCase name }}`  | my_name        |
-   * | startCase   | `{{ startCase name }}`  | My Name        |
-   * | kebabCase   | `{{ kebabCase name }}`  | my-name        |
-   * | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
-   * | pascalCase  | `{{ pascalCase name }}` | MyName         |
-   * | upperCase   | `{{ upperCase name }}`  | MYNAME         |
-   * | lowerCase   | `{{ lowerCase name }}`  | myname         |
+   * See the list of all the built-in available helpers, or how to define your own in the [readme](https://github.com/chenasraf/simple-scaffold#built-in-helpers).
    */
   helpers?: Record<string, Helper>
 
