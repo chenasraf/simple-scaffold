@@ -1,4 +1,13 @@
+<div style="text-align:center;">
+
 # Simple Scaffold
+
+[GitHub](https://github.com/chenasraf/simple-scaffold) |
+[Documentation](https://casraf.blog/simple-scaffold) |
+[NPM](https://npmjs.com/package/simple-scaffold) |
+[casraf.blog](https://casraf.blog)
+
+</div>
 
 Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
 
@@ -16,25 +25,25 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 
 - [Simple Scaffold](#simple-scaffold)
   - [Install](#install)
-  - [Use as a command line tool](#use-as-a-command-line-tool)
-    - [Command Line Options](#command-line-options)
-  - [Use in Node.js](#use-in-nodejs)
+  - [Command Line Interface (CLI)](#command-line-interface-cli)
+    - [Available flags](#available-flags)
+  - [Node module](#node-module)
     - [Node-specific options](#node-specific-options)
   - [Preparing files](#preparing-files)
     - [Template files](#template-files)
     - [Variable/token replacement](#variabletoken-replacement)
-    - [Built-in Helpers](#built-in-helpers)
-      - [Capitalization Helpers](#capitalization-helpers)
-      - [Date helpers](#date-helpers)
-    - [Custom Helpers](#custom-helpers)
+    - [Helpers](#helpers)
+      - [Built-in Helpers](#built-in-helpers)
+        - [Capitalization Helpers](#capitalization-helpers)
+        - [Date helpers](#date-helpers)
+      - [Custom Helpers](#custom-helpers)
   - [Examples](#examples)
-    - [Command Example](#command-example)
-    - [Example Scaffold Input](#example-scaffold-input)
-      - [Input Directory structure](#input-directory-structure)
-      - [Contents of `project/scaffold/{{Name}}.jsx`](#contents-of-projectscaffoldnamejsx)
-    - [Example Scaffold Output](#example-scaffold-output)
-    - [Output directory structure](#output-directory-structure)
-      - [Contents of `project/scaffold/MyComponent/MyComponent.jsx`](#contents-of-projectscaffoldmycomponentmycomponentjsx)
+    - [Run](#run)
+      - [Command Example](#command-example)
+      - [Node Module Example](#node-module-example)
+    - [Files](#files)
+      - [Input](#input)
+      - [Output](#output)
   - [Contributing](#contributing)
 
 </details>
@@ -54,9 +63,13 @@ yarn [global] add simple-scaffold
 npx simple-scaffold@latest <...args>
 ```
 
-## Use as a command line tool
+## Command Line Interface (CLI)
 
-### Command Line Options
+### Available flags
+
+The following is the help text from the `simple-scaffold` binary. To see this and more
+information anytime, add the `-h` or `--help` flag to your call, e.g.
+`npx simple-scaffold@latest -h`.
 
 ```plaintext
 Usage: simple-scaffold [options]
@@ -67,26 +80,26 @@ Options:
 
   --help|-h                       Display help information
 
-  --name|-n                       Name to be passed to the generated files. {{name}} and
-                                  {{Name}} inside contents and file names will be replaced
-                                  accordingly.
+  --name|-n                       Name to be passed to the generated files. {{name}}
+                                  and {{Name}} inside contents and file names will be
+                                  replaced accordingly.
 
   --output|-o                     Path to output to. If --create-sub-folder is enabled,
                                   the subfolder will be created inside this path.
                                   (default: current dir)
 
-  --templates|-t                  Template files to use as input. You may provide multiple
-                                  files, each of which can be a relative or absolute path, or a
-                                  glob pattern for multiple file matching easily.
+  --templates|-t                  Template files to use as input. You may provide
+                                  multiple files, each of which can be a relative or
+                                  absolute path, or a glob pattern for multiple file
+                                  matching easily.
 
   --overwrite|-w                  Enable to override output files, even if they already
                                   exist. (default: false)
 
-  --data|-d                       Add custom data to the templates. By default, only your
-                                  app name is included.
+  --data|-d                       Add custom data to the templates. By default, only
+                                  your app name is included.
 
-  --create-sub-folder|-s          Create subfolder with the input name
-                                  (default: false)
+  --create-sub-folder|-s          Create subfolder with the input name (default: false)
 
   --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
                                   `--create-sub-folder true`.
@@ -101,9 +114,9 @@ Options:
                                   2)
 
   --dry-run|-dr                   Don't emit files. This is good for testing your
-                                  scaffolds and making sure they don't fail, without having to
-                                  write actual file contents or create directories.
-                                  (default: false)
+                                  scaffolds and making sure they don't fail, without
+                                  having to write actual file contents or create
+                                  directories. (default: false)
 ```
 
 You can also add this as a script in your `package.json`:
@@ -116,7 +129,7 @@ You can also add this as a script in your `package.json`:
 }
 ```
 
-## Use in Node.js
+## Node module
 
 You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
 groups - simply pass a config object to the Scaffold function when you are ready to start.
@@ -214,14 +227,16 @@ Your `data` will be pre-populated with the following:
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
-### Built-in Helpers
+### Helpers
+
+#### Built-in Helpers
 
 Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
 
 For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
 replace `My Name` with `my_name` when producing the final value.
 
-#### Capitalization Helpers
+##### Capitalization Helpers
 
 | Helper name  | Example code            | Example output |
 | ------------ | ----------------------- | -------------- |
@@ -235,7 +250,7 @@ replace `My Name` with `my_name` when producing the final value.
 | `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
 | `lowerCase`  | `{{ lowerCase name }}`  | my name        |
 
-#### Date helpers
+##### Date helpers
 
 | Helper name                      | Description                                                      | Example code                                                     | Example output     |
 | -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
@@ -265,7 +280,7 @@ Further details:
 - **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
   it is implicitly the current date.
 
-### Custom Helpers
+#### Custom Helpers
 
 You may also add your own custom helpers using the `helpers` options when using the JS API (rather
 than the CLI). The `helpers` option takes an object whose keys are helper names, and values are
@@ -285,7 +300,9 @@ All of the above helpers (built in and custom) will also be available to you whe
 
 ## Examples
 
-### Command Example
+### Run
+
+#### Command Example
 
 ```bash
 simple-scaffold MyComponent \
@@ -295,20 +312,35 @@ simple-scaffold MyComponent \
     MyComponent
 ```
 
-### Example Scaffold Input
+#### Node Module Example
 
-#### Input Directory structure
+```typescript
+import Scaffold from 'simple-scaffold';
 
-```plaintext
-- project
-  - scaffold
-    - {{Name}}.js
-  - src
-    - components
-    - ...
+async function main() {
+  await Scaffold({
+    name: 'MyComponent',
+    templates: ['project/scaffold/**/*'],
+    output: ['src/components'],
+    data: {
+      className: 'myClassName',
+    },
+  });
+  console.log('Done.');
+}
 ```
 
-#### Contents of `project/scaffold/{{Name}}.jsx`
+### Files
+
+#### Input
+
+Input file path:
+
+```plaintext
+project → scaffold → {{Name}}.js → src → components
+```
+
+Input file contents:
 
 ```typescript
 import React from 'react'
@@ -320,30 +352,29 @@ export default {{camelCase name}}: React.FC = (props) => {
 }
 ```
 
-### Example Scaffold Output
+#### Output
 
-### Output directory structure
+Output file path:
 
-```plaintext
-- project
-  - src
-    - components
-      - MyComponent
-        - MyComponent.js
-    - ...
-```
+- With `createSubFolder = false` (default):
 
-With `createSubFolder = false`:
+  ```plaintext
+  project → src → components → MyComponent.js
+  ```
 
-```plaintext
-- project
-  - src
-    - components
-      - MyComponent.js
-    - ...
-```
+- With `createSubFolder = true`:
 
-#### Contents of `project/scaffold/MyComponent/MyComponent.jsx`
+  ```plaintext
+  project → src → components → MyComponent → MyComponent.js
+  ```
+
+- With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
+
+  ```plaintext
+  project → src → components → MYCOMPONENT → MyComponent.js
+  ```
+
+Output file contents:
 
 ```typescript
 import React from 'react'

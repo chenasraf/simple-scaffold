@@ -111,6 +111,7 @@ export interface ScaffoldConfig {
    *
    * See {@link DefaultHelperKeys} for a list of all the built-in available helpers.
    *
+   * @see https://github.com/chenasraf/simple-scaffold#helpers
    * @see https://github.com/chenasraf/simple-scaffold#built-in-helpers
    */
   helpers?: Record<string, Helper>
@@ -136,7 +137,7 @@ export interface ScaffoldConfig {
    * @param rawContent The original template before token replacement
    * @param outputPath The final output path of the processed file
    *
-   * @returns `String | Buffer | undefined` The final output of the file contents-only, after further modifications -
+   * @returns {Promise<String | Buffer | undefined> | String | Buffer | undefined} The final output of the file contents-only, after further modifications -
    * or `undefined` to use the original content (i.e. `content.toString()`)
    */
   beforeWrite?(
@@ -219,8 +220,12 @@ export type Helper = HelperDelegate
 
 /**
  * The amount of information to log when generating scaffold.
- * When not `None`, the selected level will be the lowest level included. For example, level `Info` (2) will include
- * `Info`, `Warning` and `Error`, but not `Debug`.
+ * When not `None`, the selected level will be the lowest level included.
+ *
+ * For example, level `Info` (2) will include `Info`, `Warning` and `Error`, but not `Debug`; and `Warning` will only
+ * show `Warning` and `Error`.
+ *
+ * @default `2 (info)`
  *
  * @category Logging
  */
@@ -229,7 +234,11 @@ export enum LogLevel {
   None = 0,
   /** Debugging information. Very verbose and only recommended for troubleshooting. */
   Debug = 1,
-  /** The regular level of logging. Major actions are logged to show the scaffold progress. */
+  /**
+   * The regular level of logging. Major actions are logged to show the scaffold progress.
+   *
+   * @default
+   */
   Info = 2,
   /** Warnings such as when file fails to replace token values properly in template. */
   Warning = 3,

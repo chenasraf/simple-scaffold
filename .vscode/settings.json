@@ -10,5 +10,11 @@
     "noext",
     "nonegate",
     "subdir"
-  ]
+  ],
+  "[markdown]": {
+    "editor.rulers": [
+      87,
+      100
+    ],
+  },
 }
