@@ -1,13 +1,13 @@
-<div style="text-align:center;">
+<h1 align="center">Simple Scaffold</h1>
 
-# Simple Scaffold
+<h2 align="center">
 
 [GitHub](https://github.com/chenasraf/simple-scaffold) |
 [Documentation](https://casraf.blog/simple-scaffold) |
 [NPM](https://npmjs.com/package/simple-scaffold) |
 [casraf.blog](https://casraf.blog)
 
-</div>
+</h2>
 
 Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
 
@@ -23,28 +23,27 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <details>
   <summary>Table of contents</summary>
 
-- [Simple Scaffold](#simple-scaffold)
-  - [Install](#install)
-  - [Command Line Interface (CLI)](#command-line-interface-cli)
-    - [Available flags](#available-flags)
-  - [Node module](#node-module)
-    - [Node-specific options](#node-specific-options)
-  - [Preparing files](#preparing-files)
-    - [Template files](#template-files)
-    - [Variable/token replacement](#variabletoken-replacement)
-    - [Helpers](#helpers)
-      - [Built-in Helpers](#built-in-helpers)
-        - [Capitalization Helpers](#capitalization-helpers)
-        - [Date helpers](#date-helpers)
-      - [Custom Helpers](#custom-helpers)
-  - [Examples](#examples)
-    - [Run](#run)
-      - [Command Example](#command-example)
-      - [Node Module Example](#node-module-example)
-    - [Files](#files)
-      - [Input](#input)
-      - [Output](#output)
-  - [Contributing](#contributing)
+- [Install](#install)
+- [Command Line Interface (CLI)](#command-line-interface-cli)
+  - [Available flags](#available-flags)
+- [Node module](#node-module)
+  - [Node-specific options](#node-specific-options)
+- [Preparing files](#preparing-files)
+  - [Template files](#template-files)
+  - [Variable/token replacement](#variabletoken-replacement)
+  - [Helpers](#helpers)
+    - [Built-in Helpers](#built-in-helpers)
+      - [Capitalization Helpers](#capitalization-helpers)
+      - [Date helpers](#date-helpers)
+    - [Custom Helpers](#custom-helpers)
+- [Examples](#examples)
+  - [Run](#run)
+    - [Command Example](#command-example)
+    - [Node Module Example](#node-module-example)
+  - [Files](#files)
+    - [Input](#input)
+    - [Output](#output)
+- [Contributing](#contributing)
 
 </details>
 
