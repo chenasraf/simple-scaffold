@@ -1,33 +1,13 @@
 import { HelperDelegate } from "handlebars/runtime"
 
-export enum LogLevel {
-  None = 0,
-  Debug = 1,
-  Info = 2,
-  Warning = 3,
-  Error = 4,
-}
-
-export type FileResponseFn<T> = (fullPath: string, basedir: string, basename: string) => T
-
-export type FileResponse<T> = T | FileResponseFn<T>
-
-export type DefaultHelperKeys =
-  | "camelCase"
-  | "date"
-  | "hyphenCase"
-  | "kebabCase"
-  | "lowerCase"
-  | "now"
-  | "pascalCase"
-  | "snakeCase"
-  | "startCase"
-  | "upperCase"
-
-export type HelperKeys<T> = DefaultHelperKeys | T
-
-export type Helper = HelperDelegate
-
+/**
+ * The config object for defining a scaffolding group.
+ *
+ * @see https://github.com/chenasraf/simple-scaffold#readme
+ * @see {@link DefaultHelperKeys}
+ *
+ * @category Config
+ */
 export interface ScaffoldConfig {
   /**
    * Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
@@ -37,46 +17,77 @@ export interface ScaffoldConfig {
 
   /**
    * Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path,
-   * or a glob pattern for multiple file matching easily. (default: current working directory)
+   * or a glob pattern for multiple file matching easily.
+   *
+   * @default Current working directory
    */
   templates: string[]
 
-  /** Path to output to. If `createSubFolder` is `true`, the subfolder will be created inside this path. */
+  /**
+   * Path to output to. If `createSubFolder` is `true`, the subfolder will be created inside this path.
+   *
+   * May also be a {@link FileResponseHandler} which returns a new output path to override the default one.
+   *
+   * @see {@link FileResponse}
+   * @see {@link FileResponseHandler}
+   */
   output: FileResponse<string>
 
   /**
-   * Create subfolder with the input name (default: `false`)
+   * Whether to create subfolder with the input name.
+   *
+   * When `true`, you may also use {@link subFolderNameHelper} to determine a pre-process helper on
+   * the directory name.
+   *
+   * @default `false`
    */
   createSubFolder?: boolean
 
   /**
    * Add custom data to the templates. By default, only your app name is included as `{{name}}` and `{{Name}}`.
+   *
+   * This can be any object that will be usable by Handlebars.
    */
-  data?: Record<string, string>
+  data?: Record<string, any>
 
   /**
-   * Enable to override output files, even if they already exist. (default: `false`)
+   * Enable to override output files, even if they already exist.
    *
    * You may supply a function to this option, which can take the arguments `(fullPath, baseDir, baseName)` and returns
    * a string, to return a dynamic path for each file.
+   *
+   * May also be a {@link FileResponseHandler} which returns a boolean value per file.
+   *
+   * @see {@link FileResponse}
+   * @see {@link FileResponseHandler}
+   *
+   * @default `false`
    */
   overwrite?: FileResponse<boolean>
 
-  /** Suppress output logs (Same as `verbose: 0` or `verbose: LogLevel.None`) */
+  /**
+   * Suppress output logs (Same as `verbose: 0` or `verbose: LogLevel.None`)
+   *  @see {@link verbose}
+   */
   quiet?: boolean
 
   /**
    * Determine amount of logs to display.
    *
    * The values are: `0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`. The provided level will display messages
-   * of the same level or higher. (default: `2 (info)`)
-   * @see LogLevel
+   * of the same level or higher.
+   *
+   * @see {@link LogLevel}
+   *
+   * @default `2 (info)`
    */
   verbose?: LogLevel
 
   /**
    * Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write
-   * actual file contents or create directories. (default: `false`)
+   * actual file contents or create directories.
+   *
+   * @default `false`
    */
   dryRun?: boolean
 
@@ -98,13 +109,18 @@ export interface ScaffoldConfig {
    * })
    * ```
    *
-   * See the list of all the built-in available helpers, or how to define your own in the [readme](https://github.com/chenasraf/simple-scaffold#built-in-helpers).
+   * See {@link DefaultHelperKeys} for a list of all the built-in available helpers.
+   * @see https://github.com/chenasraf/simple-scaffold#built-in-helpers
    */
   helpers?: Record<string, Helper>
 
   /**
    * Default transformer to apply to subfolder name when using `createSubFolder: true`. Can be one of the default
-   * helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
+   * capitalization helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
+   *
+   * @see {@link createSubFolder}
+   * @see {@link CapitalizationHelperKeys}
+   * @see {@link DefaultHelperKeys}
    */
   subFolderNameHelper?: DefaultHelperKeys | string
 
@@ -128,6 +144,129 @@ export interface ScaffoldConfig {
     outputPath: string
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 }
+
+/**
+ * The names of the available helper functions that relate to text capitalization.
+ *
+ * These are available for `subfolderNameHelper`.
+ *
+ * | Helper name  | Example code            | Example output |
+ * | ------------ | ----------------------- | -------------- |
+ * | [None]       | `{{ name }}`            | my name        |
+ * | `camelCase`  | `{{ camelCase name }}`  | myName         |
+ * | `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
+ * | `startCase`  | `{{ startCase name }}`  | My Name        |
+ * | `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
+ * | `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
+ * | `pascalCase` | `{{ pascalCase name }}` | MyName         |
+ * | `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
+ * | `lowerCase`  | `{{ lowerCase name }}`  | my name        |
+ *
+ * @see {@link ScaffoldConfig}
+ * @see {@link subfolderNameHelper}
+ * @see {@link DefaultHelperKeys}
+ *
+ * @category Helpers
+ */
+export type CapitalizationHelperKeys =
+  | "camelCase"
+  | "hyphenCase"
+  | "kebabCase"
+  | "lowerCase"
+  | "pascalCase"
+  | "snakeCase"
+  | "startCase"
+  | "upperCase"
+
+/**
+ * The names of the available helper functions that relate to dates.
+ *
+ * | Helper name                      | Description                                                      | Example code                                                     | Example output     |
+ * | -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
+ * | `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
+ * | `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
+ * | `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
+ * | `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
+ * | `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
+ *
+ * @see {@link DefaultHelperKeys}
+ *
+ * @category Helpers
+ */
+export type DateHelperKeys = "date" | "now"
+
+/**
+ * The names of all the available helper functions in templates.
+ * Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
+ *
+ * For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
+ * replace `My Name` with `my_name` when producing the final value.
+ *
+ * @see {@link CapitalizationHelperKeys}
+ * @see {@link DateHelperKeys}
+ *
+ * @category Helpers
+ */
+export type DefaultHelperKeys = CapitalizationHelperKeys | DateHelperKeys
+
+/**
+ * Helper function, see https://handlebarsjs.com/guide/#custom-helpers
+ *
+ * @category Helpers
+ */
+export type Helper = HelperDelegate
+
+/**
+ * The amount of information to log when generating scaffold.
+ * When not `None`, the selected level will be the lowest level included. For example, level `Info` (2) will include
+ * `Info`, `Warning` and `Error`, but not `Debug`.
+ *
+ * @category Logging
+ */
+export enum LogLevel {
+  /** Silent output */
+  None = 0,
+  /** Debugging information. Very verbose and only recommended for troubleshooting. */
+  Debug = 1,
+  /** The regular level of logging. Major actions are logged to show the scaffold progress. */
+  Info = 2,
+  /** Warnings such as when file fails to replace token values properly in template. */
+  Warning = 3,
+  /** Errors, such as missing files, bad replacement token syntax, or un-writable directories. */
+  Error = 4,
+}
+
+/**
+ * A function that takes path information about file, and returns a value of type `T`
+ *
+ * @template T The return type for the function
+ * @param {string} fullPath The full path of the current file
+ * @param {string} basedir The directory containing the current file
+ * @param {string} basename The name of the file
+ *
+ * @returns {T} A return value
+ *
+ * @category Config
+ */
+export type FileResponseHandler<T> = (fullPath: string, basedir: string, basename: string) => T
+
+/**
+ * Represents a response for file path information.
+ * Can either be:
+ *
+ * 1. `T` - static value
+ * 2. A function with the following signature which returns `T`:
+ *    ```typescript
+ *    (fullPath: string, basedir: string, basename: string) => T
+ *    ```
+ *
+ * @typedef T The return type
+ *
+ * @category Config
+ * */
+export type FileResponse<T> = T | FileResponseHandler<T>
+
+/** @internal */
 export interface ScaffoldCmdConfig {
   name: string
   templates: string[]
