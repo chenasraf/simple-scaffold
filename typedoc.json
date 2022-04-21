@@ -1,0 +1,16 @@
+{
+  "name": "Simple Scaffold",
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "includeVersion": true,
+  "categorizeByGroup": false,
+  "sort": [
+    "visibility"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true
+}

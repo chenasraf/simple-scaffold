@@ -61,3 +61,4 @@ examples/test-output/**/*
 dist/
 .DS_Store
 tmp/
+docs/

@@ -33,19 +33,7 @@ import { LogLevel, ScaffoldConfig } from "./types"
  *
  * #### Helpers
  * Helpers are functions you can use to transform your `{{ var }}` contents into other values without having to
- * pre-define the data and use a duplicated key. Common cases are transforming name-case format
- * (e.g. `MyName` &rarr; `my_name`), so these have been provided as defaults:
- *
- * | Helper name | Example code            | Example output |
- * | ----------- | ----------------------- | -------------- |
- * | camelCase   | `{{ camelCase name }}`  | myName         |
- * | snakeCase   | `{{ snakeCase name }}`  | my_name        |
- * | startCase   | `{{ startCase name }}`  | My Name        |
- * | kebabCase   | `{{ kebabCase name }}`  | my-name        |
- * | hyphenCase  | `{{ hyphenCase name }}` | my-name        |
- * | pascalCase  | `{{ pascalCase name }}` | MyName         |
- * | upperCase   | `{{ upperCase name }}`  | MYNAME         |
- * | lowerCase   | `{{ lowerCase name }}`  | myname         |
+ * pre-define the data and use a duplicated key. For available default values, see {@link DefaultHelperKeys}
  *
  * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
  * (for example, formatting a date)

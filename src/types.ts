@@ -1,33 +1,5 @@
 import { HelperDelegate } from "handlebars/runtime"
 
-export enum LogLevel {
-  None = 0,
-  Debug = 1,
-  Info = 2,
-  Warning = 3,
-  Error = 4,
-}
-
-export type FileResponseFn<T> = (fullPath: string, basedir: string, basename: string) => T
-
-export type FileResponse<T> = T | FileResponseFn<T>
-
-export type DefaultHelperKeys =
-  | "camelCase"
-  | "date"
-  | "hyphenCase"
-  | "kebabCase"
-  | "lowerCase"
-  | "now"
-  | "pascalCase"
-  | "snakeCase"
-  | "startCase"
-  | "upperCase"
-
-export type HelperKeys<T> = DefaultHelperKeys | T
-
-export type Helper = HelperDelegate
-
 export interface ScaffoldConfig {
   /**
    * Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
@@ -128,6 +100,85 @@ export interface ScaffoldConfig {
     outputPath: string
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 }
+
+/**
+ * The names of all the available helper functions in templates.
+ * Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
+ *
+ * For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
+ * replace `My Name` with `my_name` when producing the final value.
+ *
+ * #### Capitalization Helpers
+ *
+ * | Helper name  | Example code            | Example output |
+ * | ------------ | ----------------------- | -------------- |
+ * | [None]       | `{{ name }}`            | my name        |
+ * | `camelCase`  | `{{ camelCase name }}`  | myName         |
+ * | `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
+ * | `startCase`  | `{{ startCase name }}`  | My Name        |
+ * | `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
+ * | `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
+ * | `pascalCase` | `{{ pascalCase name }}` | MyName         |
+ * | `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
+ * | `lowerCase`  | `{{ lowerCase name }}`  | my name        |
+ *
+ * #### Date helpers
+ *
+ * | Helper name                      | Description                                                      | Example code                                                     | Example output     |
+ * | -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
+ * | `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
+ * | `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
+ * | `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
+ * | `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
+ * | `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
+ */
+export type DefaultHelperKeys =
+  | "camelCase"
+  | "date"
+  | "hyphenCase"
+  | "kebabCase"
+  | "lowerCase"
+  | "now"
+  | "pascalCase"
+  | "snakeCase"
+  | "startCase"
+  | "upperCase"
+
+/** Helper function, see https://handlebarsjs.com/guide/#custom-helpers */
+export type Helper = HelperDelegate
+
+/**
+ * The amount of information to log when generating scaffold.
+ * When not `None`, the selected level will be the lowest level included. For example, level `Info` (2) will include
+ * `Info`, `Warning` and `Error`, but not `Debug`.
+ */
+export enum LogLevel {
+  /** Silent output */
+  None = 0,
+  /** Debugging information. Very verbose and only recommended for troubleshooting. */
+  Debug = 1,
+  /** The regular level of logging. Major actions are logged to show the scaffold progress. */
+  Info = 2,
+  /** Warnings such as when file fails to replace token values properly in template. */
+  Warning = 3,
+  /** Errors, such as missing files, bad replacement token syntax, or un-writable directories. */
+  Error = 4,
+}
+
+/** A function that takes path information about file, and returns a value of type `T` */
+export type FileResponseHandler<T> = (fullPath: string, basedir: string, basename: string) => T
+
+/** Represents a response for file path information.
+ * Can either be:
+ * 1. `T` - static value
+ * 2. A function with the following signature which returns `T`:
+ *    ```typescript
+ *    (fullPath: string, basedir: string, basename: string) => T
+ *    ```
+ * */
+export type FileResponse<T> = T | FileResponseHandler<T>
+
+/** @private */
 export interface ScaffoldCmdConfig {
   name: string
   templates: string[]

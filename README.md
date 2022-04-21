@@ -310,7 +310,7 @@ simple-scaffold MyComponent \
 
 #### Contents of `project/scaffold/{{Name}}.jsx`
 
-```typescriptreact
+```typescript
 import React from 'react'
 
 export default {{camelCase name}}: React.FC = (props) => {
@@ -345,7 +345,7 @@ With `createSubFolder = false`:
 
 #### Contents of `project/scaffold/MyComponent/MyComponent.jsx`
 
-```typescriptreact
+```typescript
 import React from 'react'
 
 export default MyComponent: React.FC = (props) => {

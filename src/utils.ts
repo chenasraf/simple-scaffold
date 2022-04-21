@@ -1,6 +1,6 @@
 import path from "path"
 import { F_OK } from "constants"
-import { DefaultHelperKeys, FileResponse, FileResponseFn, Helper, LogLevel, ScaffoldConfig } from "./types"
+import { DefaultHelperKeys, FileResponse, FileResponseHandler, Helper, LogLevel, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
@@ -145,7 +145,7 @@ export function getOptionValueForFile<T>(
   if (typeof fn !== "function") {
     return defaultValue ?? (fn as T)
   }
-  return (fn as FileResponseFn<T>)(
+  return (fn as FileResponseHandler<T>)(
     filePath,
     path.dirname(handlebarsParse(options, filePath, { isPath: true }).toString()),
     path.basename(handlebarsParse(options, filePath, { isPath: true }).toString())
