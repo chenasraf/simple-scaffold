@@ -8,6 +8,10 @@
   "sort": [
     "visibility"
   ],
+  "categoryOrder": [
+    "Main",
+    "*"
+  ],
   "entryPointStrategy": "expand",
   "out": "docs",
   "excludePrivate": true,

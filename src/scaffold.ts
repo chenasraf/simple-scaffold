@@ -1,3 +1,9 @@
+/**
+ * @module
+ * Simple Scaffold
+ *
+ * See [readme](README.md)
+ */
 import path from "path"
 
 import {
@@ -31,34 +37,45 @@ import { LogLevel, ScaffoldConfig } from "./types"
  * The contents and names will be replaced with the transformed values so you can use your original structure as a
  * boilerplate for other projects, components, modules, or even single files.
  *
+ * The files will maintain their structure, starting from the directory containing the template (or the template itself
+ * if it is already a directory), and will output from that directory into the directory defined by `config.output`.
+ *
  * #### Helpers
  * Helpers are functions you can use to transform your `{{ var }}` contents into other values without having to
- * pre-define the data and use a duplicated key. For available default values, see {@link DefaultHelperKeys}
+ * pre-define the data and use a duplicated key.
  *
  * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
  * (for example, formatting a date)
+ *
+ * For available default values, see {@link DefaultHelperKeys}.
+ *
+ * @param {ScaffoldConfig} config The main configuration object
+ *
+ * @see {@link DefaultHelperKeys}
+ *
+ * @category Main
  */
-export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
-  options.output ??= process.cwd()
+export async function Scaffold(config: ScaffoldConfig): Promise<void> {
+  config.output ??= process.cwd()
 
-  registerHelpers(options)
+  registerHelpers(config)
   try {
-    options.data = { name: options.name, Name: pascalCase(options.name), ...options.data }
-    logInitStep(options)
-    for (let _template of options.templates) {
+    config.data = { name: config.name, Name: pascalCase(config.name), ...config.data }
+    logInitStep(config)
+    for (let _template of config.templates) {
       try {
         const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
-          options,
+          config,
           _template
         )
-        const files = await getFileList(options, template)
+        const files = await getFileList(config, template)
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {
             continue
           }
           const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(nonGlobTemplate, "")))
           const basePath = getBasePath(relPath)
-          logInputFile(options, {
+          logInputFile(config, {
             origTemplate,
             relPath,
             template,
@@ -68,7 +85,7 @@ export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
             isDirOrGlob,
             isGlob,
           })
-          await handleTemplateFile(options, options.data, {
+          await handleTemplateFile(config, {
             templatePath: inputFilePath,
             basePath,
           })
@@ -78,25 +95,24 @@ export async function Scaffold({ ...options }: ScaffoldConfig): Promise<void> {
       }
     }
   } catch (e: any) {
-    log(options, LogLevel.Error, e)
+    log(config, LogLevel.Error, e)
     throw e
   }
 }
 async function handleTemplateFile(
-  options: ScaffoldConfig,
-  data: Record<string, string>,
+  config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string }
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
-      const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(options, data, {
+      const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(config, {
         templatePath,
         basePath,
       })
-      const overwrite = getOptionValueForFile(options, inputPath, options.overwrite ?? false)
+      const overwrite = getOptionValueForFile(config, inputPath, config.overwrite ?? false)
 
       log(
-        options,
+        config,
         LogLevel.Debug,
         `\nParsing ${templatePath}`,
         `\nBase path: ${basePath}`,
@@ -107,10 +123,10 @@ async function handleTemplateFile(
         `\n`
       )
 
-      await createDirIfNotExists(path.dirname(outputPath), options)
+      await createDirIfNotExists(path.dirname(outputPath), config)
 
-      log(options, LogLevel.Info, `Writing to ${outputPath}`)
-      await copyFileTransformed(options, { exists, overwrite, outputPath, inputPath })
+      log(config, LogLevel.Info, `Writing to ${outputPath}`)
+      await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
       resolve()
     } catch (e: any) {
       handleErr(e)
