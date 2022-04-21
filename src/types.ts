@@ -110,6 +110,7 @@ export interface ScaffoldConfig {
    * ```
    *
    * See {@link DefaultHelperKeys} for a list of all the built-in available helpers.
+   *
    * @see https://github.com/chenasraf/simple-scaffold#built-in-helpers
    */
   helpers?: Record<string, Helper>
@@ -163,7 +164,7 @@ export interface ScaffoldConfig {
  * | `lowerCase`  | `{{ lowerCase name }}`  | my name        |
  *
  * @see {@link ScaffoldConfig}
- * @see {@link subfolderNameHelper}
+ * @see {@link subFolderNameHelper}
  * @see {@link DefaultHelperKeys}
  *
  * @category Helpers
@@ -261,6 +262,8 @@ export type FileResponseHandler<T> = (fullPath: string, basedir: string, basenam
  *    ```
  *
  * @typedef T The return type
+ *
+ * @see {@link FileResponseHandler}
  *
  * @category Config
  * */
