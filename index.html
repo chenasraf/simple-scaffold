@@ -1,7 +1,15 @@
-<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Simple Scaffold - v1.1.0</title><meta name="description" content="Documentation for Simple Scaffold - v1.1.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Simple Scaffold - v1.1.0</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>Simple Scaffold - v1.1.0 </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Simple Scaffold - v1.1.0</title><meta name="description" content="Documentation for Simple Scaffold - v1.1.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Simple Scaffold - v1.1.0</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>Simple Scaffold - v1.1.0 </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography"><div style="text-align:center;">
+
+
 <a href="#simple-scaffold" id="simple-scaffold" style="color: inherit; text-decoration: none;">
   <h1>Simple Scaffold</h1>
 </a>
+<p><a href="https://github.com/chenasraf/simple-scaffold">GitHub</a> |
+<a href="https://casraf.blog/simple-scaffold">Documentation</a> |
+<a href="https://npmjs.com/package/simple-scaffold">NPM</a> |
+<a href="https://casraf.blog">casraf.blog</a></p>
+</div>
+
 <p>Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.</p>
 <p>It is completely framework agnostic so you can use it for anything from a few simple files to an
 entire app boilerplate setup.</p>
@@ -16,17 +24,18 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <ul>
 <li><a href="#simple-scaffold">Simple Scaffold</a><ul>
 <li><a href="#install">Install</a></li>
-<li><a href="#use-as-a-command-line-tool">Use as a command line tool</a><ul>
-<li><a href="#command-line-options">Command Line Options</a></li>
+<li><a href="#command-line-interface-cli">Command Line Interface (CLI)</a><ul>
+<li><a href="#available-flags">Available flags</a></li>
 </ul>
 </li>
-<li><a href="#use-in-nodejs">Use in Node.js</a><ul>
+<li><a href="#node-module">Node module</a><ul>
 <li><a href="#node-specific-options">Node-specific options</a></li>
 </ul>
 </li>
 <li><a href="#preparing-files">Preparing files</a><ul>
 <li><a href="#template-files">Template files</a></li>
 <li><a href="#variabletoken-replacement">Variable/token replacement</a></li>
+<li><a href="#helpers">Helpers</a><ul>
 <li><a href="#built-in-helpers">Built-in Helpers</a><ul>
 <li><a href="#capitalization-helpers">Capitalization Helpers</a></li>
 <li><a href="#date-helpers">Date helpers</a></li>
@@ -35,16 +44,17 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <li><a href="#custom-helpers">Custom Helpers</a></li>
 </ul>
 </li>
-<li><a href="#examples">Examples</a><ul>
-<li><a href="#command-example">Command Example</a></li>
-<li><a href="#example-scaffold-input">Example Scaffold Input</a><ul>
-<li><a href="#input-directory-structure">Input Directory structure</a></li>
-<li><a href="#contents-of-projectscaffoldnamejsx">Contents of <code>project/scaffold/{{Name}}.jsx</code></a></li>
 </ul>
 </li>
-<li><a href="#example-scaffold-output">Example Scaffold Output</a></li>
-<li><a href="#output-directory-structure">Output directory structure</a><ul>
-<li><a href="#contents-of-projectscaffoldmycomponentmycomponentjsx">Contents of <code>project/scaffold/MyComponent/MyComponent.jsx</code></a></li>
+<li><a href="#examples">Examples</a><ul>
+<li><a href="#run">Run</a><ul>
+<li><a href="#command-example">Command Example</a></li>
+<li><a href="#node-module-example">Node Module Example</a></li>
+</ul>
+</li>
+<li><a href="#files">Files</a><ul>
+<li><a href="#input">Input</a></li>
+<li><a href="#output">Output</a></li>
 </ul>
 </li>
 </ul>
@@ -64,13 +74,16 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <pre><code class="language-bash"><span class="hl-5"># npm</span><br/><span class="hl-0">npm install [-g] simple-scaffold</span><br/><span class="hl-5"># yarn</span><br/><span class="hl-0">yarn [global] add simple-scaffold</span><br/><span class="hl-5"># run without installing</span><br/><span class="hl-0">npx simple-scaffold@latest &lt;...args&gt;</span>
 </code></pre>
 
-<a href="#use-as-a-command-line-tool" id="use-as-a-command-line-tool" style="color: inherit; text-decoration: none;">
-  <h2>Use as a command line tool</h2>
+<a href="#command-line-interface-cli" id="command-line-interface-cli" style="color: inherit; text-decoration: none;">
+  <h2>Command Line Interface (CLI)</h2>
 </a>
 
-<a href="#command-line-options" id="command-line-options" style="color: inherit; text-decoration: none;">
-  <h3>Command Line Options</h3>
+<a href="#available-flags" id="available-flags" style="color: inherit; text-decoration: none;">
+  <h3>Available flags</h3>
 </a>
+<p>The following is the help text from the <code>simple-scaffold</code> binary. To see this and more
+information anytime, add the <code>-h</code> or <code>--help</code> flag to your call, e.g.
+<code>npx simple-scaffold@latest -h</code>.</p>
 <pre><code class="language-plaintext">Usage: simple-scaffold [options]
 
 Create structured files based on templates.
@@ -79,26 +92,26 @@ Options:
 
   --help|-h                       Display help information
 
-  --name|-n                       Name to be passed to the generated files. {{name}} and
-                                  {{Name}} inside contents and file names will be replaced
-                                  accordingly.
+  --name|-n                       Name to be passed to the generated files. {{name}}
+                                  and {{Name}} inside contents and file names will be
+                                  replaced accordingly.
 
   --output|-o                     Path to output to. If --create-sub-folder is enabled,
                                   the subfolder will be created inside this path.
                                   (default: current dir)
 
-  --templates|-t                  Template files to use as input. You may provide multiple
-                                  files, each of which can be a relative or absolute path, or a
-                                  glob pattern for multiple file matching easily.
+  --templates|-t                  Template files to use as input. You may provide
+                                  multiple files, each of which can be a relative or
+                                  absolute path, or a glob pattern for multiple file
+                                  matching easily.
 
   --overwrite|-w                  Enable to override output files, even if they already
                                   exist. (default: false)
 
-  --data|-d                       Add custom data to the templates. By default, only your
-                                  app name is included.
+  --data|-d                       Add custom data to the templates. By default, only
+                                  your app name is included.
 
-  --create-sub-folder|-s          Create subfolder with the input name
-                                  (default: false)
+  --create-sub-folder|-s          Create subfolder with the input name (default: false)
 
   --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
                                   `--create-sub-folder true`.
@@ -113,16 +126,16 @@ Options:
                                   2)
 
   --dry-run|-dr                   Don&#39;t emit files. This is good for testing your
-                                  scaffolds and making sure they don&#39;t fail, without having to
-                                  write actual file contents or create directories.
-                                  (default: false)
+                                  scaffolds and making sure they don&#39;t fail, without
+                                  having to write actual file contents or create
+                                  directories. (default: false)
 </code></pre>
 <p>You can also add this as a script in your <code>package.json</code>:</p>
 <pre><code class="language-json"><span class="hl-0">{</span><br/><span class="hl-0">  </span><span class="hl-6">&quot;scripts&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">    </span><span class="hl-6">&quot;scaffold&quot;</span><span class="hl-0">: </span><span class="hl-7">&quot;npx simple-scaffold@latest -t scaffolds/component/**/* -o src/components -d &#39;{</span><span class="hl-8">\&quot;</span><span class="hl-7">myProp</span><span class="hl-8">\&quot;</span><span class="hl-7">: </span><span class="hl-8">\&quot;</span><span class="hl-7">propName</span><span class="hl-8">\&quot;</span><span class="hl-7">, </span><span class="hl-8">\&quot;</span><span class="hl-7">myVal</span><span class="hl-8">\&quot;</span><span class="hl-7">: 123}&#39;&quot;</span><br/><span class="hl-0">  }</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#use-in-nodejs" id="use-in-nodejs" style="color: inherit; text-decoration: none;">
-  <h2>Use in Node.js</h2>
+<a href="#node-module" id="node-module" style="color: inherit; text-decoration: none;">
+  <h2>Node module</h2>
 </a>
 <p>You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
 groups - simply pass a config object to the Scaffold function when you are ready to start.</p>
@@ -229,15 +242,19 @@ Any <code>data</code> you add in the config will be available for use with their
 information.</p>
 </blockquote>
 
+<a href="#helpers" id="helpers" style="color: inherit; text-decoration: none;">
+  <h3>Helpers</h3>
+</a>
+
 <a href="#built-in-helpers" id="built-in-helpers" style="color: inherit; text-decoration: none;">
-  <h3>Built-in Helpers</h3>
+  <h4>Built-in Helpers</h4>
 </a>
 <p>Simple-Scaffold provides some built-in text transformation filters usable by handleBars.</p>
 <p>For example, you may use <code>{{ snakeCase name }}</code> inside a template file or filename, and it will
 replace <code>My Name</code> with <code>my_name</code> when producing the final value.</p>
 
 <a href="#capitalization-helpers" id="capitalization-helpers" style="color: inherit; text-decoration: none;">
-  <h4>Capitalization Helpers</h4>
+  <h5>Capitalization Helpers</h5>
 </a>
 <table>
 <thead>
@@ -295,7 +312,7 @@ replace <code>My Name</code> with <code>my_name</code> when producing the final 
 </tbody></table>
 
 <a href="#date-helpers" id="date-helpers" style="color: inherit; text-decoration: none;">
-  <h4>Date helpers</h4>
+  <h5>Date helpers</h5>
 </a>
 <table>
 <thead>
@@ -353,7 +370,7 @@ it is implicitly the current date.</p>
 </ul>
 
 <a href="#custom-helpers" id="custom-helpers" style="color: inherit; text-decoration: none;">
-  <h3>Custom Helpers</h3>
+  <h4>Custom Helpers</h4>
 </a>
 <p>You may also add your own custom helpers using the <code>helpers</code> options when using the JS API (rather
 than the CLI). The <code>helpers</code> option takes an object whose keys are helper names, and values are
@@ -371,58 +388,55 @@ the transformation functions. For example, <code>upperCase</code> is implemented
   <h2>Examples</h2>
 </a>
 
+<a href="#run" id="run" style="color: inherit; text-decoration: none;">
+  <h3>Run</h3>
+</a>
+
 <a href="#command-example" id="command-example" style="color: inherit; text-decoration: none;">
-  <h3>Command Example</h3>
+  <h4>Command Example</h4>
 </a>
 <pre><code class="language-bash"><span class="hl-0">simple-scaffold MyComponent \</span><br/><span class="hl-0">    -t project/scaffold/**/* \</span><br/><span class="hl-0">    -o src/components \</span><br/><span class="hl-0">    -d </span><span class="hl-7">&#39;{&quot;className&quot;: &quot;myClassName&quot;}&#39;</span><br/><span class="hl-0">    MyComponent</span>
 </code></pre>
 
-<a href="#example-scaffold-input" id="example-scaffold-input" style="color: inherit; text-decoration: none;">
-  <h3>Example Scaffold Input</h3>
+<a href="#node-module-example" id="node-module-example" style="color: inherit; text-decoration: none;">
+  <h4>Node Module Example</h4>
 </a>
-
-<a href="#input-directory-structure" id="input-directory-structure" style="color: inherit; text-decoration: none;">
-  <h4>Input Directory structure</h4>
-</a>
-<pre><code class="language-plaintext">- project
-  - scaffold
-    - {{Name}}.js
-  - src
-    - components
-    - ...
+<pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">Scaffold</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-7">&#39;simple-scaffold&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-3">function</span><span class="hl-0"> </span><span class="hl-10">main</span><span class="hl-0">() {</span><br/><span class="hl-0">  </span><span class="hl-9">await</span><span class="hl-0"> </span><span class="hl-10">Scaffold</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-1">name:</span><span class="hl-0"> </span><span class="hl-7">&#39;MyComponent&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-1">templates:</span><span class="hl-0"> [</span><span class="hl-7">&#39;project/scaffold/**/*&#39;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">output:</span><span class="hl-0"> [</span><span class="hl-7">&#39;src/components&#39;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">data:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-1">className:</span><span class="hl-0"> </span><span class="hl-7">&#39;myClassName&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  });</span><br/><span class="hl-0">  </span><span class="hl-1">console</span><span class="hl-0">.</span><span class="hl-10">log</span><span class="hl-0">(</span><span class="hl-7">&#39;Done.&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#contents-of-projectscaffoldnamejsx" id="contents-of-projectscaffoldnamejsx" style="color: inherit; text-decoration: none;">
-  <h4>Contents of <code>project/scaffold/{{Name}}.jsx</code></h4>
+<a href="#files" id="files" style="color: inherit; text-decoration: none;">
+  <h3>Files</h3>
 </a>
+
+<a href="#input" id="input" style="color: inherit; text-decoration: none;">
+  <h4>Input</h4>
+</a>
+<p>Input file path:</p>
+<pre><code class="language-plaintext">project → scaffold → {{Name}}.js → src → components
+</code></pre>
+<p>Input file contents:</p>
 <pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-7">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> {{camelCase </span><span class="hl-1">name</span><span class="hl-0">}}: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-7">&quot;{{className}}&quot;</span><span class="hl-0">&gt;{{camelCase </span><span class="hl-1">name</span><span class="hl-0">}} </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#example-scaffold-output" id="example-scaffold-output" style="color: inherit; text-decoration: none;">
-  <h3>Example Scaffold Output</h3>
+<a href="#output" id="output" style="color: inherit; text-decoration: none;">
+  <h4>Output</h4>
 </a>
-
-<a href="#output-directory-structure" id="output-directory-structure" style="color: inherit; text-decoration: none;">
-  <h3>Output directory structure</h3>
-</a>
-<pre><code class="language-plaintext">- project
-  - src
-    - components
-      - MyComponent
-        - MyComponent.js
-    - ...
+<p>Output file path:</p>
+<ul>
+<li><p>With <code>createSubFolder = false</code> (default):</p>
+<pre><code class="language-plaintext">project → src → components → MyComponent.js
 </code></pre>
-<p>With <code>createSubFolder = false</code>:</p>
-<pre><code class="language-plaintext">- project
-  - src
-    - components
-      - MyComponent.js
-    - ...
+</li>
+<li><p>With <code>createSubFolder = true</code>:</p>
+<pre><code class="language-plaintext">project → src → components → MyComponent → MyComponent.js
 </code></pre>
-
-<a href="#contents-of-projectscaffoldmycomponentmycomponentjsx" id="contents-of-projectscaffoldmycomponentmycomponentjsx" style="color: inherit; text-decoration: none;">
-  <h4>Contents of <code>project/scaffold/MyComponent/MyComponent.jsx</code></h4>
-</a>
+</li>
+<li><p>With <code>createSubFolder = true</code> and <code>subFolderNameHelper = &#39;upperCase&#39;</code>:</p>
+<pre><code class="language-plaintext">project → src → components → MYCOMPONENT → MyComponent.js
+</code></pre>
+</li>
+</ul>
+<p>Output file contents:</p>
 <pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-7">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> </span><span class="hl-1">MyComponent</span><span class="hl-0">: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-7">&quot;myClassName&quot;</span><span class="hl-0">&gt;</span><span class="hl-1">MyComponent</span><span class="hl-0"> </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
 </code></pre>
 
