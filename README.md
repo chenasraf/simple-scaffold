@@ -186,8 +186,8 @@ Examples:
 | Input template                | Files in template                                      | Output path(s)                                               |
 | ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `./templates/{{ name }}.txt`  | `./templates/{{ name }}.txt`                           | `src/AppName.txt`                                            |
-| `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name.txt}}` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
-| `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name.txt}}` | `src/outer2/inner/AppName.txt`                               |
+| `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name}}.txt` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
+| `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name}}.txt` | `src/outer2/inner/AppName.txt`                               |
 
 ### Variable/token replacement
 
