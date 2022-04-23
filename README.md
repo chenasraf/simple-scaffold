@@ -70,7 +70,7 @@ The following is the help text from the `simple-scaffold` binary. To see this an
 information anytime, add the `-h` or `--help` flag to your call, e.g.
 `npx simple-scaffold@latest -h`.
 
-```plaintext
+```text
 Usage: simple-scaffold [options]
 
 Create structured files based on templates.
@@ -209,7 +209,7 @@ npx simple-scaffold@latest \
 
 Will output a file with the path:
 
-```plaintext
+```text
 <working_dir>/src/components/MyComponent.jsx
 ```
 
@@ -335,7 +335,7 @@ async function main() {
 
 Input file path:
 
-```plaintext
+```text
 project → scaffold → {{Name}}.js → src → components
 ```
 
@@ -357,19 +357,19 @@ Output file path:
 
 - With `createSubFolder = false` (default):
 
-  ```plaintext
+  ```text
   project → src → components → MyComponent.js
   ```
 
 - With `createSubFolder = true`:
 
-  ```plaintext
+  ```text
   project → src → components → MyComponent → MyComponent.js
   ```
 
 - With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
 
-  ```plaintext
+  ```text
   project → src → components → MYCOMPONENT → MyComponent.js
   ```
 

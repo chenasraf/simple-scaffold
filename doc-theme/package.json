@@ -1,0 +1,11 @@
+{
+  "name": "doc-theme",
+  "version": "1.0.0",
+  "keywords": [
+    "typedocplugin"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "build/index.js"
+}

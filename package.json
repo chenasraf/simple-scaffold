@@ -44,6 +44,7 @@
     "@types/lodash": "^4.14.171",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^14.14.22",
+    "doc-theme": "file:./doc-theme",
     "jest": "^27.0.6",
     "mock-fs": "^5.0.0",
     "rimraf": "^3.0.2",
