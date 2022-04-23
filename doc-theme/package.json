@@ -7,5 +7,8 @@
   "scripts": {
     "build": "tsc"
   },
-  "main": "build/index.js"
+  "main": "build/index.js",
+  "devDependencies": {
+    "typedoc": "^0.22.15"
+  }
 }
