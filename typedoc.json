@@ -16,5 +16,6 @@
   "out": "docs",
   "excludePrivate": true,
   "excludeProtected": true,
-  "excludeInternal": true
+  "excludeInternal": true,
+  "gaID": "G-KJQF610ZG7"
 }
