@@ -1,6 +1,6 @@
 import path from "path"
 import { F_OK } from "constants"
-import { DefaultHelperKeys, FileResponse, FileResponseFn, Helper, LogLevel, ScaffoldConfig } from "./types"
+import { DefaultHelperKeys, FileResponse, FileResponseHandler, Helper, LogLevel, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
@@ -78,10 +78,10 @@ export function dateHelper(
   return _dateHelper(dateFns.parseISO(date), formatString, durationDifference!, durationType!)
 }
 
-export function registerHelpers(options: ScaffoldConfig): void {
-  const _helpers = { ...defaultHelpers, ...options.helpers }
+export function registerHelpers(config: ScaffoldConfig): void {
+  const _helpers = { ...defaultHelpers, ...config.helpers }
   for (const helperName in _helpers) {
-    log(options, LogLevel.Debug, `Registering helper: ${helperName}`)
+    log(config, LogLevel.Debug, `Registering helper: ${helperName}`)
     Handlebars.registerHelper(helperName, _helpers[helperName as keyof typeof _helpers])
   }
 }
@@ -90,8 +90,8 @@ export function handleErr(err: NodeJS.ErrnoException | null): void {
   if (err) throw err
 }
 
-export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]): void {
-  if (options.quiet || options.verbose === LogLevel.None || level < (options.verbose ?? LogLevel.Info)) {
+export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): void {
+  if (config.quiet || config.verbose === LogLevel.None || level < (config.verbose ?? LogLevel.Info)) {
     return
   }
   const levelColor: Record<LogLevel, keyof typeof chalk> = {
@@ -115,16 +115,16 @@ export function log(options: ScaffoldConfig, level: LogLevel, ...obj: any[]): vo
   )
 }
 
-export async function createDirIfNotExists(dir: string, options: ScaffoldConfig): Promise<void> {
+export async function createDirIfNotExists(dir: string, config: ScaffoldConfig): Promise<void> {
   const parentDir = path.dirname(dir)
 
   if (!(await pathExists(parentDir))) {
-    await createDirIfNotExists(parentDir, options)
+    await createDirIfNotExists(parentDir, config)
   }
 
   if (!(await pathExists(dir))) {
     try {
-      log(options, LogLevel.Debug, `Creating dir ${dir}`)
+      log(config, LogLevel.Debug, `Creating dir ${dir}`)
       await mkdir(dir)
       return
     } catch (e: any) {
@@ -137,7 +137,7 @@ export async function createDirIfNotExists(dir: string, options: ScaffoldConfig)
 }
 
 export function getOptionValueForFile<T>(
-  options: ScaffoldConfig,
+  config: ScaffoldConfig,
   filePath: string,
   fn: FileResponse<T>,
   defaultValue?: T
@@ -145,19 +145,19 @@ export function getOptionValueForFile<T>(
   if (typeof fn !== "function") {
     return defaultValue ?? (fn as T)
   }
-  return (fn as FileResponseFn<T>)(
+  return (fn as FileResponseHandler<T>)(
     filePath,
-    path.dirname(handlebarsParse(options, filePath, { isPath: true }).toString()),
-    path.basename(handlebarsParse(options, filePath, { isPath: true }).toString())
+    path.dirname(handlebarsParse(config, filePath, { isPath: true }).toString()),
+    path.basename(handlebarsParse(config, filePath, { isPath: true }).toString())
   )
 }
 
 export function handlebarsParse(
-  options: ScaffoldConfig,
+  config: ScaffoldConfig,
   templateBuffer: Buffer | string,
   { isPath = false }: { isPath?: boolean } = {}
 ): Buffer {
-  const { data } = options
+  const { data } = config
   try {
     let str = templateBuffer.toString()
     if (isPath) {
@@ -170,8 +170,8 @@ export function handlebarsParse(
     }
     return Buffer.from(outputContents)
   } catch (e) {
-    log(options, LogLevel.Debug, e)
-    log(options, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
+    log(config, LogLevel.Debug, e)
+    log(config, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
     return Buffer.from(templateBuffer)
   }
 }
@@ -212,11 +212,11 @@ export function getBasePath(relPath: string): string {
     .replace(process.cwd(), "")
 }
 
-export async function getFileList(options: ScaffoldConfig, template: string): Promise<string[]> {
+export async function getFileList(config: ScaffoldConfig, template: string): Promise<string[]> {
   return (
     await promisify(glob)(template, {
       dot: true,
-      debug: options.verbose === LogLevel.Debug,
+      debug: config.verbose === LogLevel.Debug,
       nodir: true,
     })
   ).map((f) => f.replace(/\//g, path.sep))
@@ -230,13 +230,13 @@ export interface GlobInfo {
   template: string
 }
 
-export async function getTemplateGlobInfo(options: ScaffoldConfig, template: string): Promise<GlobInfo> {
+export async function getTemplateGlobInfo(config: ScaffoldConfig, template: string): Promise<GlobInfo> {
   const isGlob = glob.hasMagic(template)
-  log(options, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
+  log(config, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
   let _template = template
   const nonGlobTemplate = isGlob ? removeGlob(template) : template
   const isDirOrGlob = isGlob ? true : await isDir(template)
-  log(options, LogLevel.Debug, "after isDir", isDirOrGlob)
+  log(config, LogLevel.Debug, "after isDir", isDirOrGlob)
   const _shouldAddGlob = !isGlob && isDirOrGlob
   const origTemplate = template
   if (_shouldAddGlob) {
@@ -254,14 +254,13 @@ export interface OutputFileInfo {
 }
 
 export async function getTemplateFileInfo(
-  options: ScaffoldConfig,
-  data: Record<string, string>,
+  config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string }
 ): Promise<OutputFileInfo> {
   const inputPath = path.resolve(process.cwd(), templatePath)
-  const outputPathOpt = getOptionValueForFile(options, inputPath, options.output)
-  const outputDir = getOutputDir(options, outputPathOpt, basePath)
-  const outputPath = handlebarsParse(options, path.join(outputDir, path.basename(inputPath)), {
+  const outputPathOpt = getOptionValueForFile(config, inputPath, config.output)
+  const outputDir = getOutputDir(config, outputPathOpt, basePath)
+  const outputPath = handlebarsParse(config, path.join(outputDir, path.basename(inputPath)), {
     isPath: true,
   }).toString()
   const exists = await pathExists(outputPath)
@@ -269,7 +268,7 @@ export async function getTemplateFileInfo(
 }
 
 export async function copyFileTransformed(
-  options: ScaffoldConfig,
+  config: ScaffoldConfig,
   {
     exists,
     overwrite,
@@ -284,43 +283,43 @@ export async function copyFileTransformed(
 ): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
-      log(options, LogLevel.Info, `File ${outputPath} exists, overwriting`)
+      log(config, LogLevel.Info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
-    const unprocessedOutputContents = handlebarsParse(options, templateBuffer)
+    const unprocessedOutputContents = handlebarsParse(config, templateBuffer)
     const finalOutputContents = (
-      (await options.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
+      (await config.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
     ).toString()
 
-    if (!options.dryRun) {
+    if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
-      log(options, LogLevel.Info, "Done.")
+      log(config, LogLevel.Info, "Done.")
     } else {
-      log(options, LogLevel.Info, "Content output:")
-      log(options, LogLevel.Info, finalOutputContents)
+      log(config, LogLevel.Info, "Content output:")
+      log(config, LogLevel.Info, finalOutputContents)
     }
   } else if (exists) {
-    log(options, LogLevel.Info, `File ${outputPath} already exists, skipping`)
+    log(config, LogLevel.Info, `File ${outputPath} already exists, skipping`)
   }
 }
 
-export function getOutputDir(options: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
+export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
   return path.resolve(
     process.cwd(),
     ...([
       outputPathOpt,
       basePath,
-      options.createSubFolder
-        ? options.subFolderNameHelper
-          ? handlebarsParse(options, `{{ ${options.subFolderNameHelper} name }}`).toString()
-          : options.name
+      config.createSubFolder
+        ? config.subFolderNameHelper
+          ? handlebarsParse(config, `{{ ${config.subFolderNameHelper} name }}`).toString()
+          : config.name
         : undefined,
     ].filter(Boolean) as string[])
   )
 }
 
 export function logInputFile(
-  options: ScaffoldConfig,
+  config: ScaffoldConfig,
   {
     origTemplate,
     relPath,
@@ -342,7 +341,7 @@ export function logInputFile(
   }
 ): void {
   log(
-    options,
+    config,
     LogLevel.Debug,
     `\nprocess.cwd(): ${process.cwd()}`,
     `\norigTemplate: ${origTemplate}`,
@@ -357,20 +356,20 @@ export function logInputFile(
   )
 }
 
-export function logInitStep(options: ScaffoldConfig): void {
-  log(options, LogLevel.Debug, "Full config:", {
-    name: options.name,
-    templates: options.templates,
-    output: options.output,
-    createSubfolder: options.createSubFolder,
-    data: options.data,
-    overwrite: options.overwrite,
-    quiet: options.quiet,
-    subFolderTransformHelper: options.subFolderNameHelper,
-    helpers: Object.keys(options.helpers ?? {}),
-    verbose: `${options.verbose} (${Object.keys(LogLevel).find(
-      (k) => (LogLevel[k as any] as unknown as number) === options.verbose!
+export function logInitStep(config: ScaffoldConfig): void {
+  log(config, LogLevel.Debug, "Full config:", {
+    name: config.name,
+    templates: config.templates,
+    output: config.output,
+    createSubfolder: config.createSubFolder,
+    data: config.data,
+    overwrite: config.overwrite,
+    quiet: config.quiet,
+    subFolderTransformHelper: config.subFolderNameHelper,
+    helpers: Object.keys(config.helpers ?? {}),
+    verbose: `${config.verbose} (${Object.keys(LogLevel).find(
+      (k) => (LogLevel[k as any] as unknown as number) === config.verbose!
     )})`,
   })
-  log(options, LogLevel.Info, "Data:", options.data)
+  log(config, LogLevel.Info, "Data:", config.data)
 }

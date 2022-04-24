@@ -14,6 +14,12 @@
       "problemMatcher": [],
     },
     {
+      "command": "yarn typedoc --watch",
+      "label": "typedoc --watch",
+      "type": "shell",
+      "problemMatcher": [],
+    },
+    {
       "script": "start",
       "label": "start",
       "type": "npm",

@@ -1,0 +1,26 @@
+{
+  "name": "Simple Scaffold",
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "includeVersion": true,
+  "categorizeByGroup": false,
+  "sort": [
+    "visibility"
+  ],
+  "categoryOrder": [
+    "Main",
+    "*"
+  ],
+  "theme": "doc-theme",
+  "githubPages": true,
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "gaID": "GTM-KHQS9TQ",
+  "validation": {
+    "invalidLink": true
+  }
+}
