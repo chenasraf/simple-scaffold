@@ -287,9 +287,8 @@ export async function copyFileTransformed(
     }
     const templateBuffer = await readFile(inputPath)
     const unprocessedOutputContents = handlebarsParse(config, templateBuffer)
-    const finalOutputContents = (
+    const finalOutputContents =
       (await config.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
-    ).toString()
 
     if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
