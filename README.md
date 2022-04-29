@@ -230,7 +230,7 @@ Your `data` will be pre-populated with the following:
 
 #### Built-in Helpers
 
-Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
+Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.
 
 For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
 replace `My Name` with `my_name` when producing the final value.
@@ -267,14 +267,14 @@ Further details:
 
 - The date helper format takes the following arguments:
 
-    ```typescript
-    (
-      date: string,
-      format: string,
-      offsetAmount?: number,
-      offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
-    )
-    ```
+  ```typescript
+  (
+    date: string,
+    format: string,
+    offsetAmount?: number,
+    offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+  )
+  ```
 
 - **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
   it is implicitly the current date.
@@ -314,18 +314,18 @@ simple-scaffold MyComponent \
 #### Node Module Example
 
 ```typescript
-import Scaffold from 'simple-scaffold';
+import Scaffold from "simple-scaffold"
 
 async function main() {
   await Scaffold({
-    name: 'MyComponent',
-    templates: ['project/scaffold/**/*'],
-    output: ['src/components'],
+    name: "MyComponent",
+    templates: ["project/scaffold/**/*"],
+    output: ["src/components"],
     data: {
-      className: 'myClassName',
+      className: "myClassName",
     },
-  });
-  console.log('Done.');
+  })
+  console.log("Done.")
 }
 ```
 

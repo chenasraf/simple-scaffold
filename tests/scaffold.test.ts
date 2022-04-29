@@ -6,10 +6,18 @@ import { Console } from "console"
 import { defaultHelpers } from "../src/utils"
 import { join } from "path"
 import * as dateFns from "date-fns"
+import crypto from "crypto"
 
 const fileStructNormal = {
   input: {
     "{{name}}.txt": "Hello, my app is {{name}}",
+  },
+  output: {},
+}
+const fileStructWithBinary = {
+  input: {
+    "{{name}}.txt": "Hello, my app is {{name}}",
+    "{{name}}.bin": crypto.randomBytes(10000),
   },
   output: {},
 }
@@ -108,6 +116,24 @@ describe("Scaffold", () => {
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
+      })
+    })
+  )
+
+  describe(
+    "binary files",
+    withMock(fileStructWithBinary, () => {
+      test("should copy as-is", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          verbose: 0,
+        })
+        const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(data.toString()).toEqual("Hello, my app is app_name")
+        const dataBin = readFileSync(join(process.cwd(), "output", "app_name.bin"))
+        expect(dataBin).toEqual(fileStructWithBinary.input["{{name}}.bin"])
       })
     })
   )

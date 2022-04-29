@@ -3,8 +3,12 @@ import massarg from "massarg"
 import chalk from "chalk"
 import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
+import path from "path"
+import fs from "fs/promises"
 
-export function parseCliArgs(args = process.argv.slice(2)) {
+export async function parseCliArgs(args = process.argv.slice(2)) {
+  const pkg = JSON.parse((await fs.readFile(path.join(__dirname, "package.json"))).toString())
+
   return (
     massarg<ScaffoldCmdConfig & { help: boolean; extras: string[] }>()
       .main(Scaffold)
@@ -88,9 +92,12 @@ export function parseCliArgs(args = process.argv.slice(2)) {
         binName: "simple-scaffold",
         useGlobalColumns: true,
         usageExample: "[options]",
-        header: "Create structured files based on templates.",
+        header: [`Create structured files based on templates.`].join("\n"),
         footer: [
-          `Copyright © Chen Asraf 2021`,
+          `Version:  ${pkg.version}`,
+          `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
+          ``,
+          `Documentation: ${chalk.underline`https://casraf.blog/simple-scaffold`}`,
           `NPM: ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
           `GitHub: ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
         ].join("\n"),
