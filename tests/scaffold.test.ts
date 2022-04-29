@@ -123,7 +123,7 @@ describe("Scaffold", () => {
   describe(
     "binary files",
     withMock(fileStructWithBinary, () => {
-      test("should not create by default", async () => {
+      test("should copy as-is", async () => {
         await Scaffold({
           name: "app_name",
           output: "output",
