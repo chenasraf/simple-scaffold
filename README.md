@@ -421,7 +421,7 @@ Some tips on getting around the code:
   > This requires an updated build, and does not trigger one itself. From here you have several
   > options:
   >
-  > - Either use `yarn dev` to watch and build automatically
-  > - Use `yarn build` before running this
-  > - Use `yarn build-cmd` instead, which triggers a build right before running the command with the
-  >   rest of the given arguments.
+  > - Run `yarn dev` to watch and build automatically
+  > - Run `yarn build` before running this
+  > - Run `yarn build-cmd` which triggers a build right before running `yarn cmd` automatically with
+  >   the rest of the given arguments.
