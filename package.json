@@ -28,6 +28,8 @@
     "cmd": "node --trace-warnings dist/cmd.js",
     "build-test": "yarn build && yarn test",
     "build-cmd": "yarn build && yarn cmd",
+    "build-docs": "yarn build && yarn typedoc",
+    "watch-docs": "yarn typedoc --watch",
     "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert"
   },
   "dependencies": {

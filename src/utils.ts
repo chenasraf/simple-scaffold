@@ -1,6 +1,6 @@
 import path from "path"
 import { F_OK } from "constants"
-import { DefaultHelperKeys, FileResponse, FileResponseHandler, Helper, LogLevel, ScaffoldConfig } from "./types"
+import { DefaultHelpers, FileResponse, FileResponseHandler, Helper, LogLevel, ScaffoldConfig } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
@@ -23,7 +23,7 @@ import { glob } from "glob"
 import { promisify } from "util"
 const { readFile, writeFile } = fsPromises
 
-export const defaultHelpers: Record<DefaultHelperKeys, Helper> = {
+export const defaultHelpers: Record<DefaultHelpers, Helper> = {
   camelCase,
   snakeCase,
   startCase,
@@ -41,13 +41,13 @@ export function _dateHelper(
   date: Date,
   formatString: string,
   durationDifference: number,
-  durationType: keyof Duration
+  durationType: keyof Duration,
 ): string
 export function _dateHelper(
   date: Date,
   formatString: string,
   durationDifference?: number,
-  durationType?: keyof Duration
+  durationType?: keyof Duration,
 ): string {
   if (durationType && durationDifference !== undefined) {
     return dateFns.format(dateFns.add(date, { [durationType]: durationDifference }), formatString)
@@ -66,14 +66,14 @@ export function dateHelper(
   date: string,
   formatString: string,
   durationDifference: number,
-  durationType: keyof Duration
+  durationType: keyof Duration,
 ): string
 
 export function dateHelper(
   date: string,
   formatString: string,
   durationDifference?: number,
-  durationType?: keyof Duration
+  durationType?: keyof Duration,
 ): string {
   return _dateHelper(dateFns.parseISO(date), formatString, durationDifference!, durationType!)
 }
@@ -110,8 +110,8 @@ export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): voi
         ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
         : typeof i === "object"
         ? chalkFn(JSON.stringify(i, undefined, 1))
-        : chalkFn(i)
-    )
+        : chalkFn(i),
+    ),
   )
 }
 
@@ -140,7 +140,7 @@ export function getOptionValueForFile<T>(
   config: ScaffoldConfig,
   filePath: string,
   fn: FileResponse<T>,
-  defaultValue?: T
+  defaultValue?: T,
 ): T {
   if (typeof fn !== "function") {
     return defaultValue ?? (fn as T)
@@ -148,14 +148,14 @@ export function getOptionValueForFile<T>(
   return (fn as FileResponseHandler<T>)(
     filePath,
     path.dirname(handlebarsParse(config, filePath, { isPath: true }).toString()),
-    path.basename(handlebarsParse(config, filePath, { isPath: true }).toString())
+    path.basename(handlebarsParse(config, filePath, { isPath: true }).toString()),
   )
 }
 
 export function handlebarsParse(
   config: ScaffoldConfig,
   templateBuffer: Buffer | string,
-  { isPath = false }: { isPath?: boolean } = {}
+  { isPath = false }: { isPath?: boolean } = {},
 ): Buffer {
   const { data } = config
   try {
@@ -255,7 +255,7 @@ export interface OutputFileInfo {
 
 export async function getTemplateFileInfo(
   config: ScaffoldConfig,
-  { templatePath, basePath }: { templatePath: string; basePath: string }
+  { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<OutputFileInfo> {
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(config, inputPath, config.output)
@@ -279,7 +279,7 @@ export async function copyFileTransformed(
     overwrite: boolean
     outputPath: string
     inputPath: string
-  }
+  },
 ): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
@@ -313,7 +313,7 @@ export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, base
           ? handlebarsParse(config, `{{ ${config.subFolderNameHelper} name }}`).toString()
           : config.name
         : undefined,
-    ].filter(Boolean) as string[])
+    ].filter(Boolean) as string[]),
   )
 }
 
@@ -337,7 +337,7 @@ export function logInputFile(
     basePath: string
     isDirOrGlob: boolean
     isGlob: boolean
-  }
+  },
 ): void {
   log(
     config,
@@ -351,7 +351,7 @@ export function logInputFile(
     `\nbasePath: ${basePath}`,
     `\nisDirOrGlob: ${isDirOrGlob}`,
     `\nisGlob: ${isGlob}`,
-    `\n`
+    `\n`,
   )
 }
 
@@ -367,7 +367,7 @@ export function logInitStep(config: ScaffoldConfig): void {
     subFolderTransformHelper: config.subFolderNameHelper,
     helpers: Object.keys(config.helpers ?? {}),
     verbose: `${config.verbose} (${Object.keys(LogLevel).find(
-      (k) => (LogLevel[k as any] as unknown as number) === config.verbose!
+      (k) => (LogLevel[k as any] as unknown as number) === config.verbose!,
     )})`,
   })
   log(config, LogLevel.Info, "Data:", config.data)

@@ -47,11 +47,13 @@ import { LogLevel, ScaffoldConfig } from "./types"
  * Any functions you provide in `helpers` option will also be available to you to make custom formatting as you see fit
  * (for example, formatting a date)
  *
- * For available default values, see {@link DefaultHelperKeys}.
+ * For available default values, see {@link DefaultHelpers}.
  *
  * @param {ScaffoldConfig} config The main configuration object
  *
- * @see {@link DefaultHelperKeys}
+ * @see {@link DefaultHelpers}
+ * @see {@link CaseHelpers}
+ * @see {@link DateHelpers}
  *
  * @category Main
  */
@@ -66,7 +68,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
       try {
         const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
           config,
-          _template
+          _template,
         )
         const files = await getFileList(config, template)
         for (const inputFilePath of files) {
@@ -101,7 +103,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 }
 async function handleTemplateFile(
   config: ScaffoldConfig,
-  { templatePath, basePath }: { templatePath: string; basePath: string }
+  { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -120,7 +122,7 @@ async function handleTemplateFile(
         `\nOutput Path Opt: ${outputPathOpt}`,
         `\nFull output dir: ${outputDir}`,
         `\nFull output path: ${outputPath}`,
-        `\n`
+        `\n`,
       )
 
       await createDirIfNotExists(path.dirname(outputPath), config)

@@ -4,7 +4,9 @@ import { HelperDelegate } from "handlebars/runtime"
  * The config object for defining a scaffolding group.
  *
  * @see https://github.com/chenasraf/simple-scaffold#readme
- * @see {@link DefaultHelperKeys}
+ * @see {@link DefaultHelpers}
+ * @see {@link CaseHelpers}
+ * @see {@link DateHelpers}
  *
  * @category Config
  */
@@ -95,7 +97,7 @@ export interface ScaffoldConfig {
    * Additional helpers to add to the template parser. Provide an object whose keys are the name of the function to add,
    * and the value is the helper function itself. The signature of helpers is as follows:
    * ```typescript
-   * (text: string) => string
+   * (text: string, ...args: any[]) => string
    * ```
    *
    * A full example might be:
@@ -104,27 +106,47 @@ export interface ScaffoldConfig {
    * Scaffold({
    *   //...
    *   helpers: {
-   *     upperCamelCase: (text) => camelCase(text).toUpperCase()
+   *     upperKebabCase: (text) => kebabCase(text).toUpperCase()
    *   }
    * })
    * ```
    *
-   * See {@link DefaultHelperKeys} for a list of all the built-in available helpers.
+   * Which will allow:
    *
-   * @see https://github.com/chenasraf/simple-scaffold#helpers
-   * @see https://github.com/chenasraf/simple-scaffold#built-in-helpers
+   * ```
+   * {{ upperKebabCase "my value" }}
+   * ```
+   *
+   * To transform to:
+   *
+   * ```
+   * MY-VALUE
+   * ```
+   *
+   * See {@link DefaultHelpers} for a list of all the built-in available helpers.
+   *
+   * Simple Scaffold uses Handlebars.js, so all the syntax from there is supported. See
+   * [their docs](https://handlebarsjs.com/guide/#custom-helpers) for more information.
+   *
+   * @see {@link DefaultHelpers}
+   * @see {@link CaseHelpers}
+   * @see {@link DateHelpers}
+   * @see https://casraf.blog/simple-scaffold#helpers
+   * @see https://casraf.blog/simple-scaffold#built-in-helpers
+   * @see https://handlebarsjs.com/guide/#custom-helpers
    */
   helpers?: Record<string, Helper>
 
   /**
    * Default transformer to apply to subfolder name when using `createSubFolder: true`. Can be one of the default
-   * capitalization helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no transformation is done.
+   * capitalization helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no
+   * transformation is done.
    *
    * @see {@link createSubFolder}
-   * @see {@link CapitalizationHelperKeys}
-   * @see {@link DefaultHelperKeys}
+   * @see {@link CaseHelpers}
+   * @see {@link DefaultHelpers}
    */
-  subFolderNameHelper?: DefaultHelperKeys | string
+  subFolderNameHelper?: DefaultHelpers | string
 
   /**
    * This callback runs right before content is being written to the disk. If you supply this function, you may return
@@ -137,13 +159,13 @@ export interface ScaffoldConfig {
    * @param rawContent The original template before token replacement
    * @param outputPath The final output path of the processed file
    *
-   * @returns {Promise<String | Buffer | undefined> | String | Buffer | undefined} The final output of the file contents-only, after further modifications -
-   * or `undefined` to use the original content (i.e. `content.toString()`)
+   * @returns {Promise<String | Buffer | undefined> | String | Buffer | undefined} The final output of the file
+   * contents-only, after further modifications - or `undefined` to use the original content (i.e. `content.toString()`)
    */
   beforeWrite?(
     content: Buffer,
     rawContent: Buffer,
-    outputPath: string
+    outputPath: string,
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 }
 
@@ -164,13 +186,14 @@ export interface ScaffoldConfig {
  * | `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
  * | `lowerCase`  | `{{ lowerCase name }}`  | my name        |
  *
+ * @see {@link DefaultHelpers}
+ * @see {@link DateHelpers}
  * @see {@link ScaffoldConfig}
  * @see {@link subFolderNameHelper}
- * @see {@link DefaultHelperKeys}
  *
  * @category Helpers
  */
-export type CapitalizationHelperKeys =
+export type CaseHelpers =
   | "camelCase"
   | "hyphenCase"
   | "kebabCase"
@@ -191,11 +214,33 @@ export type CapitalizationHelperKeys =
  * | `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
  * | `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
  *
- * @see {@link DefaultHelperKeys}
+ * Further details:
+ *
+ * - We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates. If you want
+ *   more information on the date tokens to use, refer to
+ *   [their format documentation](https://date-fns.org/docs/format).
+ *
+ * - The date helper format takes the following arguments:
+ *
+ *   ```typescript
+ *   (
+ *     date: string,
+ *     format: string,
+ *     offsetAmount?: number,
+ *     offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+ *   )
+ *   ```
+ *
+ * - **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as it is implicitly
+ *   the current date.
+ *
+ * @see {@link DefaultHelpers}
+ * @see {@link CaseHelpers}
+ * @see {@link ScaffoldConfig}
  *
  * @category Helpers
  */
-export type DateHelperKeys = "date" | "now"
+export type DateHelpers = "date" | "now"
 
 /**
  * The names of all the available helper functions in templates.
@@ -204,12 +249,13 @@ export type DateHelperKeys = "date" | "now"
  * For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
  * replace `My Name` with `my_name` when producing the final value.
  *
- * @see {@link CapitalizationHelperKeys}
- * @see {@link DateHelperKeys}
+ * @see {@link CaseHelpers}
+ * @see {@link DateHelpers}
+ * @see {@link ScaffoldConfig}
  *
  * @category Helpers
  */
-export type DefaultHelperKeys = CapitalizationHelperKeys | DateHelperKeys
+export type DefaultHelpers = CaseHelpers | DateHelpers
 
 /**
  * Helper function, see https://handlebarsjs.com/guide/#custom-helpers

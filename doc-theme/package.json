@@ -5,7 +5,9 @@
     "typedocplugin"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && yarn copy-files && yarn post-build",
+    "copy-files": "cp package.json build/",
+    "postbuild": "rimraf node_modules"
   },
   "main": "build/index.js",
   "devDependencies": {
