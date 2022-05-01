@@ -4,12 +4,12 @@
 
 [GitHub](https://github.com/chenasraf/simple-scaffold) |
 [Documentation](https://casraf.blog/simple-scaffold) |
-[NPM](https://npmjs.com/package/simple-scaffold) |
-[casraf.blog](https://casraf.blog)
+[NPM](https://npmjs.com/package/simple-scaffold) | [casraf.blog](https://casraf.blog)
 
 </h2>
 
-Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.
+Simple Scaffold allows you to generate any set of files in the easiest way possible with simple
+commands.
 
 It is completely framework agnostic so you can use it for anything from a few simple files to an
 entire app boilerplate setup.
@@ -66,9 +66,8 @@ npx simple-scaffold@latest <...args>
 
 ### Available flags
 
-The following is the help text from the `simple-scaffold` binary. To see this and more
-information anytime, add the `-h` or `--help` flag to your call, e.g.
-`npx simple-scaffold@latest -h`.
+The following is the help text from the `simple-scaffold` binary. To see this and more information
+anytime, add the `-h` or `--help` flag to your call, e.g. `npx simple-scaffold@latest -h`.
 
 ```text
 Usage: simple-scaffold [options]
@@ -221,8 +220,8 @@ Your `data` will be pre-populated with the following:
 - `{{name}}`: raw name of the component as you entered it
 
 > Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
-> Any `data` you add in the config will be available for use with their names wrapped in
-> `{{` and `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
+> Any `data` you add in the config will be available for use with their names wrapped in `{{` and
+> `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
 > [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
 > information.
 
@@ -261,8 +260,8 @@ replace `My Name` with `my_name` when producing the final value.
 
 Further details:
 
-- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates.
-  If you want more information on the date tokens to use, refer to
+- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates. If you want
+  more information on the date tokens to use, refer to
   [their format documentation](https://date-fns.org/docs/format).
 
 - The date helper format takes the following arguments:
@@ -276,14 +275,14 @@ Further details:
   )
   ```
 
-- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as
-  it is implicitly the current date.
+- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as it
+  is implicitly the current date.
 
 #### Custom Helpers
 
 You may also add your own custom helpers using the `helpers` options when using the JS API (rather
-than the CLI). The `helpers` option takes an object whose keys are helper names, and values are
-the transformation functions. For example, `upperCase` is implemented like so:
+than the CLI). The `helpers` option takes an object whose keys are helper names, and values are the
+transformation functions. For example, `upperCase` is implemented like so:
 
 ```typescript
 config.helpers = {
@@ -387,8 +386,8 @@ export default MyComponent: React.FC = (props) => {
 
 ## Contributing
 
-I am developing this package on my free time, so any support, whether code, issues, or just stars
-is very helpful to sustaining its life. If you would like to donate a bit to help keep the project
+I am developing this package on my free time, so any support, whether code, issues, or just stars is
+very helpful to sustaining its life. If you would like to donate a bit to help keep the project
 alive, I would be very thankful!
 
 <a href='https://ko-fi.com/casraf' target='_blank'>
@@ -416,9 +415,13 @@ Some tips on getting around the code:
   changes and immediately be able to try them using `yarn cmd`.
 - Use `yarn build` to build the output
 - Use `yarn test` to run tests
-- Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory,
-  enabling you to test different behaviors. See `yarn cmd -h` for more information.
+- Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
+  you to test different behaviors. See `yarn cmd -h` for more information.
 
-  > This requires an updated build, and does not trigger one itself. Either use `yarn dev` to watch
-  > for changes and build, or `yarn build` before running this, or use `yarn build-cmd` instead,
-  > which triggers a build right before running the command with the rest of the given arguments.
+  > This requires an updated build, and does not trigger one itself. From here you have several
+  > options:
+  >
+  > - Either use `yarn dev` to watch and build automatically
+  > - Use `yarn build` before running this
+  > - Use `yarn build-cmd` instead, which triggers a build right before running the command with the
+  >   rest of the given arguments.
