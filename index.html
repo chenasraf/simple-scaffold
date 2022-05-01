@@ -4,11 +4,11 @@
 
 <p><a href="https://github.com/chenasraf/simple-scaffold">GitHub</a> |
 <a href="https://casraf.blog/simple-scaffold">Documentation</a> |
-<a href="https://npmjs.com/package/simple-scaffold">NPM</a> |
-<a href="https://casraf.blog">casraf.blog</a></p>
+<a href="https://npmjs.com/package/simple-scaffold">NPM</a> | <a href="https://casraf.blog">casraf.blog</a></p>
 </h2>
 
-<p>Simple Scaffold allows you to generate any set of files in the easiest way possible with simple commands.</p>
+<p>Simple Scaffold allows you to generate any set of files in the easiest way possible with simple
+commands.</p>
 <p>It is completely framework agnostic so you can use it for anything from a few simple files to an
 entire app boilerplate setup.</p>
 <p>Simply organize your commonly-created files in their original structure, and running Simple Scaffold
@@ -76,9 +76,8 @@ other custom data) inside the paths or contents of the files using Handlebars.js
 <a href="#available-flags" id="available-flags" style="color: inherit; text-decoration: none;">
   <h3>Available flags</h3>
 </a>
-<p>The following is the help text from the <code>simple-scaffold</code> binary. To see this and more
-information anytime, add the <code>-h</code> or <code>--help</code> flag to your call, e.g.
-<code>npx simple-scaffold@latest -h</code>.</p>
+<p>The following is the help text from the <code>simple-scaffold</code> binary. To see this and more information
+anytime, add the <code>-h</code> or <code>--help</code> flag to your call, e.g. <code>npx simple-scaffold@latest -h</code>.</p>
 <pre><code class="language-text">Usage: simple-scaffold [options]
 
 Create structured files based on templates.
@@ -231,8 +230,8 @@ transformed files in the output directory.</p>
 </ul>
 <blockquote>
 <p>Simple-Scaffold uses <a href="https://handlebarsjs.com/">Handlebars.js</a> for outputting the file contents.
-Any <code>data</code> you add in the config will be available for use with their names wrapped in
-<code>{{</code> and <code>}}</code>. Other Handlebars built-ins such as <code>each</code>, <code>if</code> and <code>with</code> are also supported, see
+Any <code>data</code> you add in the config will be available for use with their names wrapped in <code>{{</code> and
+<code>}}</code>. Other Handlebars built-ins such as <code>each</code>, <code>if</code> and <code>with</code> are also supported, see
 <a href="https://handlebarsjs.com/guide/#language-features">Handlebars.js Language Features</a> for more
 information.</p>
 </blockquote>
@@ -351,16 +350,16 @@ replace <code>My Name</code> with <code>my_name</code> when producing the final 
 </tbody></table>
 <p>Further details:</p>
 <ul>
-<li><p>We use <a href="https://date-fns.org/docs/"><code>date-fns</code></a> for parsing/manipulating the dates.
-If you want more information on the date tokens to use, refer to
+<li><p>We use <a href="https://date-fns.org/docs/"><code>date-fns</code></a> for parsing/manipulating the dates. If you want
+more information on the date tokens to use, refer to
 <a href="https://date-fns.org/docs/format">their format documentation</a>.</p>
 </li>
 <li><p>The date helper format takes the following arguments:</p>
 <pre><code class="language-typescript"><span class="hl-0">(</span><br/><span class="hl-0">  </span><span class="hl-1">date</span><span class="hl-0">: </span><span class="hl-1">string</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">format</span><span class="hl-0">: </span><span class="hl-1">string</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">offsetAmount</span><span class="hl-0">?: </span><span class="hl-1">number</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">offsetType</span><span class="hl-0">?: </span><span class="hl-7">&quot;years&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;months&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;weeks&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;days&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;hours&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;minutes&quot;</span><span class="hl-0"> | </span><span class="hl-7">&quot;seconds&quot;</span><br/><span class="hl-0">)</span>
 </code></pre>
 </li>
-<li><p><strong>The now helper</strong> (for current time) takes the same arguments, minus the first one (<code>date</code>) as
-it is implicitly the current date.</p>
+<li><p><strong>The now helper</strong> (for current time) takes the same arguments, minus the first one (<code>date</code>) as it
+is implicitly the current date.</p>
 </li>
 </ul>
 
@@ -368,8 +367,8 @@ it is implicitly the current date.</p>
   <h4>Custom Helpers</h4>
 </a>
 <p>You may also add your own custom helpers using the <code>helpers</code> options when using the JS API (rather
-than the CLI). The <code>helpers</code> option takes an object whose keys are helper names, and values are
-the transformation functions. For example, <code>upperCase</code> is implemented like so:</p>
+than the CLI). The <code>helpers</code> option takes an object whose keys are helper names, and values are the
+transformation functions. For example, <code>upperCase</code> is implemented like so:</p>
 <pre><code class="language-typescript"><span class="hl-1">config</span><span class="hl-0">.</span><span class="hl-1">helpers</span><span class="hl-0"> = {</span><br/><span class="hl-0">  </span><span class="hl-10">upperCase</span><span class="hl-1">:</span><span class="hl-0"> (</span><span class="hl-1">text</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> </span><span class="hl-1">text</span><span class="hl-0">.</span><span class="hl-10">toUpperCase</span><span class="hl-0">(),</span><br/><span class="hl-0">}</span>
 </code></pre>
 <p>All of the above helpers (built in and custom) will also be available to you when using
@@ -438,8 +437,8 @@ the transformation functions. For example, <code>upperCase</code> is implemented
 <a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
   <h2>Contributing</h2>
 </a>
-<p>I am developing this package on my free time, so any support, whether code, issues, or just stars
-is very helpful to sustaining its life. If you would like to donate a bit to help keep the project
+<p>I am developing this package on my free time, so any support, whether code, issues, or just stars is
+very helpful to sustaining its life. If you would like to donate a bit to help keep the project
 alive, I would be very thankful!</p>
 <a href='https://ko-fi.com/casraf' target='_blank'>
   <img height='36' style='border:0px;height:36px;'
@@ -468,12 +467,17 @@ changes and immediately be able to try them using <code>yarn cmd</code>.</p>
 </li>
 <li><p>Use <code>yarn test</code> to run tests</p>
 </li>
-<li><p>Use <code>yarn cmd</code> to use the CLI feature of Simple Scaffold from within the root directory,
-enabling you to test different behaviors. See <code>yarn cmd -h</code> for more information.</p>
+<li><p>Use <code>yarn cmd</code> to use the CLI feature of Simple Scaffold from within the root directory, enabling
+you to test different behaviors. See <code>yarn cmd -h</code> for more information.</p>
 <blockquote>
-<p>This requires an updated build, and does not trigger one itself. Either use <code>yarn dev</code> to watch
-for changes and build, or <code>yarn build</code> before running this, or use <code>yarn build-cmd</code> instead,
-which triggers a build right before running the command with the rest of the given arguments.</p>
+<p>This requires an updated build, and does not trigger one itself. From here you have several
+options:</p>
+<ul>
+<li>Either use <code>yarn dev</code> to watch and build automatically</li>
+<li>Use <code>yarn build</code> before running this</li>
+<li>Use <code>yarn build-cmd</code> instead, which triggers a build right before running the command with the
+rest of the given arguments.</li>
+</ul>
 </blockquote>
 </li>
 </ul>
