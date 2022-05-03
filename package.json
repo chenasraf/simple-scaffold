@@ -28,7 +28,8 @@
     "cmd": "node --trace-warnings dist/cmd.js",
     "build-test": "yarn build && yarn test",
     "build-cmd": "yarn build && yarn cmd",
-    "build-docs": "yarn build && yarn typedoc",
+    "build-docs": "yarn build && yarn build-docs-theme && typedoc",
+    "build-docs-theme": "cd doc-theme && yarn install && yarn build && rimraf node_modules && cd ..",
     "watch-docs": "yarn typedoc --watch",
     "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert"
   },

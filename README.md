@@ -429,3 +429,8 @@ Some tips on getting around the code:
   > - Run `yarn build` before running this
   > - Run `yarn build-cmd` which triggers a build right before running `yarn cmd` automatically with
   >   the rest of the given arguments.
+
+- Use `yarn build-docs` to build the documentation once
+- Use `yarn watch-docs` to start docs in watch mode
+- To see the documentation, currently you have to serve the directory yourself with a static web
+  server (like node's built in serve, VS code's "Go Live" mode, etc)

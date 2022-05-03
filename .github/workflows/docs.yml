@@ -12,9 +12,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      - run: cd doc-theme && yarn install && yarn build && rm -rf node_modules && cd ..
       - run: yarn install --frozen-lockfile
-      - run: yarn typedoc
+      - run: yarn build-docs
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
