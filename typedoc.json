@@ -12,6 +12,7 @@
     "Main",
     "*"
   ],
+  "media": "media",
   "theme": "doc-theme",
   "githubPages": true,
   "entryPointStrategy": "expand",

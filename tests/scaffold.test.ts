@@ -53,7 +53,7 @@ const fileStructHelpers = {
   input: {
     defaults: defaultHelperNames.reduce<Record<string, string>>(
       (all, cur) => ({ ...all, [cur + ".txt"]: `{{ ${cur} name }}` }),
-      {}
+      {},
     ),
     custom: {
       "add1.txt": "{{ add1 name }}",
@@ -117,7 +117,7 @@ describe("Scaffold", () => {
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
       })
-    })
+    }),
   )
 
   describe(
@@ -135,7 +135,7 @@ describe("Scaffold", () => {
         const dataBin = readFileSync(join(process.cwd(), "output", "app_name.bin"))
         expect(dataBin).toEqual(fileStructWithBinary.input["{{name}}.bin"])
       })
-    })
+    }),
   )
 
   describe(
@@ -183,7 +183,7 @@ describe("Scaffold", () => {
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my value is 2")
       })
-    })
+    }),
   )
 
   describe(
@@ -206,7 +206,7 @@ describe("Scaffold", () => {
             templates: ["non-existing-input"],
             data: { value: "1" },
             verbose: 0,
-          })
+          }),
         ).rejects.toThrow()
 
         await expect(
@@ -216,12 +216,12 @@ describe("Scaffold", () => {
             templates: ["non-existing-input/non-existing-file.txt"],
             data: { value: "1" },
             verbose: 0,
-          })
+          }),
         ).rejects.toThrow()
 
         expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
-    })
+    }),
   )
 
   describe(
@@ -248,7 +248,7 @@ describe("Scaffold", () => {
 
         expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
-    })
+    }),
   )
 
   describe(
@@ -265,7 +265,7 @@ describe("Scaffold", () => {
         const data = readFileSync(join(process.cwd(), "/custom-output/app_name/app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
       })
-    })
+    }),
   )
 
   describe(
@@ -294,7 +294,7 @@ describe("Scaffold", () => {
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
       })
-    })
+    }),
   )
 
   describe(
@@ -328,7 +328,7 @@ describe("Scaffold", () => {
           expect(file.toString()).toEqual(results[key as keyof typeof results])
         }
       })
-    })
+    }),
   )
   describe(
     "date helpers",
@@ -355,19 +355,19 @@ describe("Scaffold", () => {
         // "custom.txt": "Custom date is {{ date customDate 'mmm' }}, time is {{ date customDate 'HH:mm' }}",
 
         expect(nowFile.toString()).toEqual(
-          `Today is ${dateFns.format(now, "mmm")}, time is ${dateFns.format(now, "HH:mm")}`
+          `Today is ${dateFns.format(now, "mmm")}, time is ${dateFns.format(now, "HH:mm")}`,
         )
         expect(offsetFile.toString()).toEqual(
-          `Yesterday was ${dateFns.format(yesterday, "mmm")}, time is ${dateFns.format(yesterday, "HH:mm")}`
+          `Yesterday was ${dateFns.format(yesterday, "mmm")}, time is ${dateFns.format(yesterday, "HH:mm")}`,
         )
         expect(customFile.toString()).toEqual(
           `Custom date is ${dateFns.format(dateFns.parseISO(customDate), "mmm")}, time is ${dateFns.format(
             dateFns.parseISO(customDate),
-            "HH:mm"
-          )}`
+            "HH:mm",
+          )}`,
         )
       })
-    })
+    }),
   )
   describe(
     "custom helpers",
@@ -392,7 +392,7 @@ describe("Scaffold", () => {
           expect(file.toString()).toEqual(results[key as keyof typeof results])
         }
       })
-    })
+    }),
   )
   describe(
     "transform subfolder",
@@ -440,7 +440,7 @@ describe("Scaffold", () => {
         const data = readFileSync(join(process.cwd(), "output", "REPLACED", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
       })
-    })
+    }),
   )
   describe(
     "before write",
@@ -479,7 +479,7 @@ describe("Scaffold", () => {
             "Hello, my app is app_name".toUpperCase(),
             fileStructNormal.input["{{name}}.txt"],
             join(process.cwd(), "output", "app_name.txt"),
-          ].join(", ")
+          ].join(", "),
         )
       })
       test("should work with undefined response custom callback", async () => {
@@ -497,6 +497,6 @@ describe("Scaffold", () => {
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
       })
-    })
+    }),
   )
 })

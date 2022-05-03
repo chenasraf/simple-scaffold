@@ -71,7 +71,10 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "verbose",
         aliases: ["v"],
         defaultValue: LogLevel.Info,
-        description: `Determine amount of logs to display. The values are: ${chalk.bold`0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`}. The provided level will display messages of the same level or higher.`,
+        description:
+          "Determine amount of logs to display. The values are: " +
+          `${chalk.bold`0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`}. ` +
+          "The provided level will display messages of the same level or higher.",
         parse: Number,
       })
       .option({

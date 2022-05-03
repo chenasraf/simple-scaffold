@@ -7,16 +7,20 @@
 [NPM](https://npmjs.com/package/simple-scaffold) | [casraf.blog](https://casraf.blog)
 
 </h2>
+Generate any set of files in the easiest way possible with simple commands.
 
-Simple Scaffold allows you to generate any set of files in the easiest way possible with simple
-commands.
+It is completely agnostic and un-opinionated so you can use it for anything from a few simple files
+to an entire app boilerplate setup.
 
-It is completely framework agnostic so you can use it for anything from a few simple files to an
-entire app boilerplate setup.
+Simply organize your commonly-created files in their **original structure**, and running Simple
+Scaffold will copy the files to the output path, while replacing values (such as component or app
+name, or other custom data) inside the paths or contents of the files using Handlebars.js syntax.
 
-Simply organize your commonly-created files in their original structure, and running Simple Scaffold
-will copy the files to the output path, while replacing values (such as component or app name, or
-other custom data) inside the paths or contents of the files using Handlebars.js syntax.
+<div align="center">
+
+![sample animation](media/intro.gif)
+
+</div>
 
 <br />
 

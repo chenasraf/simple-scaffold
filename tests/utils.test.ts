@@ -24,7 +24,7 @@ describe("Utils", () => {
       })
       test("should work for windows paths", async () => {
         expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
-          Buffer.from("C:\\exports\\test.txt")
+          Buffer.from("C:\\exports\\test.txt"),
         )
       })
     })
@@ -38,7 +38,7 @@ describe("Utils", () => {
       })
       test("should work for non-windows paths", async () => {
         expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual(
-          Buffer.from("/home/test/test.txt")
+          Buffer.from("/home/test/test.txt"),
         )
       })
     })
@@ -49,8 +49,8 @@ describe("Utils", () => {
           "/home/test/{{name}} \\{{escaped}}.txt",
           {
             isPath: false,
-          }
-        )
+          },
+        ),
       ).toEqual(Buffer.from("/home/test/test {{escaped}}.txt"))
     })
   })
@@ -79,10 +79,10 @@ describe("Utils", () => {
           const fmt = "yyyy-MM-dd HH:mm"
 
           expect(dateHelper(now.toISOString(), fmt, -1, "days")).toEqual(
-            dateFns.format(dateFns.add(now, { days: -1 }), fmt)
+            dateFns.format(dateFns.add(now, { days: -1 }), fmt),
           )
           expect(dateHelper(now.toISOString(), fmt, 1, "months")).toEqual(
-            dateFns.format(dateFns.add(now, { months: 1 }), fmt)
+            dateFns.format(dateFns.add(now, { months: 1 }), fmt),
           )
         })
       })
