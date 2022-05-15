@@ -50,7 +50,7 @@ name, or other custom data) inside the paths or contents of the files using Hand
 <li><a href="#examples">Examples</a><ul>
 <li><a href="#run">Run</a><ul>
 <li><a href="#command-example">Command Example</a></li>
-<li><a href="#node-module-example">Node Module Example</a></li>
+<li><a href="#equivalent-node-module-example">Equivalent Node Module Example</a></li>
 </ul>
 </li>
 <li><a href="#files">Files</a><ul>
@@ -393,13 +393,13 @@ transformation functions. For example, <code>upperCase</code> is implemented lik
 <a href="#command-example" id="command-example" style="color: inherit; text-decoration: none;">
   <h4>Command Example</h4>
 </a>
-<pre><code class="language-bash"><span class="hl-0">simple-scaffold MyComponent \</span><br/><span class="hl-0">    -t project/scaffold/**/* \</span><br/><span class="hl-0">    -o src/components \</span><br/><span class="hl-0">    -d </span><span class="hl-5">&#39;{&quot;className&quot;: &quot;myClassName&quot;}&#39;</span><br/><span class="hl-0">    MyComponent</span>
+<pre><code class="language-bash"><span class="hl-0">simple-scaffold MyComponent \</span><br/><span class="hl-0">    -t project/scaffold/**/* \</span><br/><span class="hl-0">    -o src/components \</span><br/><span class="hl-0">    -d </span><span class="hl-5">&#39;{&quot;className&quot;: &quot;myClassName&quot;,&quot;author&quot;: &quot;Chen Asraf&quot;}&#39;</span><br/><span class="hl-0">    MyComponent</span>
 </code></pre>
 
-<a href="#node-module-example" id="node-module-example" style="color: inherit; text-decoration: none;">
-  <h4>Node Module Example</h4>
+<a href="#equivalent-node-module-example" id="equivalent-node-module-example" style="color: inherit; text-decoration: none;">
+  <h4>Equivalent Node Module Example</h4>
 </a>
-<pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">Scaffold</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&quot;simple-scaffold&quot;</span><br/><br/><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-3">function</span><span class="hl-0"> </span><span class="hl-10">main</span><span class="hl-0">() {</span><br/><span class="hl-0">  </span><span class="hl-9">await</span><span class="hl-0"> </span><span class="hl-10">Scaffold</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-1">name:</span><span class="hl-0"> </span><span class="hl-5">&quot;MyComponent&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-1">templates:</span><span class="hl-0"> [</span><span class="hl-5">&quot;project/scaffold/**/*&quot;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">output:</span><span class="hl-0"> [</span><span class="hl-5">&quot;src/components&quot;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">data:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-1">className:</span><span class="hl-0"> </span><span class="hl-5">&quot;myClassName&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  })</span><br/><span class="hl-0">  </span><span class="hl-1">console</span><span class="hl-0">.</span><span class="hl-10">log</span><span class="hl-0">(</span><span class="hl-5">&quot;Done.&quot;</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
+<pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">Scaffold</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&quot;simple-scaffold&quot;</span><br/><br/><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-3">function</span><span class="hl-0"> </span><span class="hl-10">main</span><span class="hl-0">() {</span><br/><span class="hl-0">  </span><span class="hl-9">await</span><span class="hl-0"> </span><span class="hl-10">Scaffold</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-1">name:</span><span class="hl-0"> </span><span class="hl-5">&quot;MyComponent&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-1">templates:</span><span class="hl-0"> [</span><span class="hl-5">&quot;project/scaffold/**/*&quot;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">output:</span><span class="hl-0"> [</span><span class="hl-5">&quot;src/components&quot;</span><span class="hl-0">],</span><br/><span class="hl-0">    </span><span class="hl-1">data:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-1">className:</span><span class="hl-0"> </span><span class="hl-5">&quot;myClassName&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">      </span><span class="hl-1">author:</span><span class="hl-0"> </span><span class="hl-5">&quot;Chen Asraf&quot;</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  })</span><br/><span class="hl-0">  </span><span class="hl-1">console</span><span class="hl-0">.</span><span class="hl-10">log</span><span class="hl-0">(</span><span class="hl-5">&quot;Done.&quot;</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
 </code></pre>
 
 <a href="#files" id="files" style="color: inherit; text-decoration: none;">
@@ -409,17 +409,22 @@ transformation functions. For example, <code>upperCase</code> is implemented lik
 <a href="#input" id="input" style="color: inherit; text-decoration: none;">
   <h4>Input</h4>
 </a>
-<p>Input file path:</p>
+<ul>
+<li><p>Input file path:</p>
 <pre><code class="language-text">project → scaffold → {{Name}}.js → src → components
 </code></pre>
-<p>Input file contents:</p>
-<pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> {{camelCase </span><span class="hl-1">name</span><span class="hl-0">}}: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-5">&quot;{{className}}&quot;</span><span class="hl-0">&gt;{{camelCase </span><span class="hl-1">name</span><span class="hl-0">}} </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
+</li>
+<li><p>Input file contents:</p>
+<pre><code class="language-typescript"><span class="hl-6">/**</span><br/><span class="hl-6"> * Author: {{ username }}</span><br/><span class="hl-6"> * Date: {{ now &quot;yyyy-MM-dd&quot; }}</span><br/><span class="hl-6"> */</span><br/><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> {{camelCase </span><span class="hl-1">name</span><span class="hl-0">}}: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-5">&quot;{{className}}&quot;</span><span class="hl-0">&gt;{{camelCase </span><span class="hl-1">name</span><span class="hl-0">}} </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
 </code></pre>
+</li>
+</ul>
 
 <a href="#output" id="output" style="color: inherit; text-decoration: none;">
   <h4>Output</h4>
 </a>
-<p>Output file path:</p>
+<ul>
+<li><p>Output file path:</p>
 <ul>
 <li><p>With <code>createSubFolder = false</code> (default):</p>
 <pre><code class="language-text">project → src → components → MyComponent.js
@@ -434,9 +439,12 @@ transformation functions. For example, <code>upperCase</code> is implemented lik
 </code></pre>
 </li>
 </ul>
-<p>Output file contents:</p>
-<pre><code class="language-typescript"><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> </span><span class="hl-1">MyComponent</span><span class="hl-0">: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-5">&quot;myClassName&quot;</span><span class="hl-0">&gt;</span><span class="hl-1">MyComponent</span><span class="hl-0"> </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
+</li>
+<li><p>Output file contents:</p>
+<pre><code class="language-typescript"><span class="hl-6">/**</span><br/><span class="hl-6"> * Author: Chen Asraf</span><br/><span class="hl-6"> * Date: 2022-01-01</span><br/><span class="hl-6"> */</span><br/><span class="hl-9">import</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-9">from</span><span class="hl-0"> </span><span class="hl-5">&#39;react&#39;</span><br/><br/><span class="hl-9">export</span><span class="hl-0"> </span><span class="hl-9">default</span><span class="hl-0"> </span><span class="hl-1">MyComponent</span><span class="hl-0">: </span><span class="hl-1">React</span><span class="hl-0">.</span><span class="hl-10">FC</span><span class="hl-0"> = (</span><span class="hl-1">props</span><span class="hl-0">) </span><span class="hl-3">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-9">return</span><span class="hl-0"> (</span><br/><span class="hl-0">    &lt;</span><span class="hl-1">div</span><span class="hl-0"> </span><span class="hl-1">className</span><span class="hl-0">=</span><span class="hl-5">&quot;myClassName&quot;</span><span class="hl-0">&gt;</span><span class="hl-1">MyComponent</span><span class="hl-0"> </span><span class="hl-1">Component</span><span class="hl-0">&lt;/</span><span class="hl-1">div</span><span class="hl-0">&gt;</span><br/><span class="hl-0">  )</span><br/><span class="hl-0">}</span>
 </code></pre>
+</li>
+</ul>
 
 <a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
   <h2>Contributing</h2>
