@@ -244,7 +244,7 @@ export type DateHelpers = "date" | "now"
 
 /**
  * The names of all the available helper functions in templates.
- * Simple-Scaffold provides some built-in text transformation filters usable by handleBars.
+ * Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.js.
  *
  * For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
  * replace `My Name` with `my_name` when producing the final value.
