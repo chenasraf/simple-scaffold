@@ -43,7 +43,7 @@ name, or other custom data) inside the paths or contents of the files using Hand
 - [Examples](#examples)
   - [Run](#run)
     - [Command Example](#command-example)
-    - [Node Module Example](#node-module-example)
+    - [Equivalent Node Module Example](#equivalent-node-module-example)
   - [Files](#files)
     - [Input](#input)
     - [Output](#output)
@@ -310,11 +310,11 @@ All of the above helpers (built in and custom) will also be available to you whe
 simple-scaffold MyComponent \
     -t project/scaffold/**/* \
     -o src/components \
-    -d '{"className": "myClassName"}'
+    -d '{"className": "myClassName","author": "Chen Asraf"}'
     MyComponent
 ```
 
-#### Node Module Example
+#### Equivalent Node Module Example
 
 ```typescript
 import Scaffold from "simple-scaffold"
@@ -326,6 +326,7 @@ async function main() {
     output: ["src/components"],
     data: {
       className: "myClassName",
+      author: "Chen Asraf"
     },
   })
   console.log("Done.")
@@ -336,57 +337,65 @@ async function main() {
 
 #### Input
 
-Input file path:
+- Input file path:
 
-```text
-project → scaffold → {{Name}}.js → src → components
-```
+  ```text
+  project → scaffold → {{Name}}.js → src → components
+  ```
 
-Input file contents:
+- Input file contents:
 
-```typescript
-import React from 'react'
+  ```typescript
+  /**
+   * Author: {{ username }}
+   * Date: {{ now "yyyy-MM-dd" }}
+   */
+  import React from 'react'
 
-export default {{camelCase name}}: React.FC = (props) => {
-  return (
-    <div className="{{className}}">{{camelCase name}} Component</div>
-  )
-}
-```
+  export default {{camelCase name}}: React.FC = (props) => {
+    return (
+      <div className="{{className}}">{{camelCase name}} Component</div>
+    )
+  }
+  ```
 
 #### Output
 
-Output file path:
+- Output file path:
 
-- With `createSubFolder = false` (default):
+  - With `createSubFolder = false` (default):
 
-  ```text
-  project → src → components → MyComponent.js
+    ```text
+    project → src → components → MyComponent.js
+    ```
+
+  - With `createSubFolder = true`:
+
+    ```text
+    project → src → components → MyComponent → MyComponent.js
+    ```
+
+  - With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
+
+    ```text
+    project → src → components → MYCOMPONENT → MyComponent.js
+    ```
+
+- Output file contents:
+
+  ```typescript
+  /**
+   * Author: Chen Asraf
+   * Date: 2022-01-01
+   */
+  import React from 'react'
+
+  export default MyComponent: React.FC = (props) => {
+    return (
+      <div className="myClassName">MyComponent Component</div>
+    )
+  }
   ```
-
-- With `createSubFolder = true`:
-
-  ```text
-  project → src → components → MyComponent → MyComponent.js
-  ```
-
-- With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
-
-  ```text
-  project → src → components → MYCOMPONENT → MyComponent.js
-  ```
-
-Output file contents:
-
-```typescript
-import React from 'react'
-
-export default MyComponent: React.FC = (props) => {
-  return (
-    <div className="myClassName">MyComponent Component</div>
-  )
-}
-```
 
 ## Contributing
 
