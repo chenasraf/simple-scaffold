@@ -347,7 +347,7 @@ async function main() {
 
   ```typescript
   /**
-   * Author: {{ username }}
+   * Author: {{ author }}
    * Date: {{ now "yyyy-MM-dd" }}
    */
   import React from 'react'
