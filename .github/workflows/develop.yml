@@ -2,7 +2,7 @@ name: Alpha Releases
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, fix/*, feature/*]
 jobs:
   build:
     runs-on: ubuntu-latest

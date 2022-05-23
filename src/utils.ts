@@ -136,6 +136,10 @@ export async function createDirIfNotExists(dir: string, config: ScaffoldConfig):
   }
 }
 
+export function pathSepFix(pathname: string): string {
+  return pathname.replace(/[\\\/]+/g, path.sep)
+}
+
 export function getOptionValueForFile<T>(
   config: ScaffoldConfig,
   filePath: string,
@@ -165,8 +169,8 @@ export function handlebarsParse(
     }
     const parser = Handlebars.compile(str, { noEscape: true })
     let outputContents = parser(data)
-    if (isPath && path.sep !== "/") {
-      outputContents = outputContents.replace(/\//g, "\\")
+    if (isPath) {
+      outputContents = pathSepFix(outputContents)
     }
     return Buffer.from(outputContents)
   } catch (e) {
@@ -206,8 +210,7 @@ export function makeRelativePath(str: string): string {
 }
 
 export function getBasePath(relPath: string): string {
-  return path
-    .resolve(process.cwd(), relPath)
+  return pathSepFix(path.resolve(process.cwd(), relPath))
     .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
@@ -257,12 +260,11 @@ export async function getTemplateFileInfo(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<OutputFileInfo> {
-  const inputPath = path.resolve(process.cwd(), templatePath)
-  const outputPathOpt = getOptionValueForFile(config, inputPath, config.output)
-  const outputDir = getOutputDir(config, outputPathOpt, basePath)
-  const outputPath = handlebarsParse(config, path.join(outputDir, path.basename(inputPath)), {
-    isPath: true,
-  }).toString()
+  const inputPath = pathSepFix(path.resolve(process.cwd(), templatePath))
+  const outputPathOpt = pathSepFix(getOptionValueForFile(config, inputPath, config.output))
+  const outputDir = pathSepFix(getOutputDir(config, outputPathOpt, basePath))
+  const _rawOutputPath = pathSepFix(path.join(outputDir, path.basename(inputPath)))
+  const outputPath = handlebarsParse(config, _rawOutputPath, { isPath: true }).toString()
   const exists = await pathExists(outputPath)
   return { inputPath, outputPathOpt, outputDir, outputPath, exists }
 }
