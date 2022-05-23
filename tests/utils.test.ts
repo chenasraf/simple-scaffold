@@ -1,4 +1,4 @@
-import { dateHelper, getTemplateFileInfo, handlebarsParse, nowHelper, pathSepFix } from "../src/utils"
+import { dateHelper, getTemplateFileInfo, handlebarsParse, nowHelper } from "../src/utils"
 import { ScaffoldConfig } from "../src/types"
 import path from "path"
 import * as dateFns from "date-fns"
@@ -27,7 +27,6 @@ describe("Utils", () => {
           templatePath: "/example/template/file.ext",
         },
       )
-      const wd = pathSepFix(process.cwd())
       expect(result).toHaveProperty("inputPath", "\\example\\template\\file.ext")
       expect(result).toHaveProperty("outputPathOpt", "\\output")
       expect(result).toHaveProperty("outputDir", "\\example\\base")

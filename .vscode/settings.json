@@ -2,6 +2,9 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "npm.packageManager": "yarn",
   "cSpell.words": [
+    "autotag",
+    "boilerplates",
+    "Klemensas",
     "massarg",
     "MYCOMPONENT",
     "myname",
@@ -11,7 +14,9 @@
     "noext",
     "nonegate",
     "subdir",
-    "variabletoken"
+    "variabletoken",
+    "tagname",
+    "typedoc"
   ],
   "[markdown]": {
     "editor.rulers": [
