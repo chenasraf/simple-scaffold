@@ -326,7 +326,7 @@ async function main() {
     output: ["src/components"],
     data: {
       className: "myClassName",
-      author: "Chen Asraf"
+      author: "Chen Asraf",
     },
   })
   console.log("Done.")

@@ -5,55 +5,55 @@
       "script": "build",
       "label": "build",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "dev",
       "label": "dev",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "command": "yarn typedoc --watch",
       "label": "typedoc --watch",
       "type": "shell",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "start",
       "label": "start",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "test",
       "label": "test",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "command": "yarn test --watchAll",
       "label": "yarn test --watchAll",
       "type": "shell",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "cmd",
       "label": "cmd",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "build-test",
       "label": "build-test",
       "type": "npm",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "script": "build-cmd",
       "label": "build-cmd",
       "type": "npm",
-      "problemMatcher": [],
-    },
-  ],
+      "problemMatcher": []
+    }
+  ]
 }

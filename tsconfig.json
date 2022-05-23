@@ -4,20 +4,13 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": [
-      "ES2019",
-    ],
+    "lib": ["ES2019"],
     "declaration": true,
     "outDir": "dist",
     "strict": true,
     "sourceMap": true,
-    "removeComments": false,
+    "removeComments": false
   },
-  "include": [
-    "src/index.ts",
-    "src/cmd.ts",
-  ],
-  "exclude": [
-    "tests/*"
-  ]
+  "include": ["src/index.ts", "src/cmd.ts"],
+  "exclude": ["tests/*"]
 }

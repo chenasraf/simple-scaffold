@@ -1,17 +1,10 @@
 {
   "name": "Simple Scaffold",
-  "entryPoints": [
-    "src/index.ts"
-  ],
+  "entryPoints": ["src/index.ts"],
   "includeVersion": true,
   "categorizeByGroup": false,
-  "sort": [
-    "visibility"
-  ],
-  "categoryOrder": [
-    "Main",
-    "*"
-  ],
+  "sort": ["visibility"],
+  "categoryOrder": ["Main", "*"],
   "media": "media",
   "theme": "doc-theme",
   "githubPages": true,
