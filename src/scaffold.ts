@@ -87,7 +87,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
             isDirOrGlob,
             isGlob,
           })
-          await handleTemplateFile(config, {
+          await _handleTemplateFile(config, {
             templatePath: inputFilePath,
             basePath,
           })
@@ -101,7 +101,8 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     throw e
   }
 }
-async function handleTemplateFile(
+
+async function _handleTemplateFile(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<void> {

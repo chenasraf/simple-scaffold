@@ -136,7 +136,7 @@ export async function createDirIfNotExists(dir: string, config: ScaffoldConfig):
   }
 }
 
-export function overridePathSeparator(pathname: string): string {
+function _overridePathSeparator(pathname: string): string {
   return pathname.replace(/[\\\/]+/g, path.sep)
 }
 
@@ -170,7 +170,7 @@ export function handlebarsParse(
     const parser = Handlebars.compile(str, { noEscape: true })
     let outputContents = parser(data)
     if (isPath) {
-      outputContents = overridePathSeparator(outputContents)
+      outputContents = _overridePathSeparator(outputContents)
     }
     return Buffer.from(outputContents)
   } catch (e) {
@@ -210,7 +210,7 @@ export function makeRelativePath(str: string): string {
 }
 
 export function getBasePath(relPath: string): string {
-  return overridePathSeparator(path.resolve(process.cwd(), relPath))
+  return _overridePathSeparator(path.resolve(process.cwd(), relPath))
     .replace(process.cwd() + path.sep, "")
     .replace(process.cwd(), "")
 }
@@ -260,10 +260,10 @@ export async function getTemplateFileInfo(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<OutputFileInfo> {
-  const inputPath = overridePathSeparator(path.resolve(process.cwd(), templatePath))
-  const outputPathOpt = overridePathSeparator(getOptionValueForFile(config, inputPath, config.output))
-  const outputDir = overridePathSeparator(getOutputDir(config, outputPathOpt, basePath))
-  const _rawOutputPath = overridePathSeparator(path.join(outputDir, path.basename(inputPath)))
+  const inputPath = _overridePathSeparator(path.resolve(process.cwd(), templatePath))
+  const outputPathOpt = _overridePathSeparator(getOptionValueForFile(config, inputPath, config.output))
+  const outputDir = _overridePathSeparator(getOutputDir(config, outputPathOpt, basePath))
+  const _rawOutputPath = _overridePathSeparator(path.join(outputDir, path.basename(inputPath)))
   const outputPath = handlebarsParse(config, _rawOutputPath, { isPath: true }).toString()
   const exists = await pathExists(outputPath)
   return { inputPath, outputPathOpt, outputDir, outputPath, exists }
