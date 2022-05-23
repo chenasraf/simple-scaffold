@@ -1,4 +1,4 @@
-import { dateHelper, handlebarsParse, nowHelper } from "../src/utils"
+import { dateHelper, getTemplateFileInfo, handlebarsParse, nowHelper, pathSepFix } from "../src/utils"
 import { ScaffoldConfig } from "../src/types"
 import path from "path"
 import * as dateFns from "date-fns"
@@ -12,16 +12,32 @@ const blankConf: ScaffoldConfig = {
 }
 
 describe("Utils", () => {
+  describe("getTemplateFileInfo", () => {
+    mockPathSep()
+
+    test("should fix paths properly for windows", async () => {
+      const result = await getTemplateFileInfo(
+        {
+          output: "/output",
+          templates: ["/example/template/**/*"],
+          name: "test",
+        },
+        {
+          basePath: "/example/base",
+          templatePath: "/example/template/file.ext",
+        },
+      )
+      const wd = pathSepFix(process.cwd())
+      expect(result).toHaveProperty("inputPath", "\\example\\template\\file.ext")
+      expect(result).toHaveProperty("outputPathOpt", "\\output")
+      expect(result).toHaveProperty("outputDir", "\\example\\base")
+      expect(result).toHaveProperty("outputPath", "\\example\\base\\file.ext")
+    })
+  })
+
   describe("handlebarsParse", () => {
-    let origSep: any
     describe("windows paths", () => {
-      beforeAll(() => {
-        origSep = path.sep
-        Object.defineProperty(path, "sep", { value: "\\" })
-      })
-      afterAll(() => {
-        Object.defineProperty(path, "sep", { value: origSep })
-      })
+      mockPathSep()
       test("should work for windows paths", async () => {
         expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
           Buffer.from("C:\\exports\\test.txt"),
@@ -29,13 +45,6 @@ describe("Utils", () => {
       })
     })
     describe("non-windows paths", () => {
-      beforeAll(() => {
-        origSep = path.sep
-        Object.defineProperty(path, "sep", { value: "/" })
-      })
-      afterAll(() => {
-        Object.defineProperty(path, "sep", { value: origSep })
-      })
       test("should work for non-windows paths", async () => {
         expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual(
           Buffer.from("/home/test/test.txt"),
@@ -89,3 +98,19 @@ describe("Utils", () => {
     })
   })
 })
+
+function mockPathSep() {
+  let origSep: any
+  const sep = "\\"
+  beforeAll(() => {
+    origSep = path.sep
+    Object.defineProperty(path, "sep", { value: sep })
+    Object.defineProperty(path, "join", { value: (...args: string[]) => args.join(sep) })
+    Object.defineProperty(path, "basename", { value: (arg: string) => arg.split(sep).slice(-1) })
+  })
+  afterAll(() => {
+    Object.defineProperty(path, "sep", { value: origSep })
+    Object.defineProperty(path, "join", { value: (...args: string[]) => args.join(origSep) })
+    Object.defineProperty(path, "basename", { value: (arg: string) => arg.split(origSep).slice(-1) })
+  })
+}
