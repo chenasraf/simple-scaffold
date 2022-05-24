@@ -3,13 +3,15 @@
   "npm.packageManager": "yarn",
   "cSpell.words": [
     "massarg",
+    "MYCOMPONENT",
     "myname",
     "nobrace",
     "nocomment",
     "nodir",
     "noext",
     "nonegate",
-    "subdir"
+    "subdir",
+    "variabletoken"
   ],
   "[markdown]": {
     "editor.rulers": [

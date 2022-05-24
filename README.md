@@ -400,8 +400,8 @@ async function main() {
 ## Contributing
 
 I am developing this package on my free time, so any support, whether code, issues, or just stars is
-very helpful to sustaining its life. If you would like to donate a bit to help keep the project
-alive, I would be very thankful!
+very helpful to sustaining its life. If you are feeling incredibly generous and would like to donate
+just a small amount to help sustain this project, I would be very very thankful!
 
 <a href='https://ko-fi.com/casraf' target='_blank'>
   <img height='36' style='border:0px;height:36px;'
@@ -426,7 +426,7 @@ Some tips on getting around the code:
 
 - Use `yarn dev` for development - it runs TypeScript compile in watch mode, allowing you to make
   changes and immediately be able to try them using `yarn cmd`.
-- Use `yarn build` to build the output
+- Use `yarn build` to build the output once
 - Use `yarn test` to run tests
 - Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
   you to test different behaviors. See `yarn cmd -h` for more information.
@@ -434,8 +434,8 @@ Some tips on getting around the code:
   > This requires an updated build, and does not trigger one itself. From here you have several
   > options:
   >
-  > - Run `yarn dev` to watch and build automatically
-  > - Run `yarn build` before running this
+  > - Run `yarn dev` to watch for file changes and build automatically
+  > - Run `yarn build` before running this to trigger a one-time build
   > - Run `yarn build-cmd` which triggers a build right before running `yarn cmd` automatically with
   >   the rest of the given arguments.
 
