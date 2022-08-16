@@ -3,8 +3,10 @@
 <h2 align="center">
 
 [GitHub](https://github.com/chenasraf/simple-scaffold) |
-[Documentation](https://casraf.blog/simple-scaffold) |
-[NPM](https://npmjs.com/package/simple-scaffold) | [casraf.blog](https://casraf.blog)
+[Documentation](https://casraf.dev/simple-scaffold) |
+[NPM](https://npmjs.com/package/simple-scaffold) | [casraf.dev](https://casraf.dev)
+
+![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version) ![build](https://img.shields.io/github/workflow/status/chenasraf/simple-scaffold/Release/master)
 
 </h2>
 Generate any set of files in the easiest way possible with simple commands.
