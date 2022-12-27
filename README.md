@@ -6,7 +6,7 @@
 [Documentation](https://casraf.dev/simple-scaffold) |
 [NPM](https://npmjs.com/package/simple-scaffold) | [casraf.dev](https://casraf.dev)
 
-![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version) ![build](https://img.shields.io/github/workflow/status/chenasraf/simple-scaffold/Release/master)
+![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version) ![build](https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master)
 
 </h2>
 Generate any set of files in the easiest way possible with simple commands.
