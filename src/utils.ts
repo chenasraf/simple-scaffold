@@ -234,7 +234,8 @@ export async function getTemplateGlobInfo(config: ScaffoldConfig, template: stri
   const isGlob = glob.hasMagic(template)
   log(config, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
   let _template = template
-  const nonGlobTemplate = isGlob ? removeGlob(template) : template
+  let nonGlobTemplate = isGlob ? removeGlob(template) : template
+  nonGlobTemplate = path.normalize(nonGlobTemplate)
   const isDirOrGlob = isGlob ? true : await isDir(template)
   log(config, LogLevel.Debug, "after isDir", isDirOrGlob)
   const _shouldAddGlob = !isGlob && isDirOrGlob
