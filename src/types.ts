@@ -131,8 +131,8 @@ export interface ScaffoldConfig {
    * @see {@link DefaultHelpers}
    * @see {@link CaseHelpers}
    * @see {@link DateHelpers}
-   * @see https://casraf.blog/simple-scaffold#helpers
-   * @see https://casraf.blog/simple-scaffold#built-in-helpers
+   * @see https://casraf.dev/simple-scaffold#helpers
+   * @see https://casraf.dev/simple-scaffold#built-in-helpers
    * @see https://handlebarsjs.com/guide/#custom-helpers
    */
   helpers?: Record<string, Helper>
