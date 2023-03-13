@@ -12,6 +12,7 @@ const { stat, access, mkdir } = fsPromises
 import dtAdd from "date-fns/add"
 import dtFormat from "date-fns/format"
 import dtParseISO from "date-fns/parseISO"
+import { glob, hasMagic } from "glob"
 
 const dateFns = {
   add: dtAdd,
@@ -19,8 +20,6 @@ const dateFns = {
   parseISO: dtParseISO,
 }
 
-import { glob } from "glob"
-import { promisify } from "util"
 const { readFile, writeFile } = fsPromises
 
 export const defaultHelpers: Record<DefaultHelpers, Helper> = {
@@ -214,10 +213,10 @@ export function getBasePath(relPath: string): string {
 
 export async function getFileList(config: ScaffoldConfig, template: string): Promise<string[]> {
   return (
-    await promisify(glob)(template, {
+    await glob(template, {
       dot: true,
-      debug: config.verbose === LogLevel.Debug,
       nodir: true,
+      // debug: config.verbose === LogLevel.Debug,
     })
   ).map((f) => f.replace(/\//g, path.sep))
 }
@@ -231,7 +230,7 @@ export interface GlobInfo {
 }
 
 export async function getTemplateGlobInfo(config: ScaffoldConfig, template: string): Promise<GlobInfo> {
-  const isGlob = glob.hasMagic(template)
+  const isGlob = hasMagic(template)
   log(config, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
   let _template = template
   let nonGlobTemplate = isGlob ? removeGlob(template) : template
