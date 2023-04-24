@@ -44,6 +44,7 @@
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
+    "@knodes/typedoc-plugin-pages": "^0.23.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",

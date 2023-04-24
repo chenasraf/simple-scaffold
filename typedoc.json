@@ -15,7 +15,7 @@
   "media": "media",
   "githubPages": true,
   "entryPointStrategy": "expand",
-  "out": "docs",
+  "out": "docs-gen",
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
@@ -23,5 +23,44 @@
   "validation": {
     "invalidLink": true
   },
+  "plugin": [
+    "@knodes/typedoc-plugin-pages"
+  ],
   "customCss": "src/docs.css",
+  "options": "typedoc.json",
+  "pluginPages": {
+    "source": "docs",
+    "pages": [
+      {
+        "name": "Configuration",
+        // "moduleRoot": true,
+        "childrenSourceDir": "./docs",
+        // "source": "./README.md",
+        // "childrenDir": "./",
+        "children": [
+          // {
+          //   "name": "Documentation",
+          //   "children": [
+          {
+            "name": "CLI usage",
+            "source": "cli.md"
+          },
+          {
+            "name": "Node.js usage",
+            "source": "node.md"
+          },
+          {
+            "name": "Templates",
+            "source": "templates.md"
+          },
+          {
+            "name": "Configuration Files",
+            "source": "configuration_files.md"
+          }
+          //   ]
+          // }
+        ]
+      }
+    ]
+  }
 }
