@@ -1,6 +1,14 @@
 import path from "path"
 import { F_OK } from "constants"
-import { DefaultHelpers, FileResponse, FileResponseHandler, Helper, LogLevel, ScaffoldConfig } from "./types"
+import {
+  DefaultHelpers,
+  FileResponse,
+  FileResponseHandler,
+  Helper,
+  LogLevel,
+  ScaffoldCmdConfig,
+  ScaffoldConfig,
+} from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
 import kebabCase from "lodash/kebabCase"
@@ -13,6 +21,7 @@ import dtAdd from "date-fns/add"
 import dtFormat from "date-fns/format"
 import dtParseISO from "date-fns/parseISO"
 import { glob, hasMagic } from "glob"
+import { OptionsBase } from "massarg/types"
 
 const dateFns = {
   add: dtAdd,
@@ -371,4 +380,14 @@ export function logInitStep(config: ScaffoldConfig): void {
     )})`,
   })
   log(config, LogLevel.Info, "Data:", config.data)
+}
+
+export function parseAppendData(value: string, options: ScaffoldCmdConfig & OptionsBase): unknown {
+  const data = options.data ?? {}
+  const [key, val] = value.split(/\:?=/)
+  // raw
+  if (value.includes(":=") && !val.includes(":=")) {
+    return { ...data, [key]: JSON.parse(val) }
+  }
+  return { ...data, [key]: val }
 }

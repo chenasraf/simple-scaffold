@@ -1,7 +1,8 @@
-import { dateHelper, handlebarsParse, nowHelper } from "../src/utils"
-import { ScaffoldConfig } from "../src/types"
+import { dateHelper, handlebarsParse, nowHelper, parseAppendData } from "../src/utils"
+import { ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
 import path from "path"
 import * as dateFns from "date-fns"
+import { OptionsBase } from "massarg/types"
 
 const blankConf: ScaffoldConfig = {
   verbose: 0,
@@ -9,6 +10,20 @@ const blankConf: ScaffoldConfig = {
   output: "",
   templates: [],
   data: { name: "test" },
+}
+
+const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
+  verbose: 0,
+  name: "",
+  output: "",
+  templates: [],
+  data: { name: "test" },
+  overwrite: false,
+  createSubFolder: false,
+  dryRun: false,
+  quiet: false,
+  extras: [],
+  help: false,
 }
 
 describe("Utils", () => {
@@ -86,6 +101,20 @@ describe("Utils", () => {
           )
         })
       })
+    })
+  })
+
+  describe("parseAppendData", () => {
+    test('works for "key=value"', () => {
+      expect(parseAppendData("key=value", blankCliConf)).toEqual({ key: "value", name: "test" })
+    })
+
+    test('works for "key:=value"', () => {
+      expect(parseAppendData("key:=123", blankCliConf)).toEqual({ key: 123, name: "test" })
+    })
+
+    test("overwrites existing value", () => {
+      expect(parseAppendData("name:=123", blankCliConf)).toEqual({ name: 123 })
     })
   })
 })
