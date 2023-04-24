@@ -93,6 +93,10 @@ Options:
                                   and {{Name}} inside contents and file names will be
                                   replaced accordingly.
 
+  --config|-c                     Filename to load config from instead of passing
+                                  arguments to CLI or using a Node.js script. You may pass a
+                                  JSON or JS file, with a relative or absolute path.
+
   --output|-o                     Path to output to. If --create-sub-folder is enabled,
                                   the subfolder will be created inside this path.
                                   (default: current dir)
