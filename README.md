@@ -6,7 +6,8 @@
 [Documentation](https://casraf.dev/simple-scaffold) |
 [NPM](https://npmjs.com/package/simple-scaffold) | [casraf.dev](https://casraf.dev)
 
-![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version) ![build](https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master)
+![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version)
+![build](https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master)
 
 </h2>
 Generate any set of files in the easiest way possible with simple commands.
@@ -103,6 +104,10 @@ Options:
   --data|-d                       Add custom data to the templates. By default, only
                                   your app name is included.
 
+  --append-data|-D                Append additional custom data to the templates, which
+                                  will overwrite --data, using an alternate syntax, which is
+                                  easier to use with CLI: -D key1=string -D key2:=raw
+
   --create-sub-folder|-s          Create subfolder with the input name (default: false)
 
   --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
@@ -171,6 +176,7 @@ options available:
 | `output`      |                                                                                                                                        | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                                                                                         |
 | `helpers`     | `Record<string, (string) => string>`                                                                                                   | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                                                                                    |
 | `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => Promise<String \| Buffer \| undefined> \| String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files, allowing you to add more pre-processing to your generator pipeline. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
+| `append-data` |                                                                                                                                        | Does not exist in Node.JS options, use `data` instead.                                                                                                                                                                                                                                                                  |
 
 ## Preparing files
 
