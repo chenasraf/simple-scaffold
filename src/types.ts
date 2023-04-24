@@ -336,5 +336,5 @@ export interface ScaffoldCmdConfig {
   quiet: boolean
   verbose: LogLevel
   dryRun: boolean
-  config: string
+  config?: string
 }
