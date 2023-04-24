@@ -29,7 +29,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       .option({
         name: "config",
         aliases: ["c"],
-        description: "Load config file instead of passing arguments.",
+        description:
+          "Filename to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file, with a relative or absolute path.",
       })
       .option({
         name: "output",
