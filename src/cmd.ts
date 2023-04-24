@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 import massarg from "massarg"
 import chalk from "chalk"
-import { LogLevel, ScaffoldCmdConfig } from "./types"
+import { LogLevel, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import path from "path"
 import fs from "fs/promises"
-import { parseAppendData } from "./utils"
+import { parseAppendData, parseConfig } from "./utils"
+import { OptionsBase } from "massarg/types"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const pkg = JSON.parse((await fs.readFile(path.join(__dirname, "package.json"))).toString())
+  const isConfig = args.includes("--config") || args.includes("-c")
 
   return (
     massarg<ScaffoldCmdConfig>()
       .main((config) => {
-        config.data = { ...config.data, ...config.appendData }
-        delete config.appendData
-        return Scaffold(config)
+        const _config = parseConfig(config)
+        return Scaffold(_config)
       })
       .option({
         name: "name",
@@ -26,10 +27,15 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         required: true,
       })
       .option({
+        name: "config",
+        aliases: ["c"],
+        description: "Load config file instead of passing arguments.",
+      })
+      .option({
         name: "output",
         aliases: ["o"],
         description: `Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path. ${chalk.reset`${chalk.white`(default: current dir)`}`}`,
-        required: true,
+        required: !isConfig,
       })
       .option({
         name: "templates",
@@ -38,7 +44,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         description:
           "Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path, " +
           "or a glob pattern for multiple file matching easily.",
-        required: true,
+        required: !isConfig,
       })
       .option({
         name: "overwrite",
