@@ -1,5 +1,19 @@
 # Change Log
 
+## [1.2.0](https://github.com/chenasraf/simple-scaffold/compare/v1.1.4...v1.2.0) (2023-04-24)
+
+
+### Features
+
+* append-data cli flag ([3c5c2de](https://github.com/chenasraf/simple-scaffold/commit/3c5c2ded02f61ff086e81ea4a7f40529bdff1c9d))
+
+
+### Bug Fixes
+
+* ci node version ([767d34c](https://github.com/chenasraf/simple-scaffold/commit/767d34c684516d4cea865b25e87c27c779bb79ce))
+* semantic-release build dir ([f7956dd](https://github.com/chenasraf/simple-scaffold/commit/f7956ddc786018905c48ccf1f21a3bb4657c3d75))
+* support quote wrapping in append-data ([4fecca8](https://github.com/chenasraf/simple-scaffold/commit/4fecca848347312d45d704f82f2bcb3822da9b06))
+
 ### [1.1.4](https://github.com/chenasraf/simple-scaffold/compare/v1.1.3...v1.1.4) (2023-04-24)
 
 ### Features
