@@ -29,39 +29,14 @@ lifting for you and start building your projects faster and more efficiently tod
 
 </div>
 
-<br />
-
-<details>
-  <summary>Table of contents</summary>
-
-- [Install](#install)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-
-</details>
-
 ---
-
-## Install
-
-You can either use it as a command line tool or import into your own code and run from there.
-
-```bash
-# npm
-npm install [-g] simple-scaffold
-# yarn
-yarn [global] add simple-scaffold
-# run without installing
-npx simple-scaffold@latest <...args>
-```
 
 ## Quick Start
 
 The fastest way to get started is to use `npx` to immediately start a scaffold process.
 
-Prepare any templates you want to use, e.g. in the directory `templates/component`, and use that in
-the CLI args. Here is a simple example:
+Prepare any templates you want to use - for example, in the directory `templates/component`; and use
+that in the CLI args. Here is a simple example file:
 
 `templates/component/{{ psacalName name }}.tsx`
 
@@ -98,6 +73,8 @@ export default PageWrapper: React.FC = (props) => {
 ```
 
 ## Documentation
+
+See full documentation [here](https://casraf.dev/simple-scaffold).
 
 - [Command Line Interface (CLI) usage](/docs/cli.md)
 - [Node.js usage](/docs/node.md)
