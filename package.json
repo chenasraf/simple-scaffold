@@ -28,8 +28,7 @@
     "cmd": "node --trace-warnings dist/cmd.js",
     "build-test": "yarn build && yarn test",
     "build-cmd": "yarn build && yarn cmd",
-    "build-docs": "yarn build-docs-theme && yarn install --frozen-lockfile && typedoc",
-    "build-docs-theme": "cd doc-theme && yarn install && yarn build && cd ..",
+    "build-docs": "typedoc",
     "watch-docs": "yarn typedoc --watch",
     "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert",
     "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0"
@@ -55,7 +54,6 @@
     "conventional-changelog": "^3.1.25",
     "conventional-changelog-cli": "^2.2.2",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "doc-theme": "file:./doc-theme",
     "jest": "^29.5.0",
     "mock-fs": "^5.2.0",
     "rimraf": "^5.0.0",
@@ -64,5 +62,8 @@
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.6",
     "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "doc-theme": "file:./doc-theme"
   }
 }

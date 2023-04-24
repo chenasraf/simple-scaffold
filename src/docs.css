@@ -1,0 +1,12 @@
+table {
+  border-collapse: separate;
+  width: 100%;
+  box-sizing
+}
+
+table td,
+table th {
+  vertical-align: top;
+  border: 1px solid var(--color-accent);
+  padding: 6px;
+}

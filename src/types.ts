@@ -189,7 +189,7 @@ export interface ScaffoldConfig {
  * @see {@link DefaultHelpers}
  * @see {@link DateHelpers}
  * @see {@link ScaffoldConfig}
- * @see {@link subFolderNameHelper}
+ * @see {@link ScaffoldConfig.subFolderNameHelper}
  *
  * @category Helpers
  */
