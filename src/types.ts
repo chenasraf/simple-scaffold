@@ -331,6 +331,7 @@ export interface ScaffoldCmdConfig {
   output: string
   createSubFolder: boolean
   data?: Record<string, string>
+  appendData?: Record<string, string>
   overwrite: boolean
   quiet: boolean
   verbose: LogLevel

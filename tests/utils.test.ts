@@ -116,5 +116,9 @@ describe("Utils", () => {
     test("overwrites existing value", () => {
       expect(parseAppendData("name:=123", blankCliConf)).toEqual({ name: 123 })
     })
+
+    test("works with quotes", () => {
+      expect(parseAppendData('key="value test"', blankCliConf)).toEqual({ key: "value test", name: "test" })
+    })
   })
 })
