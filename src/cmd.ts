@@ -54,7 +54,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "append-data",
         aliases: ["D"],
         description:
-          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax: --D key1=string -D key2:=raw",
+          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax, which is easier to use with CLI: -D key1=string -D key2:=raw",
         parse: parseAppendData,
       })
       .option({
