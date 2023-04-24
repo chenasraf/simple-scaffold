@@ -395,3 +395,25 @@ export function parseAppendData(value: string, options: ScaffoldCmdConfig & Opti
 function isWrappedWithQuotes(string: string): boolean {
   return (string.startsWith('"') && string.endsWith('"')) || (string.startsWith("'") && string.endsWith("'"))
 }
+
+/** @internal */
+export function parseConfig(config: ScaffoldCmdConfig & OptionsBase): ScaffoldConfig {
+  let c: ScaffoldConfig = config
+
+  if (config.config) {
+    const [configFile, template = "default"] = config.config.split(":")
+    const configImport: Record<string, ScaffoldConfig> = require(path.resolve(process.cwd(), configFile))
+    c = {
+      ...config,
+      ...configImport[template],
+      data: {
+        ...configImport[template].data,
+        ...config.data,
+      },
+    }
+  }
+
+  c.data = { ...c.data, ...config.appendData }
+  delete config.appendData
+  return c
+}
