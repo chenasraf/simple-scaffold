@@ -65,3 +65,4 @@ dist/
 .DS_Store
 tmp/
 docs/
+.nvmrc
