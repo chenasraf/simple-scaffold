@@ -3,7 +3,7 @@
 The following is the help text from the `simple-scaffold` binary. To see this and more information
 anytime, add the `-h` or `--help` flag to your call, e.g. `npx simple-scaffold@latest -h`.
 
-```txt
+```text
 Usage: simple-scaffold [options]
 
 Create structured files based on templates.
