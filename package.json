@@ -31,7 +31,8 @@
     "build-docs": "yarn build-docs-theme && yarn install --frozen-lockfile && typedoc",
     "build-docs-theme": "cd doc-theme && yarn install && yarn build && cd ..",
     "watch-docs": "yarn typedoc --watch",
-    "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert"
+    "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert",
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -40,14 +41,19 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "massarg": "^1.0.7-pre.1",
+    "semantic-release": "^21.0.1",
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/glob": "^8.1.0",
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.171",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.15.1",
+    "conventional-changelog-cli": "^2.2.2",
     "doc-theme": "file:./doc-theme",
     "jest": "^29.5.0",
     "mock-fs": "^5.2.0",
