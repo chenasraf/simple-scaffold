@@ -5,12 +5,14 @@ import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import path from "path"
 import fs from "fs/promises"
+import { OptionsBase } from "massarg/types"
+import { parseAppendData } from "./utils"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const pkg = JSON.parse((await fs.readFile(path.join(__dirname, "package.json"))).toString())
 
   return (
-    massarg<ScaffoldCmdConfig & { help: boolean; extras: string[] }>()
+    massarg<ScaffoldCmdConfig>()
       .main(Scaffold)
       .option({
         name: "name",
@@ -47,6 +49,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["d"],
         description: "Add custom data to the templates. By default, only your app name is included.",
         parse: (v) => JSON.parse(v),
+      })
+      .option({
+        name: "append-data",
+        aliases: ["D"],
+        description:
+          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax: --D key1=string -D key2:=raw",
+        parse: parseAppendData,
       })
       .option({
         name: "create-sub-folder",
