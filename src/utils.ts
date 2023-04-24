@@ -389,5 +389,9 @@ export function parseAppendData(value: string, options: ScaffoldCmdConfig & Opti
   if (value.includes(":=") && !val.includes(":=")) {
     return { ...data, [key]: JSON.parse(val) }
   }
-  return { ...data, [key]: val }
+  return { ...data, [key]: isWrappedWithQuotes(val) ? val.substring(1, val.length - 1) : val }
+}
+
+function isWrappedWithQuotes(string: string): boolean {
+  return (string.startsWith('"') && string.endsWith('"')) || (string.startsWith("'") && string.endsWith("'"))
 }

@@ -5,7 +5,6 @@ import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import path from "path"
 import fs from "fs/promises"
-import { OptionsBase } from "massarg/types"
 import { parseAppendData } from "./utils"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
@@ -13,7 +12,11 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
 
   return (
     massarg<ScaffoldCmdConfig>()
-      .main(Scaffold)
+      .main((config) => {
+        config.data = { ...config.data, ...config.appendData }
+        delete config.appendData
+        return Scaffold(config)
+      })
       .option({
         name: "name",
         aliases: ["n"],
