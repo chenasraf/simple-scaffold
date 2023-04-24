@@ -1,0 +1,46 @@
+.tsd-typography table {
+  border-collapse: collapse;
+  width: 100%;
+  box-sizing
+}
+
+.tsd-typography table td,
+.tsd-typography table th {
+  vertical-align: top;
+  border: 1px solid var(--color-accent);
+  padding: 6px;
+}
+
+.tsd-typography h1 + table,
+.tsd-typography h2 + table,
+.tsd-typography h3 + table,
+.tsd-typography h4 + table,
+.tsd-typography h5 + table,
+.tsd-typography h6 + table,
+
+.tsd-typography h1 + pre,
+.tsd-typography h2 + pre,
+.tsd-typography h3 + pre,
+.tsd-typography h4 + pre,
+.tsd-typography h5 + pre,
+.tsd-typography h6 + pre {
+  margin-top: 1em;
+}
+
+
+
+.tsd-typography pre + a + h1,
+.tsd-typography pre + a + h2,
+.tsd-typography pre + a + h3,
+.tsd-typography pre + a + h4,
+.tsd-typography pre + a + h5,
+.tsd-typography pre + a + h6,
+
+.tsd-typography table + a + h1,
+.tsd-typography table + a + h2,
+.tsd-typography table + a + h3,
+.tsd-typography table + a + h4,
+.tsd-typography table + a + h5,
+.tsd-typography table + a + h6 {
+  margin-top: 2em;
+}

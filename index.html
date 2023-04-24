@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Simple Scaffold - v1.1.4</title><meta name="description" content="Documentation for Simple Scaffold - v1.1.4"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Simple Scaffold - v1.1.4</title><meta name="description" content="Documentation for Simple Scaffold"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><link rel="stylesheet" href="assets/custom.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -9,7 +9,7 @@
 <li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Simple Scaffold - v1.1.4</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
-<div class="col-8 col-content">
+<div class="col-content">
 <div class="tsd-page-title">
 <h2>Simple Scaffold - v1.1.4</h2></div>
 <div class="tsd-panel tsd-typography"><h1 align="center">Simple Scaffold</h1>
@@ -19,7 +19,8 @@
 <p><a href="https://github.com/chenasraf/simple-scaffold">GitHub</a> |
 <a href="https://casraf.dev/simple-scaffold">Documentation</a> |
 <a href="https://npmjs.com/package/simple-scaffold">NPM</a> | <a href="https://casraf.dev">casraf.dev</a></p>
-<p><img src="https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version" alt="version"> <img src="https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master" alt="build"></p>
+<p><img src="https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version" alt="version">
+<img src="https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master" alt="build"></p>
 </h2>
 Generate any set of files in the easiest way possible with simple commands.
 
@@ -80,22 +81,10 @@ name, or other custom data) inside the paths or contents of the files using Hand
 </details>
 
 <hr>
-
-<a href="#install" id="install" style="color: inherit; text-decoration: none;">
-  <h2>Install</h2>
-</a>
-<p>You can either use it as a command line tool or import into your own code and run from there.</p>
+<a id="md:install" class="tsd-anchor"></a><h2><a href="#md:install">Install</a></h2><p>You can either use it as a command line tool or import into your own code and run from there.</p>
 <pre><code class="language-bash"><span class="hl-0"># npm</span><br/><span class="hl-1">npm </span><span class="hl-2">install</span><span class="hl-1"> [-g] </span><span class="hl-2">simple-scaffold</span><br/><span class="hl-0"># yarn</span><br/><span class="hl-1">yarn [global] </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">simple-scaffold</span><br/><span class="hl-0"># run without installing</span><br/><span class="hl-1">npx </span><span class="hl-2">simple-scaffold@latest</span><span class="hl-1"> &lt;</span><span class="hl-2">...arg</span><span class="hl-1">s&gt;</span>
-</code></pre>
-
-<a href="#command-line-interface-cli" id="command-line-interface-cli" style="color: inherit; text-decoration: none;">
-  <h2>Command Line Interface (CLI)</h2>
-</a>
-
-<a href="#available-flags" id="available-flags" style="color: inherit; text-decoration: none;">
-  <h3>Available flags</h3>
-</a>
-<p>The following is the help text from the <code>simple-scaffold</code> binary. To see this and more information
+</code><button>Copy</button></pre>
+<a id="md:command-line-interface-cli" class="tsd-anchor"></a><h2><a href="#md:command-line-interface-cli">Command Line Interface (CLI)</a></h2><a id="md:available-flags" class="tsd-anchor"></a><h3><a href="#md:available-flags">Available flags</a></h3><p>The following is the help text from the <code>simple-scaffold</code> binary. To see this and more information
 anytime, add the <code>-h</code> or <code>--help</code> flag to your call, e.g. <code>npx simple-scaffold@latest -h</code>.</p>
 <pre><code class="language-text">Usage: simple-scaffold [options]
 
@@ -124,6 +113,10 @@ Options:
   --data|-d                       Add custom data to the templates. By default, only
                                   your app name is included.
 
+  --append-data|-D                Append additional custom data to the templates, which
+                                  will overwrite --data, using an alternate syntax, which is
+                                  easier to use with CLI: -D key1=string -D key2:=raw
+
   --create-sub-folder|-s          Create subfolder with the input name (default: false)
 
   --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
@@ -142,24 +135,16 @@ Options:
                                   scaffolds and making sure they don&#39;t fail, without
                                   having to write actual file contents or create
                                   directories. (default: false)
-</code></pre>
+</code><button>Copy</button></pre>
 <p>You can also add this as a script in your <code>package.json</code>:</p>
 <pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-3">&quot;scripts&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-3">&quot;scaffold&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;npx simple-scaffold@latest -t scaffolds/component/**/* -o src/components -d &#39;{</span><span class="hl-4">\&quot;</span><span class="hl-2">myProp</span><span class="hl-4">\&quot;</span><span class="hl-2">: </span><span class="hl-4">\&quot;</span><span class="hl-2">propName</span><span class="hl-4">\&quot;</span><span class="hl-2">, </span><span class="hl-4">\&quot;</span><span class="hl-2">myVal</span><span class="hl-4">\&quot;</span><span class="hl-2">: 123}&#39;&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#node-module" id="node-module" style="color: inherit; text-decoration: none;">
-  <h2>Node module</h2>
-</a>
-<p>You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
+</code><button>Copy</button></pre>
+<a id="md:node-module" class="tsd-anchor"></a><h2><a href="#md:node-module">Node module</a></h2><p>You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
 groups - simply pass a config object to the Scaffold function when you are ready to start.</p>
 <p>The config takes similar arguments to the command line:</p>
 <pre><code class="language-typescript"><span class="hl-5">import</span><span class="hl-1"> </span><span class="hl-6">Scaffold</span><span class="hl-1"> </span><span class="hl-5">from</span><span class="hl-1"> </span><span class="hl-2">&quot;simple-scaffold&quot;</span><br/><br/><span class="hl-7">const</span><span class="hl-1"> </span><span class="hl-8">config</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;component&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">templates:</span><span class="hl-1"> [</span><span class="hl-6">path</span><span class="hl-1">.</span><span class="hl-9">join</span><span class="hl-1">(</span><span class="hl-6">__dirname</span><span class="hl-1">, </span><span class="hl-2">&quot;scaffolds&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;component&quot;</span><span class="hl-1">)],</span><br/><span class="hl-1">  </span><span class="hl-6">output:</span><span class="hl-1"> </span><span class="hl-6">path</span><span class="hl-1">.</span><span class="hl-9">join</span><span class="hl-1">(</span><span class="hl-6">__dirname</span><span class="hl-1">, </span><span class="hl-2">&quot;src&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;components&quot;</span><span class="hl-1">),</span><br/><span class="hl-1">  </span><span class="hl-6">createSubFolder:</span><span class="hl-1"> </span><span class="hl-7">true</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">subFolderNameHelper:</span><span class="hl-1"> </span><span class="hl-2">&quot;upperCase&quot;</span><br/><span class="hl-1">  </span><span class="hl-6">data</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-6">property:</span><span class="hl-1"> </span><span class="hl-2">&quot;value&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-6">helpers:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-9">twice</span><span class="hl-6">:</span><span class="hl-1"> (</span><span class="hl-6">text</span><span class="hl-1">) </span><span class="hl-7">=&gt;</span><span class="hl-1"> [</span><span class="hl-6">text</span><span class="hl-1">, </span><span class="hl-6">text</span><span class="hl-1">].</span><span class="hl-9">join</span><span class="hl-1">(</span><span class="hl-2">&quot; &quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-9">beforeWrite</span><span class="hl-6">:</span><span class="hl-1"> (</span><span class="hl-6">content</span><span class="hl-1">, </span><span class="hl-6">rawContent</span><span class="hl-1">, </span><span class="hl-6">outputPath</span><span class="hl-1">) </span><span class="hl-7">=&gt;</span><span class="hl-1"> </span><span class="hl-6">content</span><span class="hl-1">.</span><span class="hl-9">toString</span><span class="hl-1">().</span><span class="hl-9">toUpperCase</span><span class="hl-1">()</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-7">const</span><span class="hl-1"> </span><span class="hl-8">scaffold</span><span class="hl-1"> = </span><span class="hl-9">Scaffold</span><span class="hl-1">(</span><span class="hl-6">config</span><span class="hl-1">)</span>
-</code></pre>
-
-<a href="#node-specific-options" id="node-specific-options" style="color: inherit; text-decoration: none;">
-  <h3>Node-specific options</h3>
-</a>
-<p>In addition to all the options available in the command line, there are some Node/JS-specific
+</code><button>Copy</button></pre>
+<a id="md:node-specific-options" class="tsd-anchor"></a><h3><a href="#md:node-specific-options">Node-specific options</a></h3><p>In addition to all the options available in the command line, there are some Node/JS-specific
 options available:</p>
 <table>
 <thead>
@@ -184,16 +169,13 @@ options available:</p>
 <td><code>(content: Buffer, rawContent: Buffer, outputPath: string) =&gt; Promise&lt;String | Buffer | undefined&gt; | String | Buffer | undefined</code></td>
 <td>Supply this function to override the final output contents of each of your files, allowing you to add more pre-processing to your generator pipeline. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the <code>outputPath</code> argument.</td>
 </tr>
+<tr>
+<td><code>append-data</code></td>
+<td></td>
+<td>Does not exist in Node.JS options, use <code>data</code> instead.</td>
+</tr>
 </tbody></table>
-
-<a href="#preparing-files" id="preparing-files" style="color: inherit; text-decoration: none;">
-  <h2>Preparing files</h2>
-</a>
-
-<a href="#template-files" id="template-files" style="color: inherit; text-decoration: none;">
-  <h3>Template files</h3>
-</a>
-<p>Put your template files anywhere, and fill them with tokens for replacement.</p>
+<a id="md:preparing-files" class="tsd-anchor"></a><h2><a href="#md:preparing-files">Preparing files</a></h2><a id="md:template-files" class="tsd-anchor"></a><h3><a href="#md:template-files">Template files</a></h3><p>Put your template files anywhere, and fill them with tokens for replacement.</p>
 <p>Each template (not file) in the config array is parsed individually, and copied to the output
 directory. If a single template path contains multiple files (e.g. if you use a folder path or a
 glob pattern), the first directory up the tree of that template will become the base inside the
@@ -227,20 +209,16 @@ relative structure.</p>
 <td><code>src/outer2/inner/AppName.txt</code></td>
 </tr>
 </tbody></table>
-
-<a href="#variabletoken-replacement" id="variabletoken-replacement" style="color: inherit; text-decoration: none;">
-  <h3>Variable/token replacement</h3>
-</a>
-<p>Scaffolding will replace <code>{{ varName }}</code> in both the file name and its contents and put the
+<a id="md:variabletoken-replacement" class="tsd-anchor"></a><h3><a href="#md:variabletoken-replacement">Variable/token replacement</a></h3><p>Scaffolding will replace <code>{{ varName }}</code> in both the file name and its contents and put the
 transformed files in the output directory.</p>
 <p>The data available for the template parser is the data you pass to the <code>data</code> config option (or
 <code>--data</code> argument in CLI).</p>
 <p>For example, using the following command:</p>
 <pre><code class="language-bash"><span class="hl-1">npx </span><span class="hl-2">simple-scaffold@latest</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">  </span><span class="hl-2">--templates</span><span class="hl-1"> </span><span class="hl-2">templates/components/{{name}}.jsx</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">  </span><span class="hl-2">--output</span><span class="hl-1"> </span><span class="hl-2">src/components</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">  </span><span class="hl-2">--create-sub-folder</span><span class="hl-1"> </span><span class="hl-7">true</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">  </span><span class="hl-2">MyComponent</span>
-</code></pre>
+</code><button>Copy</button></pre>
 <p>Will output a file with the path:</p>
 <pre><code class="language-text">&lt;working_dir&gt;/src/components/MyComponent.jsx
-</code></pre>
+</code><button>Copy</button></pre>
 <p>The contents of the file will be transformed in a similar fashion.</p>
 <p>Your <code>data</code> will be pre-populated with the following:</p>
 <ul>
@@ -254,22 +232,10 @@ Any <code>data</code> you add in the config will be available for use with their
 <a href="https://handlebarsjs.com/guide/#language-features">Handlebars.js Language Features</a> for more
 information.</p>
 </blockquote>
-
-<a href="#helpers" id="helpers" style="color: inherit; text-decoration: none;">
-  <h3>Helpers</h3>
-</a>
-
-<a href="#built-in-helpers" id="built-in-helpers" style="color: inherit; text-decoration: none;">
-  <h4>Built-in Helpers</h4>
-</a>
-<p>Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.</p>
+<a id="md:helpers" class="tsd-anchor"></a><h3><a href="#md:helpers">Helpers</a></h3><a id="md:built-in-helpers" class="tsd-anchor"></a><h4><a href="#md:built-in-helpers">Built-in Helpers</a></h4><p>Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.</p>
 <p>For example, you may use <code>{{ snakeCase name }}</code> inside a template file or filename, and it will
 replace <code>My Name</code> with <code>my_name</code> when producing the final value.</p>
-
-<a href="#capitalization-helpers" id="capitalization-helpers" style="color: inherit; text-decoration: none;">
-  <h5>Capitalization Helpers</h5>
-</a>
-<table>
+<a id="md:capitalization-helpers" class="tsd-anchor"></a><h5><a href="#md:capitalization-helpers">Capitalization Helpers</a></h5><table>
 <thead>
 <tr>
 <th>Helper name</th>
@@ -323,11 +289,7 @@ replace <code>My Name</code> with <code>my_name</code> when producing the final 
 <td>my name</td>
 </tr>
 </tbody></table>
-
-<a href="#date-helpers" id="date-helpers" style="color: inherit; text-decoration: none;">
-  <h5>Date helpers</h5>
-</a>
-<table>
+<a id="md:date-helpers" class="tsd-anchor"></a><h5><a href="#md:date-helpers">Date helpers</a></h5><table>
 <thead>
 <tr>
 <th>Helper name</th>
@@ -375,96 +337,60 @@ more information on the date tokens to use, refer to
 </li>
 <li><p>The date helper format takes the following arguments:</p>
 <pre><code class="language-typescript"><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-6">date</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">format</span><span class="hl-1">: </span><span class="hl-6">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">offsetAmount</span><span class="hl-1">?: </span><span class="hl-6">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">offsetType</span><span class="hl-1">?: </span><span class="hl-2">&quot;years&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;months&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;weeks&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;days&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;hours&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;minutes&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;seconds&quot;</span><br/><span class="hl-1">)</span>
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 <li><p><strong>The now helper</strong> (for current time) takes the same arguments, minus the first one (<code>date</code>) as it
 is implicitly the current date.</p>
 </li>
 </ul>
-
-<a href="#custom-helpers" id="custom-helpers" style="color: inherit; text-decoration: none;">
-  <h4>Custom Helpers</h4>
-</a>
-<p>You may also add your own custom helpers using the <code>helpers</code> options when using the JS API (rather
+<a id="md:custom-helpers" class="tsd-anchor"></a><h4><a href="#md:custom-helpers">Custom Helpers</a></h4><p>You may also add your own custom helpers using the <code>helpers</code> options when using the JS API (rather
 than the CLI). The <code>helpers</code> option takes an object whose keys are helper names, and values are the
 transformation functions. For example, <code>upperCase</code> is implemented like so:</p>
 <pre><code class="language-typescript"><span class="hl-6">config</span><span class="hl-1">.</span><span class="hl-6">helpers</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-9">upperCase</span><span class="hl-6">:</span><span class="hl-1"> (</span><span class="hl-6">text</span><span class="hl-1">) </span><span class="hl-7">=&gt;</span><span class="hl-1"> </span><span class="hl-6">text</span><span class="hl-1">.</span><span class="hl-9">toUpperCase</span><span class="hl-1">(),</span><br/><span class="hl-1">}</span>
-</code></pre>
+</code><button>Copy</button></pre>
 <p>All of the above helpers (built in and custom) will also be available to you when using
 <code>subFolderNameHelper</code> (<code>--sub-folder-name-helper</code>/<code>-sh</code>) as a possible value.</p>
 <blockquote>
 <p>To see more information on how helpers work and more features, see
 <a href="https://handlebarsjs.com/guide/#custom-helpers">Handlebars.js docs</a>.</p>
 </blockquote>
-
-<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
-  <h2>Examples</h2>
-</a>
-
-<a href="#run" id="run" style="color: inherit; text-decoration: none;">
-  <h3>Run</h3>
-</a>
-
-<a href="#command-example" id="command-example" style="color: inherit; text-decoration: none;">
-  <h4>Command Example</h4>
-</a>
-<pre><code class="language-bash"><span class="hl-1">simple-scaffold </span><span class="hl-2">MyComponent</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-t</span><span class="hl-1"> </span><span class="hl-2">project/scaffold/</span><span class="hl-7">**</span><span class="hl-2">/</span><span class="hl-7">*</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-o</span><span class="hl-1"> </span><span class="hl-2">src/components</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-d</span><span class="hl-1"> </span><span class="hl-2">&#39;{&quot;className&quot;: &quot;myClassName&quot;,&quot;author&quot;: &quot;Chen Asraf&quot;}&#39;</span><br/><span class="hl-1">    MyComponent</span>
-</code></pre>
-
-<a href="#equivalent-node-module-example" id="equivalent-node-module-example" style="color: inherit; text-decoration: none;">
-  <h4>Equivalent Node Module Example</h4>
-</a>
-<pre><code class="language-typescript"><span class="hl-5">import</span><span class="hl-1"> </span><span class="hl-6">Scaffold</span><span class="hl-1"> </span><span class="hl-5">from</span><span class="hl-1"> </span><span class="hl-2">&quot;simple-scaffold&quot;</span><br/><br/><span class="hl-7">async</span><span class="hl-1"> </span><span class="hl-7">function</span><span class="hl-1"> </span><span class="hl-9">main</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-5">await</span><span class="hl-1"> </span><span class="hl-9">Scaffold</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;MyComponent&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">templates:</span><span class="hl-1"> [</span><span class="hl-2">&quot;project/scaffold/**/*&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-6">output:</span><span class="hl-1"> [</span><span class="hl-2">&quot;src/components&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-6">data:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-6">className:</span><span class="hl-1"> </span><span class="hl-2">&quot;myClassName&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-6">author:</span><span class="hl-1"> </span><span class="hl-2">&quot;Chen Asraf&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  })</span><br/><span class="hl-1">  </span><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-9">log</span><span class="hl-1">(</span><span class="hl-2">&quot;Done.&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">}</span>
-</code></pre>
-
-<a href="#files" id="files" style="color: inherit; text-decoration: none;">
-  <h3>Files</h3>
-</a>
-
-<a href="#input" id="input" style="color: inherit; text-decoration: none;">
-  <h4>Input</h4>
-</a>
-<ul>
+<a id="md:examples" class="tsd-anchor"></a><h2><a href="#md:examples">Examples</a></h2><a id="md:run" class="tsd-anchor"></a><h3><a href="#md:run">Run</a></h3><a id="md:command-example" class="tsd-anchor"></a><h4><a href="#md:command-example">Command Example</a></h4><pre><code class="language-bash"><span class="hl-1">simple-scaffold </span><span class="hl-2">MyComponent</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-t</span><span class="hl-1"> </span><span class="hl-2">project/scaffold/</span><span class="hl-7">**</span><span class="hl-2">/</span><span class="hl-7">*</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-o</span><span class="hl-1"> </span><span class="hl-2">src/components</span><span class="hl-1"> </span><span class="hl-4">\</span><br/><span class="hl-1">    </span><span class="hl-2">-d</span><span class="hl-1"> </span><span class="hl-2">&#39;{&quot;className&quot;: &quot;myClassName&quot;,&quot;author&quot;: &quot;Chen Asraf&quot;}&#39;</span><br/><span class="hl-1">    MyComponent</span>
+</code><button>Copy</button></pre>
+<a id="md:equivalent-node-module-example" class="tsd-anchor"></a><h4><a href="#md:equivalent-node-module-example">Equivalent Node Module Example</a></h4><pre><code class="language-typescript"><span class="hl-5">import</span><span class="hl-1"> </span><span class="hl-6">Scaffold</span><span class="hl-1"> </span><span class="hl-5">from</span><span class="hl-1"> </span><span class="hl-2">&quot;simple-scaffold&quot;</span><br/><br/><span class="hl-7">async</span><span class="hl-1"> </span><span class="hl-7">function</span><span class="hl-1"> </span><span class="hl-9">main</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-5">await</span><span class="hl-1"> </span><span class="hl-9">Scaffold</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;MyComponent&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">templates:</span><span class="hl-1"> [</span><span class="hl-2">&quot;project/scaffold/**/*&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-6">output:</span><span class="hl-1"> [</span><span class="hl-2">&quot;src/components&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-6">data:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-6">className:</span><span class="hl-1"> </span><span class="hl-2">&quot;myClassName&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-6">author:</span><span class="hl-1"> </span><span class="hl-2">&quot;Chen Asraf&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  })</span><br/><span class="hl-1">  </span><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-9">log</span><span class="hl-1">(</span><span class="hl-2">&quot;Done.&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">}</span>
+</code><button>Copy</button></pre>
+<a id="md:files" class="tsd-anchor"></a><h3><a href="#md:files">Files</a></h3><a id="md:input" class="tsd-anchor"></a><h4><a href="#md:input">Input</a></h4><ul>
 <li><p>Input file path:</p>
 <pre><code class="language-text">project → scaffold → {{Name}}.js → src → components
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 <li><p>Input file contents:</p>
 <pre><code class="language-typescript"><span class="hl-0">/**</span><br/><span class="hl-0"> * Author: {{ author }}</span><br/><span class="hl-0"> * Date: {{ now &quot;yyyy-MM-dd&quot; }}</span><br/><span class="hl-0"> */</span><br/><span class="hl-5">import</span><span class="hl-1"> </span><span class="hl-6">React</span><span class="hl-1"> </span><span class="hl-5">from</span><span class="hl-1"> </span><span class="hl-2">&#39;react&#39;</span><br/><br/><span class="hl-5">export</span><span class="hl-1"> </span><span class="hl-5">default</span><span class="hl-1"> {{camelCase </span><span class="hl-6">name</span><span class="hl-1">}}: </span><span class="hl-6">React</span><span class="hl-1">.</span><span class="hl-9">FC</span><span class="hl-1"> = (</span><span class="hl-6">props</span><span class="hl-1">) </span><span class="hl-7">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">return</span><span class="hl-1"> (</span><br/><span class="hl-1">    &lt;</span><span class="hl-6">div</span><span class="hl-1"> </span><span class="hl-6">className</span><span class="hl-1">=</span><span class="hl-2">&quot;{{className}}&quot;</span><span class="hl-1">&gt;{{camelCase </span><span class="hl-6">name</span><span class="hl-1">}} </span><span class="hl-6">Component</span><span class="hl-1">&lt;/</span><span class="hl-6">div</span><span class="hl-1">&gt;</span><br/><span class="hl-1">  )</span><br/><span class="hl-1">}</span>
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 </ul>
-
-<a href="#output" id="output" style="color: inherit; text-decoration: none;">
-  <h4>Output</h4>
-</a>
-<ul>
+<a id="md:output" class="tsd-anchor"></a><h4><a href="#md:output">Output</a></h4><ul>
 <li><p>Output file path:</p>
 <ul>
 <li><p>With <code>createSubFolder = false</code> (default):</p>
 <pre><code class="language-text">project → src → components → MyComponent.js
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 <li><p>With <code>createSubFolder = true</code>:</p>
 <pre><code class="language-text">project → src → components → MyComponent → MyComponent.js
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 <li><p>With <code>createSubFolder = true</code> and <code>subFolderNameHelper = &#39;upperCase&#39;</code>:</p>
 <pre><code class="language-text">project → src → components → MYCOMPONENT → MyComponent.js
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 </ul>
 </li>
 <li><p>Output file contents:</p>
 <pre><code class="language-typescript"><span class="hl-0">/**</span><br/><span class="hl-0"> * Author: Chen Asraf</span><br/><span class="hl-0"> * Date: 2022-01-01</span><br/><span class="hl-0"> */</span><br/><span class="hl-5">import</span><span class="hl-1"> </span><span class="hl-6">React</span><span class="hl-1"> </span><span class="hl-5">from</span><span class="hl-1"> </span><span class="hl-2">&#39;react&#39;</span><br/><br/><span class="hl-5">export</span><span class="hl-1"> </span><span class="hl-5">default</span><span class="hl-1"> </span><span class="hl-6">MyComponent</span><span class="hl-1">: </span><span class="hl-6">React</span><span class="hl-1">.</span><span class="hl-9">FC</span><span class="hl-1"> = (</span><span class="hl-6">props</span><span class="hl-1">) </span><span class="hl-7">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">return</span><span class="hl-1"> (</span><br/><span class="hl-1">    &lt;</span><span class="hl-6">div</span><span class="hl-1"> </span><span class="hl-6">className</span><span class="hl-1">=</span><span class="hl-2">&quot;myClassName&quot;</span><span class="hl-1">&gt;</span><span class="hl-6">MyComponent</span><span class="hl-1"> </span><span class="hl-6">Component</span><span class="hl-1">&lt;/</span><span class="hl-6">div</span><span class="hl-1">&gt;</span><br/><span class="hl-1">  )</span><br/><span class="hl-1">}</span>
-</code></pre>
+</code><button>Copy</button></pre>
 </li>
 </ul>
-
-<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-  <h2>Contributing</h2>
-</a>
-<p>I am developing this package on my free time, so any support, whether code, issues, or just stars is
+<a id="md:contributing" class="tsd-anchor"></a><h2><a href="#md:contributing">Contributing</a></h2><p>I am developing this package on my free time, so any support, whether code, issues, or just stars is
 very helpful to sustaining its life. If you are feeling incredibly generous and would like to donate
 just a small amount to help sustain this project, I would be very very thankful!</p>
 <a href='https://ko-fi.com/casraf' target='_blank'>
@@ -516,10 +442,11 @@ server (like node&#39;s built in serve, VS code&#39;s &quot;Go Live&quot; mode, 
 </li>
 </ul>
 </div></div>
-<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="col-sidebar">
+<div class="page-menu">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
-<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>Settings</h3></summary>
 <div class="tsd-accordion-details">
 <div class="tsd-filter-visibility">
 <h4 class="uppercase">Member Visibility</h4><form>
@@ -527,37 +454,68 @@ server (like node&#39;s built in serve, VS code&#39;s &quot;Go Live&quot; mode, 
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
 <div class="tsd-theme-toggle">
-<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
-<nav class="tsd-navigation primary">
-<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
-<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>On This Page</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li class="current selected"><a href="modules.html">Simple <wbr/>Scaffold -<wbr/> v1.1.4</a>
-<ul></ul></li></ul></div></details></nav>
-<nav class="tsd-navigation secondary menu-sticky">
+<li>
 <ul>
-<li class="tsd-kind-function"><a href="functions/Scaffold.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>Scaffold</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ScaffoldConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Scaffold<wbr/>Config</a></li>
-<li class="tsd-kind-type-alias"><a href="types/CaseHelpers.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>Case<wbr/>Helpers</a></li>
-<li class="tsd-kind-type-alias"><a href="types/DateHelpers.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Date<wbr/>Helpers</a></li>
-<li class="tsd-kind-type-alias"><a href="types/DefaultHelpers.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Default<wbr/>Helpers</a></li>
-<li class="tsd-kind-type-alias"><a href="types/Helper.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Helper</a></li>
-<li class="tsd-kind-enum"><a href="enums/LogLevel.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Log<wbr/>Level</a></li>
-<li class="tsd-kind-type-alias"><a href="types/FileResponseHandler.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>File<wbr/>Response<wbr/>Handler</a></li>
-<li class="tsd-kind-type-alias"><a href="types/FileResponse.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>File<wbr/>Response</a></li>
-<li class="tsd-kind-reference"><a href="modules.html#default" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4D82" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-8388608-path"></rect><path d="M10.354 17V8.24H13.066C13.586 8.24 14.042 8.348 14.434 8.564C14.826 8.772 15.13 9.064 15.346 9.44C15.562 9.816 15.67 10.256 15.67 10.76C15.67 11.352 15.514 11.86 15.202 12.284C14.898 12.708 14.482 13 13.954 13.16L15.79 17H14.518L12.838 13.28H11.434V17H10.354ZM11.434 12.308H13.066C13.514 12.308 13.874 12.168 14.146 11.888C14.418 11.6 14.554 11.224 14.554 10.76C14.554 10.288 14.418 9.912 14.146 9.632C13.874 9.352 13.514 9.212 13.066 9.212H11.434V12.308Z" fill="var(--color-text)" id="icon-8388608-text"></path></svg>default</a></li></ul></nav></div></div>
-<div class="container tsd-generator">
+<li><a href="#md:install"><span>Install</span></a></li>
+<li>
+<ul>
+<li><a href="#md:command-line-interface-cli"><span>Command <wbr/>Line <wbr/>Interface (CLI)</span></a></li>
+<li>
+<ul>
+<li><a href="#md:available-flags"><span>Available flags</span></a></li></ul></li>
+<li><a href="#md:node-module"><span>Node module</span></a></li>
+<li>
+<ul>
+<li><a href="#md:node-specific-options"><span>Node-<wbr/>specific options</span></a></li></ul></li>
+<li><a href="#md:preparing-files"><span>Preparing files</span></a></li>
+<li>
+<ul>
+<li><a href="#md:template-files"><span>Template files</span></a></li>
+<li><a href="#md:variabletoken-replacement"><span>Variable/token replacement</span></a></li>
+<li><a href="#md:helpers"><span>Helpers</span></a></li>
+<li>
+<ul>
+<li><a href="#md:built-in-helpers"><span>Built-<wbr/>in <wbr/>Helpers</span></a></li>
+<li>
+<ul>
+<li><a href="#md:capitalization-helpers"><span>Capitalization <wbr/>Helpers</span></a></li>
+<li><a href="#md:date-helpers"><span>Date helpers</span></a></li></ul></li>
+<li><a href="#md:custom-helpers"><span>Custom <wbr/>Helpers</span></a></li></ul></li></ul></li>
+<li><a href="#md:examples"><span>Examples</span></a></li>
+<li>
+<ul>
+<li><a href="#md:run"><span>Run</span></a></li>
+<li>
+<ul>
+<li><a href="#md:command-example"><span>Command <wbr/>Example</span></a></li>
+<li><a href="#md:equivalent-node-module-example"><span>Equivalent <wbr/>Node <wbr/>Module <wbr/>Example</span></a></li></ul></li>
+<li><a href="#md:files"><span>Files</span></a></li>
+<li>
+<ul>
+<li><a href="#md:input"><span>Input</span></a></li>
+<li><a href="#md:output"><span>Output</span></a></li></ul></li></ul></li>
+<li><a href="#md:contributing"><span>Contributing</span></a></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>Simple <wbr/>Scaffold -<wbr/> v1.1.4</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="functions/Scaffold.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg><span>Scaffold</span></a></li>
+<li><a href="interfaces/ScaffoldConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Scaffold<wbr/>Config</span></a></li>
+<li><a href="types/CaseHelpers.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>Case<wbr/>Helpers</span></a></li>
+<li><a href="types/DateHelpers.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Date<wbr/>Helpers</span></a></li>
+<li><a href="types/DefaultHelpers.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Default<wbr/>Helpers</span></a></li>
+<li><a href="types/Helper.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Helper</span></a></li>
+<li><a href="enums/LogLevel.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg><span>Log<wbr/>Level</span></a></li>
+<li><a href="types/FileResponseHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>File<wbr/>Response<wbr/>Handler</span></a></li>
+<li><a href="types/FileResponse.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>File<wbr/>Response</span></a></li>
+<li><a href="modules.html#default"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4D82" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-8388608-path"></rect><path d="M10.354 17V8.24H13.066C13.586 8.24 14.042 8.348 14.434 8.564C14.826 8.772 15.13 9.064 15.346 9.44C15.562 9.816 15.67 10.256 15.67 10.76C15.67 11.352 15.514 11.86 15.202 12.284C14.898 12.708 14.482 13 13.954 13.16L15.79 17H14.518L12.838 13.28H11.434V17H10.354ZM11.434 12.308H13.066C13.514 12.308 13.874 12.168 14.146 11.888C14.418 11.6 14.554 11.224 14.554 10.76C14.554 10.288 14.418 9.912 14.146 9.632C13.874 9.352 13.514 9.212 13.066 9.212H11.434V12.308Z" fill="var(--color-text)" id="icon-8388608-text"></path></svg><span>default</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
-<div class="overlay"></div><script src="assets/main.js"></script><script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-KHQS9TQ");
-    </script></body></html>
+<div class="overlay"></div><script async src="https://www.googletagmanager.com/gtag/js?id=GTM-KHQS9TQ"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'GTM-KHQS9TQ');</script></body></html>
