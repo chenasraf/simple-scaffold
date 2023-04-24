@@ -36,13 +36,12 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "conventional-changelog": "^3.1.25",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
     "date-fns": "^2.29.3",
     "glob": "^9.2.1",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "massarg": "^1.0.7-pre.1",
+    "semantic-release-conventional-commits": "^3.0.0",
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
@@ -53,7 +52,9 @@
     "@types/lodash": "^4.14.171",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.16.0",
+    "conventional-changelog": "^3.1.25",
     "conventional-changelog-cli": "^2.2.2",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
     "doc-theme": "file:./doc-theme",
     "jest": "^29.5.0",
     "mock-fs": "^5.2.0",

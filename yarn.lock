@@ -2076,7 +2076,7 @@ conventional-commits-filter@^2.0.0, conventional-commits-filter@^2.0.7:
     lodash.ismatch "^4.4.0"
     modify-values "^1.0.0"
 
-conventional-commits-parser@^3.2.0, conventional-commits-parser@^3.2.3:
+conventional-commits-parser@^3.0.0, conventional-commits-parser@^3.2.0, conventional-commits-parser@^3.2.3:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/conventional-commits-parser/-/conventional-commits-parser-3.2.4.tgz#a7d3b77758a202a9b2293d2112a8d8052c740972"
   integrity sha512-nK7sAtfi+QXbxHCYfhpZsfRtaitZLIA6889kFIouLvz6repszQDgxBu7wf2WbU+Dco7sAnNCJYERCwt54WPC2Q==
@@ -5256,6 +5256,13 @@ safe-buffer@~5.2.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+semantic-release-conventional-commits@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/semantic-release-conventional-commits/-/semantic-release-conventional-commits-3.0.0.tgz#a5f362aa789c062212f0d1be54e41e49ce807da4"
+  integrity sha512-y7pqPk64zWjc/kX7nfT1wONwYs7R+oD2rX2HwR0SVtXneUaSL8cTkzt3rwx00in8NSovzkajy9JYlYOJyqSzZg==
+  dependencies:
+    conventional-commits-parser "^3.0.0"
 
 semantic-release@^21.0.1:
   version "21.0.1"
