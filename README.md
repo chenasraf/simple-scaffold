@@ -10,14 +10,18 @@
 ![build](https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master)
 
 </h2>
-Generate any set of files in the easiest way possible with simple commands.
 
-It is completely agnostic and un-opinionated so you can use it for anything from a few simple files
-to an entire app boilerplate setup.
+Looking to streamline your workflow and get your projects up and running quickly? Look no further
+than Simple Scaffold - the easy-to-use NPM package that simplifies the process of organizing and
+copying your commonly-created files.
 
-Simply organize your commonly-created files in their **original structure**, and running Simple
-Scaffold will copy the files to the output path, while replacing values (such as component or app
-name, or other custom data) inside the paths or contents of the files using Handlebars.js syntax.
+With its agnostic and un-opinionated approach, Simple Scaffold can handle anything from a few simple
+files to an entire app boilerplate setup. Plus, with the power of **Handlebars.js** syntax, you can
+easily replace custom data and personalize your files to fit your exact needs. But that's not all -
+you can also use it to loop through data, use conditions, and write custom functions using helpers.
+
+Don't waste any more time manually copying and pasting files - let Simple Scaffold do the heavy
+lifting for you and start building your projects faster and more efficiently today!
 
 <div align="center">
 
