@@ -16,7 +16,7 @@ Steps to reproduce the behavior:
 
 1. Prepare templates:
 
-   ```txt
+   ```text
    This is my {{ template }}
    ```
 
