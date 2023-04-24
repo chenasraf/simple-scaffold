@@ -1966,6 +1966,15 @@ conventional-changelog-conventionalcommits@^4.5.0:
     lodash "^4.17.15"
     q "^1.5.1"
 
+conventional-changelog-conventionalcommits@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-5.0.0.tgz#41bdce54eb65a848a4a3ffdca93e92fa22b64a86"
+  integrity sha512-lCDbA+ZqVFQGUj7h9QBKoIpLhl8iihkO0nCTyRNzuXtcd7ubODpYB04IFy31JloiJgG0Uovu8ot8oxRzn7Nwtw==
+  dependencies:
+    compare-func "^2.0.0"
+    lodash "^4.17.15"
+    q "^1.5.1"
+
 conventional-changelog-core@^4.2.1:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/conventional-changelog-core/-/conventional-changelog-core-4.2.4.tgz#e50d047e8ebacf63fac3dc67bf918177001e1e9f"
@@ -2042,7 +2051,7 @@ conventional-changelog-writer@^5.0.0:
     split "^1.0.0"
     through2 "^4.0.0"
 
-conventional-changelog@^3.1.24:
+conventional-changelog@^3.1.24, conventional-changelog@^3.1.25:
   version "3.1.25"
   resolved "https://registry.yarnpkg.com/conventional-changelog/-/conventional-changelog-3.1.25.tgz#3e227a37d15684f5aa1fb52222a6e9e2536ccaff"
   integrity sha512-ryhi3fd1mKf3fSjbLXOfK2D06YwKNic1nC9mWqybBHdObPd8KJ2vjaXZfYj1U23t+V8T8n0d7gwnc9XbIdFbyQ==
