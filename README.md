@@ -35,25 +35,8 @@ lifting for you and start building your projects faster and more efficiently tod
   <summary>Table of contents</summary>
 
 - [Install](#install)
-- [Command Line Interface (CLI)](#command-line-interface-cli)
-  - [Available flags](#available-flags)
-- [Node module](#node-module)
-  - [Node-specific options](#node-specific-options)
-- [Preparing files](#preparing-files)
-  - [Template files](#template-files)
-  - [Variable/token replacement](#variabletoken-replacement)
-  - [Helpers](#helpers)
-    - [Built-in Helpers](#built-in-helpers)
-      - [Capitalization Helpers](#capitalization-helpers)
-      - [Date helpers](#date-helpers)
-    - [Custom Helpers](#custom-helpers)
-- [Examples](#examples)
-  - [Run](#run)
-    - [Command Example](#command-example)
-    - [Equivalent Node Module Example](#equivalent-node-module-example)
-  - [Files](#files)
-    - [Input](#input)
-    - [Output](#output)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
 
 </details>
@@ -73,345 +56,53 @@ yarn [global] add simple-scaffold
 npx simple-scaffold@latest <...args>
 ```
 
-## Command Line Interface (CLI)
+## Quick Start
 
-### Available flags
+The fastest way to get started is to use `npx` to immediately start a scaffold process.
 
-The following is the help text from the `simple-scaffold` binary. To see this and more information
-anytime, add the `-h` or `--help` flag to your call, e.g. `npx simple-scaffold@latest -h`.
+Prepare any templates you want to use, e.g. in the directory `templates/component`, and use that in
+the CLI args. Here is a simple example:
 
-```text
-Usage: simple-scaffold [options]
+`templates/component/{{ psacalName name }}.tsx`
 
-Create structured files based on templates.
+```tsx
+// Created: {{ now | 'yyyy-MM-dd' }}
+import React from 'react'
 
-Options:
-
-  --help|-h                       Display help information
-
-  --name|-n                       Name to be passed to the generated files. {{name}}
-                                  and {{Name}} inside contents and file names will be
-                                  replaced accordingly.
-
-  --config|-c                     Filename to load config from instead of passing
-                                  arguments to CLI or using a Node.js script. You may pass a
-                                  JSON or JS file, with a relative or absolute path.
-
-  --output|-o                     Path to output to. If --create-sub-folder is enabled,
-                                  the subfolder will be created inside this path.
-                                  (default: current dir)
-
-  --templates|-t                  Template files to use as input. You may provide
-                                  multiple files, each of which can be a relative or
-                                  absolute path, or a glob pattern for multiple file
-                                  matching easily.
-
-  --overwrite|-w                  Enable to override output files, even if they already
-                                  exist. (default: false)
-
-  --data|-d                       Add custom data to the templates. By default, only
-                                  your app name is included.
-
-  --append-data|-D                Append additional custom data to the templates, which
-                                  will overwrite --data, using an alternate syntax, which is
-                                  easier to use with CLI: -D key1=string -D key2:=raw
-
-  --create-sub-folder|-s          Create subfolder with the input name (default: false)
-
-  --sub-folder-name-helper|-sh    Default helper to apply to subfolder name when using
-                                  `--create-sub-folder true`.
-
-  --quiet|-q                      Suppress output logs (Same as --verbose 0)
-                                  (default: false)
-
-  --verbose|-v                    Determine amount of logs to display. The values are:
-                                  0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4
-                                  (error). The provided level will display messages of
-                                  the same level or higher. (default:
-                                  2)
-
-  --dry-run|-dr                   Don't emit files. This is good for testing your
-                                  scaffolds and making sure they don't fail, without
-                                  having to write actual file contents or create
-                                  directories. (default: false)
-```
-
-You can also add this as a script in your `package.json`:
-
-```json
-{
-  "scripts": {
-    "scaffold": "npx simple-scaffold@latest -t scaffolds/component/**/* -o src/components -d '{\"myProp\": \"propName\", \"myVal\": 123}'"
-  }
-}
-```
-
-## Node module
-
-You can also build the scaffold yourself, if you want to create more complex arguments or scaffold
-groups - simply pass a config object to the Scaffold function when you are ready to start.
-
-The config takes similar arguments to the command line:
-
-```typescript
-import Scaffold from "simple-scaffold"
-
-const config = {
-  name: "component",
-  templates: [path.join(__dirname, "scaffolds", "component")],
-  output: path.join(__dirname, "src", "components"),
-  createSubFolder: true,
-  subFolderNameHelper: "upperCase"
-  data: {
-    property: "value",
-  },
-  helpers: {
-    twice: (text) => [text, text].join(" ")
-  },
-  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
-}
-
-const scaffold = Scaffold(config)
-```
-
-### Node-specific options
-
-In addition to all the options available in the command line, there are some Node/JS-specific
-options available:
-
-| Option        | Type                                                                                                                                   | Description                                                                                                                                                                                                                                                                                                             |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `output`      |                                                                                                                                        | In addition to being passed the same as CLI, it may also be passed a function for each input file to output into a dynamic path: `{ output: (fullPath, baseDir, baseName) => path.resolve(baseDir, baseName) }`                                                                                                         |
-| `helpers`     | `Record<string, (string) => string>`                                                                                                   | Helpers are simple functions that transform your `data` variables into other values. See [Helpers](#helpers) for the list of default helpers, or add your own to be loaded into the template parser.                                                                                                                    |
-| `beforeWrite` | `(content: Buffer, rawContent: Buffer, outputPath: string) => Promise<String \| Buffer \| undefined> \| String \| Buffer \| undefined` | Supply this function to override the final output contents of each of your files, allowing you to add more pre-processing to your generator pipeline. The return value of this function will replace the output content of the respective file, which you may discriminate (if needed) using the `outputPath` argument. |
-| `append-data` |                                                                                                                                        | Does not exist in Node.JS options, use `data` instead.                                                                                                                                                                                                                                                                  |
-
-## Preparing files
-
-### Template files
-
-Put your template files anywhere, and fill them with tokens for replacement.
-
-Each template (not file) in the config array is parsed individually, and copied to the output
-directory. If a single template path contains multiple files (e.g. if you use a folder path or a
-glob pattern), the first directory up the tree of that template will become the base inside the
-defined output path for that template, while copying files recursively and maintaining their
-relative structure.
-
-Examples:
-
-> In the following examples, the config `name` is `AppName`, and the config `output` is `src`.
-
-| Input template                | Files in template                                      | Output path(s)                                               |
-| ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
-| `./templates/{{ name }}.txt`  | `./templates/{{ name }}.txt`                           | `src/AppName.txt`                                            |
-| `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name}}.txt` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
-| `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name}}.txt` | `src/outer2/inner/AppName.txt`                               |
-
-### Variable/token replacement
-
-Scaffolding will replace `{{ varName }}` in both the file name and its contents and put the
-transformed files in the output directory.
-
-The data available for the template parser is the data you pass to the `data` config option (or
-`--data` argument in CLI).
-
-For example, using the following command:
-
-```bash
-npx simple-scaffold@latest \
-  --templates templates/components/{{name}}.jsx \
-  --output src/components \
-  --create-sub-folder true \
-  MyComponent
-```
-
-Will output a file with the path:
-
-```text
-<working_dir>/src/components/MyComponent.jsx
-```
-
-The contents of the file will be transformed in a similar fashion.
-
-Your `data` will be pre-populated with the following:
-
-- `{{Name}}`: PascalCase of the component name
-- `{{name}}`: raw name of the component as you entered it
-
-> Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
-> Any `data` you add in the config will be available for use with their names wrapped in `{{` and
-> `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
-> [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
-> information.
-
-### Helpers
-
-#### Built-in Helpers
-
-Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.
-
-For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
-replace `My Name` with `my_name` when producing the final value.
-
-##### Capitalization Helpers
-
-| Helper name  | Example code            | Example output |
-| ------------ | ----------------------- | -------------- |
-| [None]       | `{{ name }}`            | my name        |
-| `camelCase`  | `{{ camelCase name }}`  | myName         |
-| `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
-| `startCase`  | `{{ startCase name }}`  | My Name        |
-| `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
-| `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
-| `pascalCase` | `{{ pascalCase name }}` | MyName         |
-| `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
-| `lowerCase`  | `{{ lowerCase name }}`  | my name        |
-
-##### Date helpers
-
-| Helper name                      | Description                                                      | Example code                                                     | Example output     |
-| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
-| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
-| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
-| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
-| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
-| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
-
-Further details:
-
-- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates. If you want
-  more information on the date tokens to use, refer to
-  [their format documentation](https://date-fns.org/docs/format).
-
-- The date helper format takes the following arguments:
-
-  ```typescript
-  (
-    date: string,
-    format: string,
-    offsetAmount?: number,
-    offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+export default {{pascalCase name}}: React.FC = (props) => {
+  return (
+    <div className="{{camelCase name}}">{{pascalCase name}} Component</div>
   )
-  ```
-
-- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as it
-  is implicitly the current date.
-
-#### Custom Helpers
-
-You may also add your own custom helpers using the `helpers` options when using the JS API (rather
-than the CLI). The `helpers` option takes an object whose keys are helper names, and values are the
-transformation functions. For example, `upperCase` is implemented like so:
-
-```typescript
-config.helpers = {
-  upperCase: (text) => text.toUpperCase(),
 }
 ```
 
-All of the above helpers (built in and custom) will also be available to you when using
-`subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
+To generate the template output, run:
 
-> To see more information on how helpers work and more features, see
-> [Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).
-
-## Examples
-
-### Run
-
-#### Command Example
-
-```bash
-simple-scaffold MyComponent \
-    -t project/scaffold/**/* \
-    -o src/components \
-    -d '{"className": "myClassName","author": "Chen Asraf"}'
-    MyComponent
+```shell
+# generate single component
+npx simple-scaffold@latest \
+  -t templates/component -o src/components PageWrapper
 ```
 
-#### Equivalent Node Module Example
+This will immediately create the following file: `src/components/PageWrapper.tsx`
 
-```typescript
-import Scaffold from "simple-scaffold"
+```tsx
+// Created: 2077/01/01
+import React from 'react'
 
-async function main() {
-  await Scaffold({
-    name: "MyComponent",
-    templates: ["project/scaffold/**/*"],
-    output: ["src/components"],
-    data: {
-      className: "myClassName",
-      author: "Chen Asraf",
-    },
-  })
-  console.log("Done.")
+export default PageWrapper: React.FC = (props) => {
+  return (
+    <div className="pageWrapper">PageWrapper Component</div>
+  )
 }
 ```
 
-### Files
+## Documentation
 
-#### Input
-
-- Input file path:
-
-  ```text
-  project → scaffold → {{Name}}.js → src → components
-  ```
-
-- Input file contents:
-
-  ```typescript
-  /**
-   * Author: {{ author }}
-   * Date: {{ now "yyyy-MM-dd" }}
-   */
-  import React from 'react'
-
-  export default {{camelCase name}}: React.FC = (props) => {
-    return (
-      <div className="{{className}}">{{camelCase name}} Component</div>
-    )
-  }
-  ```
-
-#### Output
-
-- Output file path:
-
-  - With `createSubFolder = false` (default):
-
-    ```text
-    project → src → components → MyComponent.js
-    ```
-
-  - With `createSubFolder = true`:
-
-    ```text
-    project → src → components → MyComponent → MyComponent.js
-    ```
-
-  - With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
-
-    ```text
-    project → src → components → MYCOMPONENT → MyComponent.js
-    ```
-
-- Output file contents:
-
-  ```typescript
-  /**
-   * Author: Chen Asraf
-   * Date: 2022-01-01
-   */
-  import React from 'react'
-
-  export default MyComponent: React.FC = (props) => {
-    return (
-      <div className="myClassName">MyComponent Component</div>
-    )
-  }
-  ```
+- [Command Line Interface (CLI) usage](/docs/cli.md)
+- [Node.js usage](/docs/node.md)
+- [Templates](/docs/templates.md)
+- [Configuration Files](/docs/configuration_files.md)
 
 ## Contributing
 
