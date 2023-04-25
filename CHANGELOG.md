@@ -2,16 +2,17 @@
 
 ## [1.3.0](https://github.com/chenasraf/simple-scaffold/compare/v1.2.0...v1.3.0) (2023-04-25)
 
-
 ### Features
 
-* load scaffold config from files ([c398976](https://github.com/chenasraf/simple-scaffold/commit/c3989769fee445c9183ff5e5b3892c4e9fb66a9e))
-
+- load scaffold config from files
+  ([c398976](https://github.com/chenasraf/simple-scaffold/commit/c3989769fee445c9183ff5e5b3892c4e9fb66a9e))
 
 ### Bug Fixes
 
-* config option should not be mandatory ([3db6a91](https://github.com/chenasraf/simple-scaffold/commit/3db6a918f13d9300efa2fcb4a356d004475ab91c))
-* export config file type ([4302eb5](https://github.com/chenasraf/simple-scaffold/commit/4302eb5ce35ed6cf1dc80dfb92790c3fdd96f963))
+- config option should not be mandatory
+  ([3db6a91](https://github.com/chenasraf/simple-scaffold/commit/3db6a918f13d9300efa2fcb4a356d004475ab91c))
+- export config file type
+  ([4302eb5](https://github.com/chenasraf/simple-scaffold/commit/4302eb5ce35ed6cf1dc80dfb92790c3fdd96f963))
 
 ## [1.2.0](https://github.com/chenasraf/simple-scaffold/compare/v1.1.4...v1.2.0) (2023-04-24)
 
