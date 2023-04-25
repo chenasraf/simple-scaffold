@@ -8,6 +8,7 @@ import {
   LogLevel,
   ScaffoldCmdConfig,
   ScaffoldConfig,
+  ScaffoldConfigFile,
 } from "./types"
 import camelCase from "lodash/camelCase"
 import snakeCase from "lodash/snakeCase"
@@ -402,7 +403,10 @@ export function parseConfig(config: ScaffoldCmdConfig & OptionsBase): ScaffoldCo
 
   if (config.config) {
     const [configFile, template = "default"] = config.config.split(":")
-    const configImport: Record<string, ScaffoldConfig> = require(path.resolve(process.cwd(), configFile))
+    const configImport: ScaffoldConfigFile = require(path.resolve(process.cwd(), configFile))
+    if (!configImport[template]) {
+      throw new Error(`Template "${template}" not found in ${configFile}`)
+    }
     c = {
       ...config,
       ...configImport[template],
