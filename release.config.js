@@ -1,3 +1,15 @@
+const releaseRules = [
+  { type: "feat", section: "Features", release: "minor" },
+  { type: "docs", section: "Misc", release: "patch" },
+  { type: "fix", section: "Bug Fixes", release: "patch" },
+  { type: "refactor", section: "Misc", release: "patch" },
+  { type: "docs", section: "Build", release: "patch" },
+  { type: "perf", section: "Misc", release: "patch" },
+  { type: "build", section: "Build", release: "patch" },
+  { type: "chore", section: "Misc", release: "patch" },
+  { type: "test", section: "Misc", release: "patch" },
+]
+
 /** @type {import('semantic-release').Options} */
 module.exports = {
   branches: [
@@ -22,17 +34,7 @@ module.exports = {
         parserOpts: {
           noteKeywords: ["breaking:", "breaking-fix:", "breaking-feat:"],
         },
-        releaseRules: [
-          { type: "feat", section: "Features", release: "minor" },
-          { type: "docs", section: "Misc", release: "patch" },
-          { type: "fix", section: "Bug Fixes", release: "patch" },
-          { type: "refactor", section: "Misc", release: "patch" },
-          { type: "docs", section: "Misc", release: "patch" },
-          { type: "perf", section: "Misc", release: "patch" },
-          { type: "build", section: "Misc", release: "patch" },
-          { type: "chore", section: "Misc", release: "patch" },
-          { type: "test", section: "Misc", release: "patch" },
-        ],
+        releaseRules: releaseRules,
       },
     ],
     [
@@ -41,17 +43,7 @@ module.exports = {
         preset: "conventionalcommits",
         parserOpts: {
           noteKeywords: ["breaking"],
-          types: [
-            { type: "feat", section: "Features", release: "minor" },
-            { type: "docs", section: "Misc", release: "patch" },
-            { type: "fix", section: "Bug Fixes", release: "patch" },
-            { type: "refactor", section: "Misc", release: "patch" },
-            { type: "docs", section: "Misc", release: "patch" },
-            { type: "perf", section: "Misc", release: "patch" },
-            { type: "build", section: "Misc", release: "patch" },
-            { type: "chore", section: "Misc", release: "patch" },
-            { type: "test", section: "Misc", release: "patch" },
-          ],
+          types: releaseRules,
         },
       },
     ],
