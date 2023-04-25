@@ -43,10 +43,16 @@
 
 .tsd-index-accordion[data-key*="Configuration."] ul.tsd-nested-navigation,
 .tsd-index-accordion[data-key*="Configuration."] .tsd-accordion-summary > svg,
+.tsd-index-accordion[data-key="Changelog"] ul.tsd-nested-navigation,
+.tsd-index-accordion[data-key="Changelog"] .tsd-accordion-summary > svg,
 .tsd-index-accordion[data-key="Configuration"] li:nth-child(n + 6) {
   display: none;
 }
 
 .tsd-index-accordion[data-key*="Configuration."] {
+  margin-left: 0;
+}
+
+.tsd-index-accordion[data-key="Changelog"] {
   margin-left: 0;
 }
