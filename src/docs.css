@@ -49,10 +49,7 @@
   display: none;
 }
 
-.tsd-index-accordion[data-key*="Configuration."] {
-  margin-left: 0;
-}
-
+.tsd-index-accordion[data-key*="Configuration."],
 .tsd-index-accordion[data-key="Changelog"] {
   margin-left: 0;
 }
