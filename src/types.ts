@@ -338,3 +338,5 @@ export interface ScaffoldCmdConfig {
   dryRun: boolean
   config?: string
 }
+
+export type ScaffoldConfigFile = Record<string, ScaffoldConfig>

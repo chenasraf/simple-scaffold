@@ -1,4 +1,4 @@
-/** @type {Record<string, require('simple-scaffold').ScaffoldConfig>} */
+/** @type {import('simple-scaffold').ScaffoldConfigFile} */
 module.exports = {
   default: {
     templates: ["examples/test-input/Component"],

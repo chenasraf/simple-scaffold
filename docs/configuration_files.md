@@ -48,7 +48,7 @@ not support non-primitives.
 A `.js` file is just like a `.json` file, make sure to export the final configuration:
 
 ```js
-/** @type {import('simple-scaffold').ConfigFileOptions} */
+/** @type {import('simple-scaffold').ScaffoldConfigFile} */
 module.exports = {
   component: {
     templates: ["templates/component"],
@@ -70,7 +70,7 @@ If you don't want to supply a template/config name (e.g. `component`), you can o
 the name, and it will use the configuration named `default`:
 
 ```js
-/** @type {import('simple-scaffold').ConfigFileOptions} */
+/** @type {import('simple-scaffold').ScaffoldConfigFile} */
 module.exports = {
   default: {
     // ...
