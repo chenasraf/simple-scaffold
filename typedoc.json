@@ -15,7 +15,7 @@
   "media": "media",
   "githubPages": true,
   "entryPointStrategy": "expand",
-  "out": "docs-gen",
+  "out": "docs",
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
@@ -31,12 +31,12 @@
   "logLevel": "Verbose",
   "pluginPages": {
     "logLevel": "Verbose",
-    "source": "docs",
     "pages": [
       {
         "name": "Configuration",
         "source": "README.md",
-        "childrenDir": "./docs",
+        "childrenDir": "./pages",
+        "childrenOutputDir": "./",
         "children": [
           {
             "name": "CLI usage",
