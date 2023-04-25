@@ -18,7 +18,8 @@ example:
 }
 ```
 
-The configuration contents are identical to the [Node.js configuration structure](/docs/node.md):
+The configuration contents are identical to the
+[Node.js configuration structure](https://chenasraf.githun.io/simple-scaffold/pages/docs/node.md):
 
 ```ts
 interface ScaffoldConfig {

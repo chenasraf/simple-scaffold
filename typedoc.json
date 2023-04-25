@@ -28,7 +28,9 @@
   ],
   "customCss": "src/docs.css",
   "options": "typedoc.json",
+  "logLevel": "Verbose",
   "pluginPages": {
+    "logLevel": "Verbose",
     "source": "docs",
     "pages": [
       {
@@ -51,6 +53,10 @@
           {
             "name": "Configuration Files",
             "source": "configuration_files.md"
+          },
+          {
+            "name": "Migrating 0.x to v1.x",
+            "source": "migration.md"
           }
         ]
       }
