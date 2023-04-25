@@ -38,7 +38,7 @@ The fastest way to get started is to use `npx` to immediately start a scaffold p
 Prepare any templates you want to use - for example, in the directory `templates/component`; and use
 that in the CLI args. Here is a simple example file:
 
-`templates/component/{{ psacalName name }}.tsx`
+`templates/component/{{ pascalName name }}.tsx`
 
 ```tsx
 // Created: {{ now | 'yyyy-MM-dd' }}
@@ -74,12 +74,13 @@ export default PageWrapper: React.FC = (props) => {
 
 ## Documentation
 
-See full documentation [here](https://casraf.dev/simple-scaffold).
+See full documentation [here](https://chenasraf.github.io/simple-scaffold).
 
-- [Command Line Interface (CLI) usage](/docs/cli.md)
-- [Node.js usage](/docs/node.md)
-- [Templates](/docs/templates.md)
-- [Configuration Files](/docs/configuration_files.md)
+- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/pages/docs/cli.html)
+- [Node.js usage](https://chenasraf.github.io/simple-scaffold/pages/docs/node.md)
+- [Templates](https://chenasraf.github.io/simple-scaffold/pages/docs/templates.md)
+- [Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/docs/configuration_files.md)
+- [Migrating 0.x to v1.x](https://chenasraf.github.io/simple-scaffold/pages/docs/migration.md)
 
 ## Contributing
 

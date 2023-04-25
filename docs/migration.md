@@ -1,5 +1,3 @@
-# Migrating from 0.x to 1.x
-
 In Simple Scaffold v1.0, the entire codebase was overhauled, yet usage remains mostly the same
 between versions. With these notable exceptions:
 
