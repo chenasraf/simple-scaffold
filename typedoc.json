@@ -59,6 +59,10 @@
             "source": "migration.md"
           }
         ]
+      },
+      {
+        "name": "Changelog",
+        "source": "./CHANGELOG.md",
       }
     ]
   }
