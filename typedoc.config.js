@@ -49,7 +49,7 @@ module.exports = {
             source: "configuration_files.md",
           },
           {
-            name: "Migrating 0.x to v1.x",
+            name: "Migrating v0.x to v1.x",
             source: "migration.md",
           },
         ],
