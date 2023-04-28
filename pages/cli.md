@@ -60,7 +60,7 @@ Options:
 ```
 
 > See
-> [Configuration Files](https://chenasraf.githun.io/simple-scaffold/pages/docs/docs/configuration_files.md)
+> [Configuration Files](https://chenasraf.githun.io/simple-scaffold/pages/docs/configuration_files.md)
 > for organizing multiple scaffold types into easy-to-maintain files
 
 You can also add this as a script in your `package.json`:

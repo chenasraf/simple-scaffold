@@ -19,7 +19,7 @@ example:
 ```
 
 The configuration contents are identical to the
-[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/pages/docs/node.md):
+[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/pages/node.md):
 
 ```ts
 interface ScaffoldConfig {
