@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.3.1](https://github.com/chenasraf/simple-scaffold/compare/v1.3.0...v1.3.1) (2023-04-28)
+
+
+### Bug Fixes
+
+* docs ([6e19a86](https://github.com/chenasraf/simple-scaffold/commit/6e19a86190dd924058a48448aa6463569ef1125f))
+* remove old peer-dep ([c7e2ef8](https://github.com/chenasraf/simple-scaffold/commit/c7e2ef862cb658feb1071ac120b185d8b34d6dd3))
+
 ## [1.3.0](https://github.com/chenasraf/simple-scaffold/compare/v1.2.0...v1.3.0) (2023-04-25)
 
 ### Features
