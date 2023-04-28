@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.4.0](https://github.com/chenasraf/simple-scaffold/compare/v1.3.2...v1.4.0) (2023-04-28)
+
+
+### Features
+
+* add `--key` | `-k` to config loader ([6c5ba0b](https://github.com/chenasraf/simple-scaffold/commit/6c5ba0bc916fb1d59240d2eaa1abedc74527a974))
+
 ## [1.3.2](https://github.com/chenasraf/simple-scaffold/compare/v1.3.1...v1.3.2) (2023-04-28)
 
 
