@@ -337,6 +337,7 @@ export interface ScaffoldCmdConfig {
   verbose: LogLevel
   dryRun: boolean
   config?: string
+  key?: string
 }
 
 export type ScaffoldConfigFile = Record<string, ScaffoldConfig>

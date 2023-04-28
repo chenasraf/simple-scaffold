@@ -20,6 +20,10 @@ Options:
                                   arguments to CLI or using a Node.js script. You may pass a
                                   JSON or JS file, with a relative or absolute path.
 
+  --key|-k                        Key to load inside the config file. This overwrites the
+                                  config key provided after the colon in --config (e.g. --config
+                                  scaffold.cmd.js:component)
+
   --output|-o                     Path to output to. If --create-sub-folder is enabled,
                                   the subfolder will be created inside this path.
                                   (default: current dir)

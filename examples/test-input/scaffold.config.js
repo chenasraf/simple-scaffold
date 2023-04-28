@@ -7,7 +7,7 @@ module.exports = {
   },
   component: {
     templates: ["examples/test-input/Component"],
-    output: "examples/test-output",
+    output: "examples/test-output/component",
     data: { property: "myProp", value: "10" },
   },
 }

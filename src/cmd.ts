@@ -32,6 +32,12 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           "Filename to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file, with a relative or absolute path.",
       })
       .option({
+        name: "key",
+        aliases: ["k"],
+        description:
+          "Key to load inside the config file. This overwrites the config key provided after the colon in --config (e.g. --config scaffold.cmd.js:component)",
+      })
+      .option({
         name: "output",
         aliases: ["o"],
         description: `Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path. ${chalk.reset`${chalk.white`(default: current dir)`}`}`,

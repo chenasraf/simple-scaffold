@@ -118,8 +118,8 @@ export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): voi
       i instanceof Error
         ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
         : typeof i === "object"
-        ? chalkFn(JSON.stringify(i, undefined, 1))
-        : chalkFn(i),
+          ? chalkFn(JSON.stringify(i, undefined, 1))
+          : chalkFn(i),
     ),
   )
 }
@@ -402,7 +402,8 @@ export function parseConfig(config: ScaffoldCmdConfig & OptionsBase): ScaffoldCo
   let c: ScaffoldConfig = config
 
   if (config.config) {
-    const [configFile, template = "default"] = config.config.split(":")
+    const [configFile, colonTemplate = "default"] = config.config.split(":")
+    const template = config.key ?? colonTemplate
     const configImport: ScaffoldConfigFile = require(path.resolve(process.cwd(), configFile))
     if (!configImport[template]) {
       throw new Error(`Template "${template}" not found in ${configFile}`)
