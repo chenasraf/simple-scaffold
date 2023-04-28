@@ -63,8 +63,5 @@
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.6",
     "typescript": "^5.0.4"
-  },
-  "peerDependencies": {
-    "doc-theme": "file:./doc-theme"
   }
 }
