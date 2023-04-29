@@ -1,13 +1,12 @@
 const releaseRules = [
   { type: "feat", section: "Features", release: "minor" },
-  { type: "docs", section: "Misc", release: "patch" },
+  { type: "docs", section: "Build", release: false },
   { type: "fix", section: "Bug Fixes", release: "patch" },
   { type: "refactor", section: "Misc", release: "patch" },
-  { type: "docs", section: "Build", release: "patch" },
   { type: "perf", section: "Misc", release: "patch" },
   { type: "build", section: "Build", release: "patch" },
   { type: "chore", section: "Misc", release: "patch" },
-  { type: "test", section: "Misc", release: "patch" },
+  { type: "test", section: "Tests", release: "patch" },
 ]
 
 /** @type {import('semantic-release').Options} */
@@ -17,6 +16,7 @@ module.exports = {
     "master",
     "next",
     "next-major",
+    { name: "develop", prerelease: true },
     { name: "beta", prerelease: true },
     { name: "alpha", prerelease: true },
   ],
