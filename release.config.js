@@ -61,15 +61,15 @@ module.exports = {
       },
     ],
     [
-      "@semantic-release/github",
-      {
-        assets: ["package.tgz"],
-      },
-    ],
-    [
       "@semantic-release/git",
       {
         assets: ["CHANGELOG.md", "package.json"],
+      },
+    ],
+    [
+      "@semantic-release/github",
+      {
+        assets: ["package.tgz"],
       },
     ],
   ],
