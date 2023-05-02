@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.0](https://github.com/chenasraf/simple-scaffold/compare/v1.4.0...v1.5.0) (2023-05-02)
+
+
+### Features
+
+* add github remote templates ([f961c13](https://github.com/chenasraf/simple-scaffold/commit/f961c13da15320b42540773ed958cdc3f97e4502))
+* support for remote template configs ([05487f4](https://github.com/chenasraf/simple-scaffold/commit/05487f4d1e3b05f1d695242bb54427ee2fbdf247))
+
 ## [1.5.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.4.0...v1.5.0-develop.1) (2023-05-02)
 
 
