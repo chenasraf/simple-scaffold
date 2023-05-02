@@ -34,7 +34,10 @@ not support non-primitives.</p>
 <pre><code class="language-js"><span class="hl-0">/** </span><span class="hl-6">@type</span><span class="hl-0"> </span><span class="hl-12">{import(&#39;simple-scaffold&#39;).ScaffoldConfigFile}</span><span class="hl-0"> */</span><br/><span class="hl-12">module</span><span class="hl-2">.</span><span class="hl-12">exports</span><span class="hl-2"> = {</span><br/><span class="hl-2">  </span><span class="hl-3">component:</span><span class="hl-2"> {</span><br/><span class="hl-2">    </span><span class="hl-3">templates:</span><span class="hl-2"> [</span><span class="hl-4">&quot;templates/component&quot;</span><span class="hl-2">],</span><br/><span class="hl-2">    </span><span class="hl-3">output:</span><span class="hl-2"> </span><span class="hl-4">&quot;src/components&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">  },</span><br/><span class="hl-2">}</span>
 </code><button>Copy</button></pre>
 <a id="md:using-a-config-file" class="tsd-anchor"></a><h2><a href="#md:using-a-config-file">Using a config file</a></h2><p>Once your config is created, you can use it by providing the file name to the <code>--config</code> (or <code>-c</code>
-for brevity), followed by a colon, then your scaffold config name. For example:</p>
+for brevity), optionally followed by a colon, then your scaffold config name.</p>
+<pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> &lt;</span><span class="hl-4">fil</span><span class="hl-2">e&gt;</span><span class="hl-4">[:</span><span class="hl-2">&lt;</span><span class="hl-4">template_ke</span><span class="hl-2">y&gt;</span><span class="hl-4">]</span>
+</code><button>Copy</button></pre>
+<p>For example:</p>
 <pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> </span><span class="hl-4">scaffold.json:component</span><span class="hl-2"> </span><span class="hl-4">MyComponentName</span>
 </code><button>Copy</button></pre>
 <p>If you don&#39;t want to supply a template/config name (e.g. <code>component</code>), you can omit the colon and
@@ -43,6 +46,26 @@ the name, and it will use the configuration named <code>default</code>:</p>
 </code><button>Copy</button></pre>
 <p>And then:</p>
 <pre><code class="language-shell"><span class="hl-0"># will use &#39;default&#39; template</span><br/><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> </span><span class="hl-4">scaffold.json</span><span class="hl-2"> </span><span class="hl-4">MyComponentName</span>
+</code><button>Copy</button></pre>
+<a id="md:remote-templates" class="tsd-anchor"></a><h2><a href="#md:remote-templates">Remote Templates</a></h2><p>You can load template groups remotely, similar to how you would pass a config normally.</p>
+<p>The main difference is the templates will be hosted on a remote location such as a git server, and
+not locally in your project. This can be done to easily share &amp; reuse templates.</p>
+<p>When passing a git URL to <code>--config</code>, you will clone that repo and use the files there as template.</p>
+<p>The syntax is as follows:</p>
+<pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> &lt;</span><span class="hl-4">git_ur</span><span class="hl-2">l&gt;</span><span class="hl-4">[#</span><span class="hl-2">&lt;</span><span class="hl-4">git_fil</span><span class="hl-2">e&gt;</span><span class="hl-4">][:</span><span class="hl-2">&lt;</span><span class="hl-4">template_ke</span><span class="hl-2">y&gt;</span><span class="hl-4">]</span>
+</code><button>Copy</button></pre>
+<p>For example, to use this repository&#39;s example as base:</p>
+<pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> </span><span class="hl-4">https://github.com/chenasraf/simple-scaffold.git#examples/test-input/scaffold.config.js:component</span>
+</code><button>Copy</button></pre>
+<p>When the filename is omitted, <code>/scaffold.config.js</code> will be used as default.</p>
+<p>When the template_key is ommitted, <code>default</code> will be used as default.</p>
+<a id="md:github-templates" class="tsd-anchor"></a><h3><a href="#md:github-templates">GitHub Templates</a></h3><p>As a shorter alternative to the above example, you can use <code>--github</code> or <code>-gh</code> to reference a GitHub
+URL without specifying the whole path.</p>
+<p>The syntax is as follows:</p>
+<pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-gh</span><span class="hl-2"> &lt;</span><span class="hl-4">usernam</span><span class="hl-2">e&gt;</span><span class="hl-4">/</span><span class="hl-2">&lt;</span><span class="hl-4">project_nam</span><span class="hl-2">e&gt;</span><span class="hl-4">[#</span><span class="hl-2">&lt;</span><span class="hl-4">git_fil</span><span class="hl-2">e&gt;</span><span class="hl-4">][:</span><span class="hl-2">&lt;</span><span class="hl-4">template_ke</span><span class="hl-2">y&gt;</span><span class="hl-4">]</span>
+</code><button>Copy</button></pre>
+<p>This example is equivalent to the above, just shorter to write:</p>
+<pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> </span><span class="hl-4">chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component</span>
 </code><button>Copy</button></pre>
 </div></div>
 <div class="col-sidebar">
@@ -67,7 +90,11 @@ the name, and it will use the configuration named <code>default</code>:</p>
 <li><a href="#md:creating-config-files"><span>Creating config files</span></a></li>
 <li>
 <ul>
-<li><a href="#md:using-a-config-file"><span>Using a config file</span></a></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#md:using-a-config-file"><span>Using a config file</span></a></li>
+<li><a href="#md:remote-templates"><span>Remote <wbr/>Templates</span></a></li>
+<li>
+<ul>
+<li><a href="#md:github-templates"><span>Git<wbr/>Hub <wbr/>Templates</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>Simple <wbr/>Scaffold -<wbr/> v1.4.0</span></a>
 <ul class="tsd-small-nested-navigation">
