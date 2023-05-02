@@ -23,6 +23,8 @@ import dtFormat from "date-fns/format"
 import dtParseISO from "date-fns/parseISO"
 import { glob, hasMagic } from "glob"
 import { OptionsBase } from "massarg/types"
+import { spawn } from "node:child_process"
+import os from "node:os"
 
 const dateFns = {
   add: dtAdd,
@@ -99,10 +101,14 @@ export function handleErr(err: NodeJS.ErrnoException | null): void {
   if (err) throw err
 }
 
-export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): void {
+/** @internal */
+export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
+
+export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
   if (config.quiet || config.verbose === LogLevel.None || level < (config.verbose ?? LogLevel.Info)) {
     return
   }
+
   const levelColor: Record<LogLevel, keyof typeof chalk> = {
     [LogLevel.None]: "reset",
     [LogLevel.Debug]: "blue",
@@ -110,6 +116,7 @@ export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): voi
     [LogLevel.Warning]: "yellow",
     [LogLevel.Error]: "red",
   }
+
   const chalkFn: any = chalk[levelColor[level]]
   const key: "log" | "warn" | "error" = level === LogLevel.Error ? "error" : level === LogLevel.Warning ? "warn" : "log"
   const logFn: any = console[key]
@@ -118,8 +125,8 @@ export function log(config: ScaffoldConfig, level: LogLevel, ...obj: any[]): voi
       i instanceof Error
         ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
         : typeof i === "object"
-          ? chalkFn(JSON.stringify(i, undefined, 1))
-          : chalkFn(i),
+        ? chalkFn(JSON.stringify(i, undefined, 1))
+        : chalkFn(i),
     ),
   )
 }
@@ -370,16 +377,18 @@ export function logInitStep(config: ScaffoldConfig): void {
     name: config.name,
     templates: config.templates,
     output: config.output,
-    createSubfolder: config.createSubFolder,
+    createSubFolder: config.createSubFolder,
     data: config.data,
     overwrite: config.overwrite,
     quiet: config.quiet,
-    subFolderTransformHelper: config.subFolderNameHelper,
+    subFolderNameHelper: config.subFolderNameHelper,
     helpers: Object.keys(config.helpers ?? {}),
     verbose: `${config.verbose} (${Object.keys(LogLevel).find(
       (k) => (LogLevel[k as any] as unknown as number) === config.verbose!,
     )})`,
-  })
+    dryRun: config.dryRun,
+    beforeWrite: config.beforeWrite,
+  } as Record<keyof ScaffoldConfig, unknown>)
   log(config, LogLevel.Info, "Data:", config.data)
 }
 
@@ -398,21 +407,27 @@ function isWrappedWithQuotes(string: string): boolean {
 }
 
 /** @internal */
-export function parseConfig(config: ScaffoldCmdConfig & OptionsBase): ScaffoldConfig {
+export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Promise<ScaffoldConfig> {
   let c: ScaffoldConfig = config
 
   if (config.config) {
-    const [configFile, colonTemplate = "default"] = config.config.split(":")
-    const template = config.key ?? colonTemplate
-    const configImport: ScaffoldConfigFile = require(path.resolve(process.cwd(), configFile))
-    if (!configImport[template]) {
-      throw new Error(`Template "${template}" not found in ${configFile}`)
+    const isUrl = config.config.includes("://")
+
+    const hasColonToken = (!isUrl && config.config.includes(":")) || (isUrl && count(config.config, ":") > 1)
+    const colonIndex = config.config.lastIndexOf(":")
+    const [configFile, templateKey = "default"] = hasColonToken
+      ? [config.config.substring(0, colonIndex), config.config.substring(colonIndex + 1)]
+      : [config.config, undefined]
+    const key = (config.key ?? templateKey) || "default"
+    const configImport = await getConfig({ config: configFile, quiet: config.quiet, verbose: config.verbose })
+    if (!configImport[key]) {
+      throw new Error(`Template "${key}" not found in ${configFile}`)
     }
     c = {
       ...config,
-      ...configImport[template],
+      ...configImport[key],
       data: {
-        ...configImport[template].data,
+        ...configImport[key].data,
         ...config.data,
       },
     }
@@ -421,4 +436,63 @@ export function parseConfig(config: ScaffoldCmdConfig & OptionsBase): ScaffoldCo
   c.data = { ...c.data, ...config.appendData }
   delete config.appendData
   return c
+}
+
+/** @internal */
+export async function getConfig(
+  config: Pick<ScaffoldCmdConfig, "quiet" | "verbose" | "config">,
+): Promise<ScaffoldConfigFile> {
+  const { config: configFile, ...logConfig } = config as Required<typeof config>
+  const url = new URL(configFile)
+
+  if (url.protocol === "file:") {
+    log(logConfig, LogLevel.Info, `Loading config from file ${configFile}`)
+    const absolutePath = path.resolve(process.cwd(), configFile)
+    return import(absolutePath)
+  }
+
+  const isHttp = url.protocol === "http:" || url.protocol === "https:"
+  const isGit = url.protocol === "git:" || (isHttp && url.pathname.endsWith(".git"))
+
+  if (isHttp || isGit) {
+    if (isGit) {
+      const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
+      log(logConfig, LogLevel.Info, `Cloning git repo ${repoUrl}`)
+      const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
+
+      return new Promise((resolve, reject) => {
+        const clone = spawn("git", ["clone", repoUrl, tmpPath])
+
+        clone.on("error", reject)
+        clone.on("close", async (code) => {
+          if (code === 0) {
+            log(logConfig, LogLevel.Info, `Loading config from git repo: ${configFile}`)
+            const absolutePath = path.resolve(tmpPath, url.hash.replace("#", ""))
+            const loadedConfig = (await import(absolutePath)).default as ScaffoldConfigFile
+            log(logConfig, LogLevel.Info, `Loaded config from git repo`)
+            log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
+            const fixedConfig: ScaffoldConfigFile = Object.fromEntries(
+              Object.entries(loadedConfig).map(([k, v]) => [
+                k,
+                // use absolute paths for template as config is necessarily in another directory
+                { ...v, templates: v.templates.map((t) => path.resolve(tmpPath, t)) },
+              ]),
+            )
+
+            resolve(fixedConfig)
+          } else {
+            reject(new Error(`Git clone failed with code ${code}`))
+          }
+        })
+      })
+    }
+
+    throw new Error(`Unsupported protocol ${url.protocol}`)
+  }
+
+  return import(path.resolve(process.cwd(), configFile))
+}
+
+function count(string: string, substring: string): number {
+  return string.split(substring).length - 1
 }
