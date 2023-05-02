@@ -130,7 +130,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           `Version:  ${pkg.version}`,
           `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
           ``,
-          `Documentation: ${chalk.underline`https://casraf.dev/simple-scaffold`}`,
+          `Documentation: ${chalk.underline`https://chenasraf.github.io/simple-scaffold`}`,
           `NPM: ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
           `GitHub: ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
         ].join("\n"),
