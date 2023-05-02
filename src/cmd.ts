@@ -29,7 +29,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "config",
         aliases: ["c"],
         description:
-          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file with a relative or absolute path",
+          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file with a relative or absolute path, or a fully qualified git repository URL.",
       })
       .option({
         name: "github",
