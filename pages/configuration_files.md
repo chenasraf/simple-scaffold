@@ -60,7 +60,13 @@ module.exports = {
 ## Using a config file
 
 Once your config is created, you can use it by providing the file name to the `--config` (or `-c`
-for brevity), followed by a colon, then your scaffold config name. For example:
+for brevity), optionally followed by a colon, then your scaffold config name.
+
+```shell
+simple-scaffold -c <file>[:<template_key>]
+```
+
+For example:
 
 ```shell
 simple-scaffold -c scaffold.json:component MyComponentName
@@ -83,4 +89,46 @@ And then:
 ```shell
 # will use 'default' template
 simple-scaffold -c scaffold.json MyComponentName
+```
+
+## Remote Templates
+
+You can load template groups remotely, similar to how you would pass a config normally.
+
+The main difference is the templates will be hosted on a remote location such as a git server, and
+not locally in your project. This can be done to easily share & reuse templates.
+
+When passing a git URL to `--config`, you will clone that repo and use the files there as template.
+
+The syntax is as follows:
+
+```shell
+simple-scaffold -c <git_url>[#<git_file>][:<template_key>]
+```
+
+For example, to use this repository's example as base:
+
+```shell
+simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#examples/test-input/scaffold.config.js:component
+```
+
+When the filename is omitted, `/scaffold.config.js` will be used as default.
+
+When the template_key is ommitted, `default` will be used as default.
+
+### GitHub Templates
+
+As a shorter alternative to the above example, you can use `--github` or `-gh` to reference a GitHub
+URL without specifying the whole path.
+
+The syntax is as follows:
+
+```shell
+simple-scaffold -gh <username>/<project_name>[#<git_file>][:<template_key>]
+```
+
+This example is equivalent to the above, just shorter to write:
+
+```shell
+simple-scaffold -c chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component
 ```

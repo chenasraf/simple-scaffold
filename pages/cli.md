@@ -16,13 +16,16 @@ Options:
                                   {{Name}} inside contents and file names will be replaced
                                   accordingly.
 
-  --config|-c                     Filename to load config from instead of passing
-                                  arguments to CLI or using a Node.js script. You may pass a
-                                  JSON or JS file, with a relative or absolute path.
+  --config|-c                     Filename or https git URL to load config from instead of
+                                  passing arguments to CLI or using a Node.js script. You may
+                                  pass a JSON or JS file with a relative or absolute
+                                  path
 
-  --key|-k                        Key to load inside the config file. This overwrites the
-                                  config key provided after the colon in --config (e.g. --config
-                                  scaffold.cmd.js:component)
+  --github|-gh                    GitHub path to load config from instead of passing
+                                  arguments to CLI or using a Node.js script. You may pass a
+                                  GitHub path (e.g. username/package#scaffold.config.js). You may also optionally
+                                  add a key (same as passing --key) to load from inside the
+                                  config.
 
   --output|-o                     Path to output to. If --create-sub-folder is enabled,
                                   the subfolder will be created inside this path.

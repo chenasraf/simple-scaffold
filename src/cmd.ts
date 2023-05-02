@@ -35,7 +35,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "github",
         aliases: ["gh"],
         description:
-          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file, with a relative or absolute path, a URL to a repository, or a GitHub path (e.g. username/package#scaffold.config.js). You may also optionally add a key (same as passing --key) to load from inside the config.",
+          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a GitHub path (e.g. username/package#scaffold.config.js). You may also optionally add a key (same as passing --key) to load from inside the config.",
       })
       .option({
         name: "key",
