@@ -33,6 +33,8 @@ lifting for you and start building your projects faster and more efficiently tod
 
 ## Quick Start
 
+### Local Templates
+
 The fastest way to get started is to use `npx` to immediately start a scaffold process.
 
 Prepare any templates you want to use - for example, in the directory `templates/component`; and use
@@ -71,6 +73,28 @@ export default PageWrapper: React.FC = (props) => {
   )
 }
 ```
+
+### Remote Templates
+
+Another quick way to start is to re-use someone else's (or your own) work using a template
+repository.
+
+Here is an example for loading the example component templates in this very repository:
+
+```shell
+npx simple-scaffold@latest \
+  -gh chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component \
+  PageWrapper
+
+# equivalent to:
+npx simple-scaffold@latest \
+  -c https://github.com/chenasraf/simple-scaffold.git#examples/test-input/scaffold.config.js:component \
+  PageWrapper
+```
+
+When template name (`:component`) is omitted, `default` is used.
+
+See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html)
 
 ## Documentation
 

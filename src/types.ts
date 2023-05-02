@@ -338,6 +338,7 @@ export interface ScaffoldCmdConfig {
   dryRun: boolean
   config?: string
   key?: string
+  github?: string
 }
 
 export type ScaffoldConfigFile = Record<string, ScaffoldConfig>

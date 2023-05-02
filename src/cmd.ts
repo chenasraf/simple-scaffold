@@ -9,12 +9,12 @@ import { parseAppendData, parseConfig } from "./utils"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const pkg = JSON.parse((await fs.readFile(path.join(__dirname, "package.json"))).toString())
-  const isConfig = args.includes("--config") || args.includes("-c")
+  const isConfig = args.includes("--config") || args.includes("-c") || args.includes("--github") || args.includes("-gh")
 
   return (
     massarg<ScaffoldCmdConfig>()
-      .main((config) => {
-        const _config = parseConfig(config)
+      .main(async (config) => {
+        const _config = await parseConfig(config)
         return Scaffold(_config)
       })
       .option({
@@ -29,7 +29,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "config",
         aliases: ["c"],
         description:
-          "Filename to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file, with a relative or absolute path.",
+          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file with a relative or absolute path, or a fully qualified git repository URL.",
+      })
+      .option({
+        name: "github",
+        aliases: ["gh"],
+        description:
+          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a GitHub path (e.g. username/package#scaffold.config.js). You may also optionally add a key (same as passing --key) to load from inside the config.",
       })
       .option({
         name: "key",
