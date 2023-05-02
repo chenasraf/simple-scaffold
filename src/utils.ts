@@ -409,6 +409,14 @@ function isWrappedWithQuotes(string: string): boolean {
 /** @internal */
 export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Promise<ScaffoldConfig> {
   let c: ScaffoldConfig = config
+  if (config.github) {
+    log(config, LogLevel.Info, `Loading config from github ${config.github}`)
+    const gitUrl = new URL(`https://github.com/${config.github}`)
+    if (!gitUrl.pathname.endsWith(".git")) {
+      gitUrl.pathname += ".git"
+    }
+    config.config = gitUrl.toString()
+  }
 
   if (config.config) {
     const isUrl = config.config.includes("://")
@@ -419,6 +427,7 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
       ? [config.config.substring(0, colonIndex), config.config.substring(colonIndex + 1)]
       : [config.config, undefined]
     const key = (config.key ?? templateKey) || "default"
+    log(config, LogLevel.Info, `Loading config from ${configFile} with key ${key}`)
     const configImport = await getConfig({ config: configFile, quiet: config.quiet, verbose: config.verbose })
     if (!configImport[key]) {
       throw new Error(`Template "${key}" not found in ${configFile}`)
@@ -461,15 +470,16 @@ export async function getConfig(
       const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
 
       return new Promise((resolve, reject) => {
-        const clone = spawn("git", ["clone", repoUrl, tmpPath])
+        const clone = spawn("git", ["clone", "--depth", "1", repoUrl, tmpPath])
 
         clone.on("error", reject)
         clone.on("close", async (code) => {
           if (code === 0) {
-            log(logConfig, LogLevel.Info, `Loading config from git repo: ${configFile}`)
-            const absolutePath = path.resolve(tmpPath, url.hash.replace("#", ""))
+            log(logConfig, LogLevel.Info, `Loading config from git repo: ${repoUrl}`)
+            const hashPath = url.hash?.replace("#", "") || "scaffold.config.js"
+            const absolutePath = path.resolve(tmpPath, hashPath)
             const loadedConfig = (await import(absolutePath)).default as ScaffoldConfigFile
-            log(logConfig, LogLevel.Info, `Loaded config from git repo`)
+            log(logConfig, LogLevel.Info, `Loaded config from git`)
             log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
             const fixedConfig: ScaffoldConfigFile = Object.fromEntries(
               Object.entries(loadedConfig).map(([k, v]) => [
