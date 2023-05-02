@@ -3,7 +3,8 @@ import { HelperDelegate } from "handlebars/runtime"
 /**
  * The config object for defining a scaffolding group.
  *
- * @see https://github.com/chenasraf/simple-scaffold#readme
+ * @see {@link https://chenasraf.github.io/simple-scaffold/pages/node.html | Node.js usage}
+ * @see {@link https://chenasraf.github.io/simple-scaffold/pages/cli.html | CLI usage}
  * @see {@link DefaultHelpers}
  * @see {@link CaseHelpers}
  * @see {@link DateHelpers}
@@ -131,10 +132,8 @@ export interface ScaffoldConfig {
    * @see {@link DefaultHelpers}
    * @see {@link CaseHelpers}
    * @see {@link DateHelpers}
-   * @see https://casraf.dev/simple-scaffold#helpers
-   * @see https://casraf.dev/simple-scaffold#built-in-helpers
-   * @see https://handlebarsjs.com/guide/#custom-helpers
-   */
+   * @see {@link https://chenasraf.github.io/simple-scaffold/pages/templates.html | Templates}
+   * */
   helpers?: Record<string, Helper>
 
   /**
@@ -341,4 +340,15 @@ export interface ScaffoldCmdConfig {
   github?: string
 }
 
+/**
+ * A mapping of scaffold template keys to their configurations.
+ *
+ * Each configuration is a {@link ScaffoldConfig} object.
+ *
+ * The key is the name of the template, and the value is the configuration for that template.
+ *
+ * When no template key is provided to the scaffold command, the "default" template is used.
+ *
+ * @see {@link ScaffoldConfig}
+ */
 export type ScaffoldConfigFile = Record<string, ScaffoldConfig>

@@ -2,7 +2,7 @@
   "name": "simple-scaffold",
   "version": "1.5.0",
   "description": "A simple command to generate any file structure, from single components to entire app boilerplates.",
-  "homepage": "https://casraf.dev/simple-scaffold",
+  "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
   "license": "MIT",

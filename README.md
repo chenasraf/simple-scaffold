@@ -3,7 +3,7 @@
 <h2 align="center">
 
 [GitHub](https://github.com/chenasraf/simple-scaffold) |
-[Documentation](https://casraf.dev/simple-scaffold) |
+[Documentation](https://chenasraf.github.io/simple-scaffold) |
 [NPM](https://npmjs.com/package/simple-scaffold) | [casraf.dev](https://casraf.dev)
 
 ![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version)
