@@ -39,8 +39,7 @@
     "glob": "^9.2.1",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
-    "massarg": "^1.0.7-pre.1",
-    "util.promisify": "^1.1.1"
+    "massarg": "^1.0.7-pre.1"
   },
   "devDependencies": {
     "@knodes/typedoc-plugin-pages": "^0.23.4",
