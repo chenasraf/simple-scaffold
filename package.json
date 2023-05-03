@@ -40,7 +40,6 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "massarg": "^1.0.7-pre.1",
-    "semantic-release-conventional-commits": "^3.0.0",
     "util.promisify": "^1.1.1"
   },
   "devDependencies": {
@@ -59,6 +58,7 @@
     "mock-fs": "^5.2.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^21.0.1",
+    "semantic-release-conventional-commits": "^3.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.6",
