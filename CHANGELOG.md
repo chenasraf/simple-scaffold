@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.0-develop.2](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0-develop.1...v1.5.0-develop.2) (2023-05-03)
+
+
+### Bug Fixes
+
+* move dependency to dev dependency ([408a940](https://github.com/chenasraf/simple-scaffold/commit/408a94085366bb4e39391fcfcfa7df78b06a480f))
+
 ## [1.5.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.4.0...v1.5.0-develop.1) (2023-05-02)
 
 
