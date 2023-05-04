@@ -132,3 +132,24 @@ This example is equivalent to the above, just shorter to write:
 ```shell
 simple-scaffold -c chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component
 ```
+
+## Use In Node.js
+
+You can also start a scaffold from Node.js with a remote file or URL config.
+
+Just use the `Scaffold.fromConfig` function:
+
+```ts
+Scaffold.fromConfig(
+  "scaffold.config.js", // file or HTTPS git URL
+  {
+    // name of the generated component
+    name: "My Component",
+    // key to load from the config
+    key: "component",
+  },
+  {
+    // other config overrides
+  },
+)
+```
