@@ -325,6 +325,10 @@ export type FileResponse<T> = T | FileResponseHandler<T>
 
 /** @internal */
 export interface ScaffoldCmdConfig {
+  /**
+   * Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
+   * accordingly.
+   */
   name: string
   templates: string[]
   output: string
@@ -336,6 +340,7 @@ export interface ScaffoldCmdConfig {
   verbose: LogLevel
   dryRun: boolean
   config?: string
+  /** The key to use for the file which contains the template configurations. */
   key?: string
   github?: string
 }
