@@ -67,6 +67,10 @@ URL without specifying the whole path.</p>
 <p>This example is equivalent to the above, just shorter to write:</p>
 <pre><code class="language-shell"><span class="hl-2">simple-scaffold </span><span class="hl-4">-c</span><span class="hl-2"> </span><span class="hl-4">chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component</span>
 </code><button>Copy</button></pre>
+<a id="md:use-in-nodejs" class="tsd-anchor"></a><h2><a href="#md:use-in-nodejs">Use In Node.js</a></h2><p>You can also start a scaffold from Node.js with a remote file or URL config.</p>
+<p>Just use the <code>Scaffold.fromConfig</code> function:</p>
+<pre><code class="language-ts"><span class="hl-3">Scaffold</span><span class="hl-2">.</span><span class="hl-5">fromConfig</span><span class="hl-2">(</span><br/><span class="hl-2">  </span><span class="hl-4">&quot;scaffold.config.js&quot;</span><span class="hl-2">, </span><span class="hl-0">// file or HTTPS git URL</span><br/><span class="hl-2">  {</span><br/><span class="hl-2">    </span><span class="hl-0">// name of the generated component</span><br/><span class="hl-2">    </span><span class="hl-3">name:</span><span class="hl-2"> </span><span class="hl-4">&quot;My Component&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-0">// key to load from the config</span><br/><span class="hl-2">    </span><span class="hl-3">key:</span><span class="hl-2"> </span><span class="hl-4">&quot;component&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">  },</span><br/><span class="hl-2">  {</span><br/><span class="hl-2">    </span><span class="hl-0">// other config overrides</span><br/><span class="hl-2">  },</span><br/><span class="hl-2">)</span>
+</code><button>Copy</button></pre>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -94,7 +98,8 @@ URL without specifying the whole path.</p>
 <li><a href="#md:remote-templates"><span>Remote <wbr/>Templates</span></a></li>
 <li>
 <ul>
-<li><a href="#md:github-templates"><span>Git<wbr/>Hub <wbr/>Templates</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#md:github-templates"><span>Git<wbr/>Hub <wbr/>Templates</span></a></li></ul></li>
+<li><a href="#md:use-in-nodejs"><span>Use <wbr/>In <wbr/>Node.js</span></a></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>Simple <wbr/>Scaffold -<wbr/> v1.5.0</span></a>
 <ul class="tsd-small-nested-navigation">
@@ -123,6 +128,11 @@ URL without specifying the whole path.</p>
 <li><a href="migration.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>Migrating v0.x to v1.x</span></a></li></ul></div></details></li>
 <li><a href="CHANGELOG.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>Changelog</span></a></li>
 <li><a href="../functions/Scaffold.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>Scaffold</span></a></li>
+<li>
+<details class="tsd-index-accordion" data-key="Scaffold"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="../modules/Scaffold-1.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>Scaffold</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="../functions/Scaffold-1.fromConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>from<wbr/>Config</span></a></li></ul></div></details></li>
 <li><a href="../interfaces/ScaffoldConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Scaffold<wbr/>Config</span></a></li>
 <li><a href="../types/CaseHelpers.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Case<wbr/>Helpers</span></a></li>
 <li><a href="../types/DateHelpers.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Date<wbr/>Helpers</span></a></li>
