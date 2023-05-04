@@ -6,7 +6,7 @@ const releaseRules = [
   { type: "perf", section: "Misc", release: "patch" },
   { type: "build", section: "Build", release: "patch" },
   { type: "chore", section: "Misc", release: "patch" },
-  { type: "test", section: "Tests", release: "patch" },
+  { type: "test", section: "Tests", release: false },
 ]
 
 /** @type {import('semantic-release').Options} */
@@ -42,7 +42,7 @@ module.exports = {
       {
         preset: "conventionalcommits",
         parserOpts: {
-          noteKeywords: ["breaking"],
+          noteKeywords: ["breaking", "major"],
           types: releaseRules,
         },
       },
@@ -57,6 +57,13 @@ module.exports = {
     [
       "@semantic-release/npm",
       {
+        npmPublish: false,
+      },
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        npmPublish: true,
         pkgRoot: "dist",
       },
     ],
