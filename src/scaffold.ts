@@ -23,8 +23,10 @@ import {
   getTemplateFileInfo,
   logInitStep,
   logInputFile,
+  parseConfig,
 } from "./utils"
-import { LogLevel, ScaffoldConfig } from "./types"
+import { LogLevel, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
+import { OptionsBase } from "massarg/types"
 
 /**
  * Create a scaffold using given `options`.
@@ -50,6 +52,7 @@ import { LogLevel, ScaffoldConfig } from "./types"
  * For available default values, see {@link DefaultHelpers}.
  *
  * @param {ScaffoldConfig} config The main configuration object
+ * @return {Promise<void>} A promise that resolves when the scaffold is complete
  *
  * @see {@link DefaultHelpers}
  * @see {@link CaseHelpers}
@@ -101,6 +104,40 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     throw e
   }
 }
+
+/**
+ * Create a scaffold based on a config file or URL.
+ *
+ * @param {string} pathOrUrl The path or URL to the config file
+ * @param {Record<string, string>} config Information needed before loading the config
+ * @param {Partial<Omit<ScaffoldConfig, 'name'>>} overrides Any overrides to the loaded config
+ *
+ * @see {@link Scaffold}
+ * @category Main
+ * @return {Promise<void>} A promise that resolves when the scaffold is complete
+ */
+Scaffold.fromConfig = async function (
+  pathOrUrl: string,
+  config: Pick<ScaffoldCmdConfig, "name" | "key">,
+  overrides?: Partial<Omit<ScaffoldConfig, "name">>,
+): Promise<void> {
+  const _cmdConfig: ScaffoldCmdConfig & OptionsBase = {
+    dryRun: false,
+    output: process.cwd(),
+    verbose: LogLevel.Info,
+    overwrite: false,
+    templates: [],
+    createSubFolder: false,
+    quiet: false,
+    help: false,
+    extras: [],
+    config: pathOrUrl,
+    ...config,
+  }
+  const _config = await parseConfig(_cmdConfig)
+  return Scaffold({ ..._config, ...overrides })
+}
+
 async function handleTemplateFile(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
