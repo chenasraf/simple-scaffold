@@ -29,13 +29,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "config",
         aliases: ["c"],
         description:
-          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a JSON or JS file with a relative or absolute path, or a fully qualified git repository URL.",
+          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. See examples for syntax.",
       })
       .option({
         name: "github",
         aliases: ["gh"],
         description:
-          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. You may pass a GitHub path (e.g. username/package#scaffold.config.js). You may also optionally add a key (same as passing --key) to load from inside the config.",
+          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. See examples for syntax.",
       })
       .option({
         name: "key",
@@ -121,16 +121,41 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       //   description: "Usage",
       //   output: "",
       // })
+      .example({
+        description: "Usage with config file",
+        input: "simple-scaffold -c scaffold.cmd.js --key component",
+      })
+      .example({
+        description: "Usage with GitHub config file",
+        input: "simple-scaffold -gh chenasraf/simple-scaffold --key component",
+      })
+      .example({
+        description: "Usage with https git URL (for non-GitHub)",
+        input: "simple-scaffold -c https://example.com/user/template.git#scaffold.cmd.js --key component",
+      })
+      .example({
+        description: "Full syntax with config path and template key (applicable to all above methods)",
+        input: "simple-scaffold -c scaffold.cmd.js:component MyComponent",
+      })
+      .example({
+        description: "Excluded template key, assumes 'default' key",
+        input: "simple-scaffold -c scaffold.cmd.js MyComponent",
+      })
+      .example({
+        description: "Shortest syntax for GitHub, assumes file 'scaffold.cmd.js' and template key 'default'",
+        input: "simple-scaffold -gh chenasraf/simple-scaffold MyComponent",
+      })
       .help({
         binName: "simple-scaffold",
         useGlobalColumns: true,
         usageExample: "[options]",
+        printWidth: 100,
         header: [`Create structured files based on templates.`].join("\n"),
         footer: [
           `Version:  ${pkg.version}`,
           `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
           ``,
-          `Documentation: ${chalk.underline`https://casraf.dev/simple-scaffold`}`,
+          `Documentation: ${chalk.underline`https://chenasraf.github.io/simple-scaffold`}`,
           `NPM: ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
           `GitHub: ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
         ].join("\n"),

@@ -1,8 +1,8 @@
 {
   "name": "simple-scaffold",
-  "version": "1.5.0",
-  "description": "A simple command to generate any file structure, from single components to entire app boilerplates.",
-  "homepage": "https://casraf.dev/simple-scaffold",
+  "version": "1.6.0",
+  "description": "Generate any file structure - from single components to entire app boilerplates, with a single command.",
+  "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
   "author": "Chen Asraf <inbox@casraf.com>",
   "license": "MIT",
@@ -39,9 +39,7 @@
     "glob": "^9.2.1",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
-    "massarg": "^1.0.7-pre.1",
-    "semantic-release-conventional-commits": "^3.0.0",
-    "util.promisify": "^1.1.1"
+    "massarg": "^1.0.7-pre.1"
   },
   "devDependencies": {
     "@knodes/typedoc-plugin-pages": "^0.23.4",
@@ -59,6 +57,7 @@
     "mock-fs": "^5.2.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^21.0.1",
+    "semantic-release-conventional-commits": "^3.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.6",
