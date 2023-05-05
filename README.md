@@ -40,10 +40,12 @@ The fastest way to get started is to use `npx` to immediately start a scaffold p
 Prepare any templates you want to use - for example, in the directory `templates/component`; and use
 that in the CLI args. Here is a simple example file:
 
+Simple Scaffold will maintain any file and directory structure you try to generate.
+
 `templates/component/{{ pascalName name }}.tsx`
 
 ```tsx
-// Created: {{ now | 'yyyy-MM-dd' }}
+// Created: {{ now 'yyyy-MM-dd' }}
 import React from 'react'
 
 export default {{pascalCase name}}: React.FC = (props) => {
