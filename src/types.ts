@@ -57,7 +57,7 @@ export interface ScaffoldConfig {
    * Enable to override output files, even if they already exist.
    *
    * You may supply a function to this option, which can take the arguments `(fullPath, baseDir, baseName)` and returns
-   * a string, to return a dynamic path for each file.
+   * a boolean for each file.
    *
    * May also be a {@link FileResponseHandler} which returns a boolean value per file.
    *

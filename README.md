@@ -59,7 +59,7 @@ To generate the template output, run:
 
 ```shell
 # generate single component
-npx simple-scaffold@latest \
+$ npx simple-scaffold@latest \
   -t templates/component -o src/components PageWrapper
 ```
 
@@ -76,27 +76,73 @@ export default PageWrapper: React.FC = (props) => {
 }
 ```
 
-### Remote Templates
+### Configuration Files
+
+You can also use a config file to more easily maintain all your scaffold definitions.
+
+`scaffold.config.js`
+
+```js
+module.exports = {
+  // use "default" to avoid needing to specify key
+  // in this case the key is "component"
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    data: {
+      // ...
+    },
+  },
+}
+```
+
+Then call your scaffold like this:
+
+```shell
+$ npx simple-scaffold@latest -c scaffold.config.js PageWrapper
+```
+
+This will allow you to avoid needing to remember which configs are needed or to store them in a
+1-liner in `packqge.json` which can get pretty long and messy, which is harder to maintain.
+
+Also, this allows you to define more complex scaffolds with logic without having to use the Node.js
+API directly. (Of course you always have the option to still do so if you wish)
+
+See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html) and
+[Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html).
+
+### Remote Configurations
 
 Another quick way to start is to re-use someone else's (or your own) work using a template
 repository.
 
+A remote config can be loaded in one of these ways:
+
+- If it's on GitHub, you can use `-gh user/repository_name`
+- If it's on another git server (such as GitLab), you can use
+  `-c https://example.com/user/repository_name.git`
+
+Configurations can hold multiple scaffold groups. Each group can be accessed using its key by
+supplying the `--key` or `-k` argument, or by appending a hash and then the key name, like so:
+`-gh user/repository_name#key_name` - this also works for the `-c` flag.
+
 Here is an example for loading the example component templates in this very repository:
 
 ```shell
-npx simple-scaffold@latest \
-  -gh chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component \
+$ npx simple-scaffold@latest \
+  -gh chenasraf/simple-scaffold#scaffold.config.js:component \
   PageWrapper
 
 # equivalent to:
-npx simple-scaffold@latest \
-  -c https://github.com/chenasraf/simple-scaffold.git#examples/test-input/scaffold.config.js:component \
+$ npx simple-scaffold@latest \
+  -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js:component \
   PageWrapper
 ```
 
 When template name (`:component`) is omitted, `default` is used.
 
-See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html)
+See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html) and
+[Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html).
 
 ## Documentation
 
