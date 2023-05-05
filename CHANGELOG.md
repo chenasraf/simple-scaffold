@@ -1,3 +1,17 @@
+# Change Log
+
+## [1.6.0](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0...v1.6.0) (2023-05-05)
+
+
+### Features
+
+* node.js function for remote configs ([ce5adbe](https://github.com/chenasraf/simple-scaffold/commit/ce5adbe0f898a86db6046d7f66d83dfcaa519ad2))
+
+
+### Bug Fixes
+
+* move dependency to dev dependency ([d916d88](https://github.com/chenasraf/simple-scaffold/commit/d916d88384054e6c6b40e6299073f1d1acb4d29d))
+
 ## Change Log
 
 # [1.5.0](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0-develop.1...v1.5.0) (2023-05-04)
