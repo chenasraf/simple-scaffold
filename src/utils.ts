@@ -228,14 +228,14 @@ export function getBasePath(relPath: string): string {
     .replace(process.cwd(), "")
 }
 
-export async function getFileList(config: ScaffoldConfig, template: string): Promise<string[]> {
+export async function getFileList(_config: ScaffoldConfig, template: string): Promise<string[]> {
   return (
     await glob(template, {
       dot: true,
       nodir: true,
       // debug: config.verbose === LogLevel.Debug,
     })
-  ).map((f) => f.replace(/\//g, path.sep))
+  ).map(path.normalize)
 }
 
 export interface GlobInfo {
