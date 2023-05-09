@@ -16,6 +16,7 @@ import {
   getBasePath,
   copyFileTransformed,
   getTemplateFileInfo,
+  handleTemplateFile,
 } from "./file"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { OptionsBase } from "massarg/types"
@@ -135,42 +136,6 @@ Scaffold.fromConfig = async function (
   const _overrides = resolve(overrides, _cmdConfig)
   const _config = await parseConfig(_cmdConfig)
   return Scaffold({ ..._config, ..._overrides })
-}
-
-async function handleTemplateFile(
-  config: ScaffoldConfig,
-  { templatePath, basePath }: { templatePath: string; basePath: string },
-): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(config, {
-        templatePath,
-        basePath,
-      })
-      const overwrite = getOptionValueForFile(config, inputPath, config.overwrite ?? false)
-
-      log(
-        config,
-        LogLevel.Debug,
-        `\nParsing ${templatePath}`,
-        `\nBase path: ${basePath}`,
-        `\nFull input path: ${inputPath}`,
-        `\nOutput Path Opt: ${outputPathOpt}`,
-        `\nFull output dir: ${outputDir}`,
-        `\nFull output path: ${outputPath}`,
-        `\n`,
-      )
-
-      await createDirIfNotExists(path.dirname(outputPath), config)
-
-      log(config, LogLevel.Info, `Writing to ${outputPath}`)
-      await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
-      resolve()
-    } catch (e: any) {
-      handleErr(e)
-      reject(e)
-    }
-  })
 }
 
 export default Scaffold
