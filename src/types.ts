@@ -1,5 +1,4 @@
 import { HelperDelegate } from "handlebars/runtime"
-import { LogConfig } from "./logger"
 
 /**
  * The config object for defining a scaffolding group.

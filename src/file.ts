@@ -7,6 +7,7 @@ import { glob, hasMagic } from "glob"
 import { log } from "./logger"
 import { getOptionValueForFile } from "./config"
 import { handlebarsParse } from "./parser"
+import { handleErr } from "./utils"
 
 const { readFile, writeFile } = fsPromises
 
