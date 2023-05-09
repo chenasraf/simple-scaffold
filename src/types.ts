@@ -356,4 +356,18 @@ export interface ScaffoldCmdConfig {
  *
  * @see {@link ScaffoldConfig}
  */
-export type ScaffoldConfigFile = Record<string, ScaffoldConfig>
+export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
+
+/** The scaffold config file is either:
+ * - A {@link ScaffoldConfigMap} object
+ * - A function that returns a {@link ScaffoldConfigMap} object
+ * - A promise that resolves to a {@link ScaffoldConfigMap} object
+ * - A function that returns a promise that resolves to a {@link ScaffoldConfigMap} object
+ */
+export type ScaffoldConfigFile = AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>
+
+/** @internal */
+export type Resolver<T, R = T> = R | ((value: T) => R)
+
+/** @internal */
+export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>

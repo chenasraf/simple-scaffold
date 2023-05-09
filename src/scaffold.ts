@@ -5,28 +5,23 @@
  * See [readme](README.md)
  */
 import path from "path"
-
+import { handleErr, resolve } from "./utils"
 import {
   createDirIfNotExists,
-  getOptionValueForFile,
-  handleErr,
-  log,
-  pascalCase,
   isDir,
   removeGlob,
   makeRelativePath,
-  registerHelpers,
   getTemplateGlobInfo,
   getFileList,
   getBasePath,
   copyFileTransformed,
   getTemplateFileInfo,
-  logInitStep,
-  logInputFile,
-  parseConfig,
-} from "./utils"
-import { LogLevel, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
+} from "./file"
+import { LogLevel, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { OptionsBase } from "massarg/types"
+import { pascalCase, registerHelpers } from "./parser"
+import { log, logInitStep, logInputFile } from "./logger"
+import { getOptionValueForFile, parseConfig } from "./config"
 
 /**
  * Create a scaffold using given `options`.
@@ -119,7 +114,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 Scaffold.fromConfig = async function (
   pathOrUrl: string,
   config: Pick<ScaffoldCmdConfig, "name" | "key">,
-  overrides?: Partial<Omit<ScaffoldConfig, "name">>,
+  overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
   const _cmdConfig: ScaffoldCmdConfig & OptionsBase = {
     dryRun: false,
@@ -134,8 +129,9 @@ Scaffold.fromConfig = async function (
     config: pathOrUrl,
     ...config,
   }
+  const _overrides = resolve(overrides, _cmdConfig)
   const _config = await parseConfig(_cmdConfig)
-  return Scaffold({ ..._config, ...overrides })
+  return Scaffold({ ..._config, ..._overrides })
 }
 
 async function handleTemplateFile(
