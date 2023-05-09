@@ -1,8 +1,9 @@
-import { dateHelper, handlebarsParse, nowHelper, parseAppendData } from "../src/utils"
 import { ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
 import path from "path"
 import * as dateFns from "date-fns"
 import { OptionsBase } from "massarg/types"
+import { dateHelper, handlebarsParse, nowHelper } from "../src/parser"
+import { parseAppendData } from "../src/config"
 
 const blankConf: ScaffoldConfig = {
   verbose: 0,

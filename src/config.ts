@@ -1,8 +1,10 @@
 import path from "path"
 import {
   AsyncResolver,
+  ConfigLoadConfig,
   FileResponse,
   FileResponseHandler,
+  LogConfig,
   LogLevel,
   Resolver,
   ScaffoldCmdConfig,
@@ -99,9 +101,7 @@ function wrapNoopResolver<T, R = T>(value: Resolver<T, R>): Resolver<T, R> {
 }
 
 /** @internal */
-export async function getConfig(
-  config: Pick<ScaffoldCmdConfig, "quiet" | "verbose" | "config">,
-): Promise<ScaffoldConfigFile> {
+export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfigFile> {
   const { config: configFile, ...logConfig } = config as Required<typeof config>
   const url = new URL(configFile)
 
@@ -127,7 +127,7 @@ export async function getConfig(
 
 async function getGitConfig(
   url: URL,
-  logConfig: Pick<ScaffoldCmdConfig, "verbose" | "quiet">,
+  logConfig: LogConfig,
 ): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
   const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
 

@@ -1,4 +1,5 @@
 import { HelperDelegate } from "handlebars/runtime"
+import { LogConfig } from "./logger"
 
 /**
  * The config object for defining a scaffolding group.
@@ -371,3 +372,12 @@ export type Resolver<T, R = T> = R | ((value: T) => R)
 
 /** @internal */
 export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>
+
+/** @internal */
+export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
+
+/** @internal */
+export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
+
+/** @internal */
+export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">

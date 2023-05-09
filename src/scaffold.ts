@@ -17,7 +17,7 @@ import {
   copyFileTransformed,
   getTemplateFileInfo,
 } from "./file"
-import { LogLevel, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
+import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { OptionsBase } from "massarg/types"
 import { pascalCase, registerHelpers } from "./parser"
 import { log, logInitStep, logInputFile } from "./logger"
@@ -112,8 +112,11 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
 Scaffold.fromConfig = async function (
+  /** The path or URL to the config file */
   pathOrUrl: string,
-  config: Pick<ScaffoldCmdConfig, "name" | "key">,
+  /** Information needed before loading the config */
+  config: MinimalConfig,
+  /** Any overrides to the loaded config */
   overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
   const _cmdConfig: ScaffoldCmdConfig & OptionsBase = {

@@ -1,8 +1,5 @@
-import { LogLevel, ScaffoldConfig } from "./types"
+import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import chalk from "chalk"
-
-/** @internal */
-export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
 
 export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
   if (config.quiet || config.verbose === LogLevel.None || level < (config.verbose ?? LogLevel.Info)) {
