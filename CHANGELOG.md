@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.7.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0...v1.7.0-develop.1) (2023-05-09)
+
+
+### Features
+
+* function config file ([02a8ba1](https://github.com/chenasraf/simple-scaffold/commit/02a8ba16cd6ee31806532845cb5ddbe0f5abf7de))
+
+
+### Bug Fixes
+
+* use path.normalize ([565090a](https://github.com/chenasraf/simple-scaffold/commit/565090a951e13dd222f2f802df717e7cb6ca0a73))
+
 ## [1.6.0](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0...v1.6.0) (2023-05-05)
 
 
