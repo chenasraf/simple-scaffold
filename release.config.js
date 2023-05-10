@@ -1,11 +1,12 @@
 const releaseRules = [
   { type: "feat", section: "Features", release: "minor" },
-  { type: "docs", section: "Build", release: false },
+  { type: "revert", section: "Features", release: "minor" },
   { type: "fix", section: "Bug Fixes", release: "patch" },
+  { type: "chore", section: "Misc", release: "patch" },
   { type: "refactor", section: "Misc", release: "patch" },
   { type: "perf", section: "Misc", release: "patch" },
   { type: "build", section: "Build", release: "patch" },
-  { type: "chore", section: "Misc", release: "patch" },
+  { type: "docs", section: "Build", release: false },
   { type: "test", section: "Tests", release: false },
 ]
 
@@ -22,9 +23,9 @@ module.exports = {
   ],
   analyzeCommits: {
     path: "semantic-release-conventional-commits",
-    majorTypes: ["major", "breaking"],
-    minorTypes: ["minor", "feat", "feature"],
-    patchTypes: ["patch", "fix", "bugfix", "refactor", "perf", "revert"],
+    majorTypes: releaseRules.filter((x) => x.release === "major").map((x) => x.type),
+    minorTypes: releaseRules.filter((x) => x.release === "minor").map((x) => x.type),
+    patchTypes: releaseRules.filter((x) => x.release === "patch").map((x) => x.type),
   },
   plugins: [
     [
