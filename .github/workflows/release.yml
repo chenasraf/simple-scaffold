@@ -30,7 +30,7 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - run: pnpm build
-      - run: cd ./dist && pnpm pack --filename=../package.tgz
+      - run: cd ./dist && pnpm pack --pack-destination=../
       - run: pnpm semantic-release
         if: "!contains(github.event.head_commit.message, '[skip publish]')"
         env:
