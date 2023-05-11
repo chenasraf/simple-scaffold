@@ -8,8 +8,10 @@ import fs from "fs/promises"
 import { parseAppendData, parseConfig } from "./config"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
-  const pkg = JSON.parse((await fs.readFile(path.join(__dirname, "package.json"))).toString())
-  const isConfig = args.includes("--config") || args.includes("-c") || args.includes("--github") || args.includes("-gh")
+  const pkgFile = await fs.readFile(path.join(__dirname, "package.json"))
+  const pkg = JSON.parse(pkgFile.toString())
+  const isConfigProvided =
+    args.includes("--config") || args.includes("-c") || args.includes("--github") || args.includes("-gh")
 
   return (
     massarg<ScaffoldCmdConfig>()
@@ -47,7 +49,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "output",
         aliases: ["o"],
         description: `Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path. ${chalk.reset`${chalk.white`(default: current dir)`}`}`,
-        required: !isConfig,
+        required: !isConfigProvided,
       })
       .option({
         name: "templates",
@@ -56,7 +58,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         description:
           "Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path, " +
           "or a glob pattern for multiple file matching easily.",
-        required: !isConfig,
+        required: !isConfigProvided,
       })
       .option({
         name: "overwrite",

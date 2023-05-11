@@ -30,19 +30,10 @@ export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
 
 export function logInputFile(
   config: ScaffoldConfig,
-  {
-    origTemplate,
-    relPath,
-    template,
-    inputFilePath,
-    nonGlobTemplate,
-    basePath,
-    isDirOrGlob,
-    isGlob,
-  }: {
-    origTemplate: string
-    relPath: string
-    template: string
+  data: {
+    originalTemplate: string
+    relativePath: string
+    parsedTemplate: string
     inputFilePath: string
     nonGlobTemplate: string
     basePath: string
@@ -50,20 +41,7 @@ export function logInputFile(
     isGlob: boolean
   },
 ): void {
-  log(
-    config,
-    LogLevel.Debug,
-    `\nprocess.cwd(): ${process.cwd()}`,
-    `\norigTemplate: ${origTemplate}`,
-    `\nrelPath: ${relPath}`,
-    `\ntemplate: ${template}`,
-    `\ninputFilePath: ${inputFilePath}`,
-    `\nnonGlobTemplate: ${nonGlobTemplate}`,
-    `\nbasePath: ${basePath}`,
-    `\nisDirOrGlob: ${isDirOrGlob}`,
-    `\nisGlob: ${isGlob}`,
-    `\n`,
-  )
+  log(config, LogLevel.Debug, data)
 }
 
 export function logInitStep(config: ScaffoldConfig): void {

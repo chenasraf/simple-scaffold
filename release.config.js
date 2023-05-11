@@ -7,7 +7,7 @@ const releaseRules = [
   { type: "perf", section: "Misc", release: "patch" },
   { type: "build", section: "Build", release: "patch" },
   { type: "docs", section: "Build", release: false },
-  { type: "test", section: "Tests", release: false },
+  { type: "test", section: "Tests", release: "patch" },
 ]
 
 /** @type {import('semantic-release').Options} */

@@ -7,22 +7,19 @@
 import path from "path"
 import { handleErr, resolve } from "./utils"
 import {
-  createDirIfNotExists,
   isDir,
   removeGlob,
   makeRelativePath,
   getTemplateGlobInfo,
   getFileList,
   getBasePath,
-  copyFileTransformed,
-  getTemplateFileInfo,
   handleTemplateFile,
 } from "./file"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { OptionsBase } from "massarg/types"
 import { pascalCase, registerHelpers } from "./parser"
 import { log, logInitStep, logInputFile } from "./logger"
-import { getOptionValueForFile, parseConfig } from "./config"
+import { parseConfig } from "./config"
 
 /**
  * Create a scaffold using given `options`.
@@ -77,9 +74,9 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
           const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(nonGlobTemplate, "")))
           const basePath = getBasePath(relPath)
           logInputFile(config, {
-            origTemplate,
-            relPath,
-            template,
+            originalTemplate: origTemplate,
+            relativePath: relPath,
+            parsedTemplate: template,
             inputFilePath,
             nonGlobTemplate,
             basePath,
