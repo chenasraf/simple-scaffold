@@ -8,6 +8,7 @@
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
+  "packageManager": "pnpm@8.5.0",
   "keywords": [
     "javascript",
     "cli",
