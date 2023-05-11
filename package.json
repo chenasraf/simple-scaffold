@@ -21,17 +21,17 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
+    "build": "pnpm clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
     "dev": "tsc --watch",
     "start": "node dist/scaffold.js",
     "test": "jest",
     "cmd": "node --trace-warnings dist/cmd.js",
-    "build-test": "yarn build && yarn test",
-    "build-cmd": "yarn build && yarn cmd",
+    "build-test": "pnpm build && pnpm test",
+    "build-cmd": "pnpm build && pnpm cmd",
     "build-docs": "typedoc",
-    "watch-docs": "yarn typedoc --watch",
-    "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert",
-    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0"
+    "watch-docs": "pnpm typedoc --watch",
+    "audit-fix": "pnpm audit --fix",
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0; echo \"# Change Log\n\n$(cat CHANGELOG.md)\" > CHANGELOG.md"
   },
   "dependencies": {
     "chalk": "^4.1.2",
