@@ -2,16 +2,18 @@ name: Pull Requests
 
 on:
   pull_request:
-    branches: [master, develop]
+    branches: [ master, develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2
         with:
           node-version: "18.x"
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn test
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - run: pnpm build
+      - run: pnpm test
