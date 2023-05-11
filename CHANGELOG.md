@@ -1,5 +1,7 @@
 # Change Log
 
+## [1.7.0-develop.3](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.2...v1.7.0-develop.3) (2023-05-11)
+
 ## [1.7.0-develop.2](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.1...v1.7.0-develop.2) (2023-05-10)
 
 ## [1.7.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0...v1.7.0-develop.1) (2023-05-09)
