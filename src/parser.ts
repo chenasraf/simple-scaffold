@@ -39,20 +39,20 @@ function _dateHelper(
   return dateFns.format(date, formatString)
 }
 
-function nowHelper(formatString: string): string
-function nowHelper(formatString: string, durationDifference: number, durationType: keyof Duration): string
-function nowHelper(formatString: string, durationDifference?: number, durationType?: keyof Duration): string {
+export function nowHelper(formatString: string): string
+export function nowHelper(formatString: string, durationDifference: number, durationType: keyof Duration): string
+export function nowHelper(formatString: string, durationDifference?: number, durationType?: keyof Duration): string {
   return _dateHelper(new Date(), formatString, durationDifference!, durationType!)
 }
 
-function dateHelper(date: string, formatString: string): string
-function dateHelper(
+export function dateHelper(date: string, formatString: string): string
+export function dateHelper(
   date: string,
   formatString: string,
   durationDifference: number,
   durationType: keyof Duration,
 ): string
-function dateHelper(
+export function dateHelper(
   date: string,
   formatString: string,
   durationDifference?: number,

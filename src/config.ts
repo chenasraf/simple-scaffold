@@ -54,22 +54,11 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
   let c: ScaffoldConfig = config
   if (config.github) {
     log(config, LogLevel.Info, `Loading config from github ${config.github}`)
-    const gitUrl = new URL(`https://github.com/${config.github}`)
-    if (!gitUrl.pathname.endsWith(".git")) {
-      gitUrl.pathname += ".git"
-    }
-    config.config = gitUrl.toString()
+    config.config = githubPartToUrl(config.github)
   }
 
   if (config.config) {
-    const isUrl = config.config.includes("://")
-
-    const hasColonToken = (!isUrl && config.config.includes(":")) || (isUrl && count(config.config, ":") > 1)
-    const colonIndex = config.config.lastIndexOf(":")
-    const [configFile, templateKey = "default"] = hasColonToken
-      ? [config.config.substring(0, colonIndex), config.config.substring(colonIndex + 1)]
-      : [config.config, undefined]
-    const key = (config.key ?? templateKey) || "default"
+    const { configFile, key } = parseConfigSelection(config.config, config.key)
     log(config, LogLevel.Info, `Loading config from ${configFile} with key ${key}`)
     const configPromise = await getConfig({ config: configFile, quiet: config.quiet, verbose: config.verbose })
     const configImport = await resolve(configPromise, config)
@@ -90,6 +79,26 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
   c.data = { ...c.data, ...config.appendData }
   delete config.appendData
   return c
+}
+
+export function parseConfigSelection(config: string, key?: string): { configFile: string; key: string } {
+  const isUrl = config.includes("://")
+
+  const hasColonToken = (!isUrl && config.includes(":")) || (isUrl && count(config, ":") > 1)
+  const colonIndex = config.lastIndexOf(":")
+  const [configFile, templateKey = "default"] = hasColonToken
+    ? [config.substring(0, colonIndex), config.substring(colonIndex + 1)]
+    : [config, undefined]
+  const _key = (key ?? templateKey) || "default"
+  return { configFile, key: _key }
+}
+
+export function githubPartToUrl(part: string): string {
+  const gitUrl = new URL(`https://github.com/${part}`)
+  if (!gitUrl.pathname.endsWith(".git")) {
+    gitUrl.pathname += ".git"
+  }
+  return gitUrl.toString()
 }
 
 function wrapNoopResolver<T, R = T>(value: Resolver<T, R>): Resolver<T, R> {
@@ -114,11 +123,11 @@ export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfi
   const isHttp = url.protocol === "http:" || url.protocol === "https:"
   const isGit = url.protocol === "git:" || (isHttp && url.pathname.endsWith(".git"))
 
-  if (isHttp || isGit) {
-    if (isGit) {
-      return getGitConfig(url, logConfig)
-    }
+  if (isGit) {
+    return getGitConfig(url, logConfig)
+  }
 
+  if (!isHttp) {
     throw new Error(`Unsupported protocol ${url.protocol}`)
   }
 
