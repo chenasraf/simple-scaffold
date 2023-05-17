@@ -1,5 +1,25 @@
 # Change Log
 
+## [1.7.0-develop.5](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.4...v1.7.0-develop.5) (2023-05-12)
+
+## [1.7.0-develop.4](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.3...v1.7.0-develop.4) (2023-05-11)
+
+## [1.7.0-develop.3](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.2...v1.7.0-develop.3) (2023-05-11)
+
+## [1.7.0-develop.2](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.1...v1.7.0-develop.2) (2023-05-10)
+
+## [1.7.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0...v1.7.0-develop.1) (2023-05-09)
+
+
+### Features
+
+* function config file ([02a8ba1](https://github.com/chenasraf/simple-scaffold/commit/02a8ba16cd6ee31806532845cb5ddbe0f5abf7de))
+
+
+### Bug Fixes
+
+* use path.normalize ([565090a](https://github.com/chenasraf/simple-scaffold/commit/565090a951e13dd222f2f802df717e7cb6ca0a73))
+
 ## [1.6.0](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0...v1.6.0) (2023-05-05)
 
 

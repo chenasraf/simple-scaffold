@@ -5,28 +5,21 @@
  * See [readme](README.md)
  */
 import path from "path"
-
+import { handleErr, resolve } from "./utils"
 import {
-  createDirIfNotExists,
-  getOptionValueForFile,
-  handleErr,
-  log,
-  pascalCase,
   isDir,
   removeGlob,
   makeRelativePath,
-  registerHelpers,
   getTemplateGlobInfo,
   getFileList,
   getBasePath,
-  copyFileTransformed,
-  getTemplateFileInfo,
-  logInitStep,
-  logInputFile,
-  parseConfig,
-} from "./utils"
-import { LogLevel, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
+  handleTemplateFile,
+} from "./file"
+import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { OptionsBase } from "massarg/types"
+import { defaultHelpers, registerHelpers } from "./parser"
+import { log, logInitStep, logInputFile } from "./logger"
+import { parseConfig } from "./config"
 
 /**
  * Create a scaffold using given `options`.
@@ -65,7 +58,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 
   registerHelpers(config)
   try {
-    config.data = { name: config.name, Name: pascalCase(config.name), ...config.data }
+    config.data = { name: config.name, Name: defaultHelpers.pascalCase(config.name), ...config.data }
     logInitStep(config)
     for (let _template of config.templates) {
       try {
@@ -81,9 +74,9 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
           const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(nonGlobTemplate, "")))
           const basePath = getBasePath(relPath)
           logInputFile(config, {
-            origTemplate,
-            relPath,
-            template,
+            originalTemplate: origTemplate,
+            relativePath: relPath,
+            parsedTemplate: template,
             inputFilePath,
             nonGlobTemplate,
             basePath,
@@ -116,10 +109,13 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function (
+Scaffold.fromConfig = async function(
+  /** The path or URL to the config file */
   pathOrUrl: string,
-  config: Pick<ScaffoldCmdConfig, "name" | "key">,
-  overrides?: Partial<Omit<ScaffoldConfig, "name">>,
+  /** Information needed before loading the config */
+  config: MinimalConfig,
+  /** Any overrides to the loaded config */
+  overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
   const _cmdConfig: ScaffoldCmdConfig & OptionsBase = {
     dryRun: false,
@@ -134,44 +130,9 @@ Scaffold.fromConfig = async function (
     config: pathOrUrl,
     ...config,
   }
+  const _overrides = resolve(overrides, _cmdConfig)
   const _config = await parseConfig(_cmdConfig)
-  return Scaffold({ ..._config, ...overrides })
-}
-
-async function handleTemplateFile(
-  config: ScaffoldConfig,
-  { templatePath, basePath }: { templatePath: string; basePath: string },
-): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(config, {
-        templatePath,
-        basePath,
-      })
-      const overwrite = getOptionValueForFile(config, inputPath, config.overwrite ?? false)
-
-      log(
-        config,
-        LogLevel.Debug,
-        `\nParsing ${templatePath}`,
-        `\nBase path: ${basePath}`,
-        `\nFull input path: ${inputPath}`,
-        `\nOutput Path Opt: ${outputPathOpt}`,
-        `\nFull output dir: ${outputDir}`,
-        `\nFull output path: ${outputPath}`,
-        `\n`,
-      )
-
-      await createDirIfNotExists(path.dirname(outputPath), config)
-
-      log(config, LogLevel.Info, `Writing to ${outputPath}`)
-      await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
-      resolve()
-    } catch (e: any) {
-      handleErr(e)
-      reject(e)
-    }
-  })
+  return Scaffold({ ..._config, ..._overrides })
 }
 
 export default Scaffold

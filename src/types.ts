@@ -57,7 +57,7 @@ export interface ScaffoldConfig {
    * Enable to override output files, even if they already exist.
    *
    * You may supply a function to this option, which can take the arguments `(fullPath, baseDir, baseName)` and returns
-   * a string, to return a dynamic path for each file.
+   * a boolean for each file.
    *
    * May also be a {@link FileResponseHandler} which returns a boolean value per file.
    *
@@ -356,4 +356,27 @@ export interface ScaffoldCmdConfig {
  *
  * @see {@link ScaffoldConfig}
  */
-export type ScaffoldConfigFile = Record<string, ScaffoldConfig>
+export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
+
+/** The scaffold config file is either:
+ * - A {@link ScaffoldConfigMap} object
+ * - A function that returns a {@link ScaffoldConfigMap} object
+ * - A promise that resolves to a {@link ScaffoldConfigMap} object
+ * - A function that returns a promise that resolves to a {@link ScaffoldConfigMap} object
+ */
+export type ScaffoldConfigFile = AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>
+
+/** @internal */
+export type Resolver<T, R = T> = R | ((value: T) => R)
+
+/** @internal */
+export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>
+
+/** @internal */
+export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
+
+/** @internal */
+export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
+
+/** @internal */
+export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">

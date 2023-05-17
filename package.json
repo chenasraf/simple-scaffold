@@ -1,13 +1,14 @@
 {
   "name": "simple-scaffold",
-  "version": "1.6.0",
+  "version": "1.7.0-develop.5",
   "description": "Generate any file structure - from single components to entire app boilerplates, with a single command.",
   "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
-  "author": "Chen Asraf <inbox@casraf.com>",
+  "author": "Chen Asraf <contact@casraf.dev>",
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
+  "packageManager": "pnpm@8.5.0",
   "keywords": [
     "javascript",
     "cli",
@@ -21,24 +22,23 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
+    "build": "pnpm clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
     "dev": "tsc --watch",
     "start": "node dist/scaffold.js",
     "test": "jest",
     "cmd": "node --trace-warnings dist/cmd.js",
-    "build-test": "yarn build && yarn test",
-    "build-cmd": "yarn build && yarn cmd",
+    "build-test": "pnpm build && pnpm test",
+    "build-cmd": "pnpm build && pnpm cmd",
     "build-docs": "typedoc",
-    "watch-docs": "yarn typedoc --watch",
-    "audit-fix": "npm_config_yes=true npx yarn-audit-fix --flow=convert",
-    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0"
+    "watch-docs": "pnpm typedoc --watch",
+    "audit-fix": "pnpm audit --fix",
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0; echo \"# Change Log\n\n$(cat CHANGELOG.md)\" > CHANGELOG.md"
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "date-fns": "^2.29.3",
-    "glob": "^9.2.1",
+    "date-fns": "^2.30.0",
+    "glob": "^10.2.3",
     "handlebars": "^4.7.7",
-    "lodash": "^4.17.21",
     "massarg": "^1.0.7-pre.1"
   },
   "devDependencies": {
@@ -47,7 +47,6 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/jest": "^29.5.1",
-    "@types/lodash": "^4.14.171",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.16.0",
     "conventional-changelog": "^3.1.25",
