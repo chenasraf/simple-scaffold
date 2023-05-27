@@ -66,7 +66,7 @@ $ npx simple-scaffold@latest \
 This will immediately create the following file: `src/components/PageWrapper.tsx`
 
 ```tsx
-// Created: 2077/01/01
+// Created: 2077-01-01
 import React from 'react'
 
 export default PageWrapper: React.FC = (props) => {
