@@ -376,7 +376,7 @@ export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>
 export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
 
 /** @internal */
-export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
+export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config"> & { isRemote: boolean }
 
 /** @internal */
 export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">

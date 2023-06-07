@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "1.7.0",
+  "version": "1.7.1-develop.1",
   "description": "Generate any file structure - from single components to entire app boilerplates, with a single command.",
   "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
@@ -49,6 +49,7 @@
     "@types/jest": "^29.5.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.16.0",
+    "@types/semantic-release": "^20.0.1",
     "conventional-changelog": "^3.1.25",
     "conventional-changelog-cli": "^2.2.2",
     "conventional-changelog-conventionalcommits": "^5.0.0",

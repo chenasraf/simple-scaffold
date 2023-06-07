@@ -12,15 +12,7 @@ const releaseRules = [
 
 /** @type {import('semantic-release').Options} */
 module.exports = {
-  branches: [
-    "+([0-9])?(.{+([0-9]),x}).x",
-    "master",
-    "next",
-    "next-major",
-    { name: "develop", prerelease: true },
-    { name: "beta", prerelease: true },
-    { name: "alpha", prerelease: true },
-  ],
+  branches: ["+([0-9])?(.{+([0-9]),x}).x", "master", "next", "next-major", { name: "pre", prerelease: true }],
   analyzeCommits: {
     path: "semantic-release-conventional-commits",
     majorTypes: releaseRules.filter((x) => x.release === "major").map((x) => x.type),
