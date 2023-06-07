@@ -12,7 +12,7 @@
     "sourceMap": true,
     "removeComments": false,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/index.ts", "src/cmd.ts"],
