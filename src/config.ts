@@ -112,7 +112,7 @@ function wrapNoopResolver<T, R = T>(value: Resolver<T, R>): Resolver<T, R> {
 /** @internal */
 export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfigFile> {
   const { config: configFile, ...logConfig } = config as Required<typeof config>
-  const url = new URL(configFile)
+  const url = configFile.includes("://") ? new URL(configFile) : new URL(`file://${configFile}`)
 
   if (url.protocol === "file:") {
     log(logConfig, LogLevel.Info, `Loading config from file ${configFile}`)
