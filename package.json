@@ -49,6 +49,7 @@
     "@types/jest": "^29.5.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.16.0",
+    "@types/semantic-release": "^20.0.1",
     "conventional-changelog": "^3.1.25",
     "conventional-changelog-cli": "^2.2.2",
     "conventional-changelog-conventionalcommits": "^5.0.0",

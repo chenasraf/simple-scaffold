@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
@@ -9,7 +10,10 @@
     "outDir": "dist",
     "strict": true,
     "sourceMap": true,
-    "removeComments": false
+    "removeComments": false,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/index.ts", "src/cmd.ts"],
   "exclude": ["tests/*"]

@@ -58,9 +58,14 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
   }
 
   if (config.config) {
-    const { configFile, key } = parseConfigSelection(config.config, config.key)
+    const { configFile, key, isRemote } = parseConfigSelection(config.config, config.key)
     log(config, LogLevel.Info, `Loading config from ${configFile} with key ${key}`)
-    const configPromise = await getConfig({ config: configFile, quiet: config.quiet, verbose: config.verbose })
+    const configPromise = await getConfig({
+      config: configFile,
+      isRemote,
+      quiet: config.quiet,
+      verbose: config.verbose,
+    })
     const configImport = await resolve(configPromise, config)
 
     if (!configImport[key]) {
@@ -81,7 +86,10 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
   return c
 }
 
-export function parseConfigSelection(config: string, key?: string): { configFile: string; key: string } {
+export function parseConfigSelection(
+  config: string,
+  key?: string,
+): { configFile: string; key: string; isRemote: boolean } {
   const isUrl = config.includes("://")
 
   const hasColonToken = (!isUrl && config.includes(":")) || (isUrl && count(config, ":") > 1)
@@ -90,7 +98,7 @@ export function parseConfigSelection(config: string, key?: string): { configFile
     ? [config.substring(0, colonIndex), config.substring(colonIndex + 1)]
     : [config, undefined]
   const _key = (key ?? templateKey) || "default"
-  return { configFile, key: _key }
+  return { configFile, key: _key, isRemote: isUrl }
 }
 
 export function githubPartToUrl(part: string): string {
@@ -111,19 +119,20 @@ function wrapNoopResolver<T, R = T>(value: Resolver<T, R>): Resolver<T, R> {
 
 /** @internal */
 export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfigFile> {
-  const { config: configFile, ...logConfig } = config as Required<typeof config>
-  const url = configFile.includes("://") ? new URL(configFile) : new URL(`file://${configFile}`)
+  const { config: configFile, isRemote, ...logConfig } = config as Required<typeof config>
 
-  if (url.protocol === "file:") {
+  if (!isRemote) {
     log(logConfig, LogLevel.Info, `Loading config from file ${configFile}`)
     const absolutePath = path.resolve(process.cwd(), configFile)
     return wrapNoopResolver(import(absolutePath))
   }
 
+  const url = new URL(configFile)
   const isHttp = url.protocol === "http:" || url.protocol === "https:"
   const isGit = url.protocol === "git:" || (isHttp && url.pathname.endsWith(".git"))
 
   if (isGit) {
+    console.log("Calling getGitConfig", getGitConfig)
     return getGitConfig(url, logConfig)
   }
 
@@ -134,10 +143,11 @@ export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfi
   return wrapNoopResolver(import(path.resolve(process.cwd(), configFile)))
 }
 
-async function getGitConfig(
+export async function getGitConfig(
   url: URL,
   logConfig: LogConfig,
 ): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
+  console.log("Calling real getGitConfig")
   const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
 
   log(logConfig, LogLevel.Info, `Cloning git repo ${repoUrl}`)
@@ -165,9 +175,10 @@ async function getGitConfig(
         )
 
         resolve(wrapNoopResolver(fixedConfig))
-      } else {
-        reject(new Error(`Git clone failed with code ${code}`))
+        return
       }
+
+      reject(new Error(`Git clone failed with code ${code}`))
     })
   })
 }

@@ -1,56 +1,27 @@
 # Change Log
 
-## [1.7.1-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1-develop.1) (2023-06-07)
-
-
-### Bug Fixes
-
-* local config file load error ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
+## [1.7.0](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.5...v1.7.0) (2023-05-17)
 
 ## [1.7.0-develop.7](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.6...v1.7.0-develop.7) (2023-06-07)
 
-
 ### Bug Fixes
 
-* local config file load error ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
-
-## [1.7.0-develop.6](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.5...v1.7.0-develop.6) (2023-05-27)
-
-## [1.7.0-develop.5](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.4...v1.7.0-develop.5) (2023-05-12)
-
-## [1.7.0-develop.4](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.3...v1.7.0-develop.4) (2023-05-11)
-
-## [1.7.0-develop.3](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.2...v1.7.0-develop.3) (2023-05-11)
-
-## [1.7.0-develop.2](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.1...v1.7.0-develop.2) (2023-05-10)
+- local config file load error
+  ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
 
 ## [1.7.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0...v1.7.0-develop.1) (2023-05-09)
 
-
 ### Features
 
-* function config file ([02a8ba1](https://github.com/chenasraf/simple-scaffold/commit/02a8ba16cd6ee31806532845cb5ddbe0f5abf7de))
-
+- function config file
+  ([02a8ba1](https://github.com/chenasraf/simple-scaffold/commit/02a8ba16cd6ee31806532845cb5ddbe0f5abf7de))
 
 ### Bug Fixes
 
-* use path.normalize ([565090a](https://github.com/chenasraf/simple-scaffold/commit/565090a951e13dd222f2f802df717e7cb6ca0a73))
+- use path.normalize
+  ([565090a](https://github.com/chenasraf/simple-scaffold/commit/565090a951e13dd222f2f802df717e7cb6ca0a73))
 
-## [1.6.0](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0...v1.6.0) (2023-05-05)
-
-
-### Features
-
-* node.js function for remote configs ([ce5adbe](https://github.com/chenasraf/simple-scaffold/commit/ce5adbe0f898a86db6046d7f66d83dfcaa519ad2))
-
-
-### Bug Fixes
-
-* move dependency to dev dependency ([d916d88](https://github.com/chenasraf/simple-scaffold/commit/d916d88384054e6c6b40e6299073f1d1acb4d29d))
-
-## Change Log
-
-# [1.5.0](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0-develop.1...v1.5.0) (2023-05-04)
+## [1.6.0](https://github.com/chenasraf/simple-scaffold/compare/v1.6.0-develop.1...v1.6.0) (2023-05-05)
 
 ## [1.6.0-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.5.0...v1.6.0-develop.1) (2023-05-04)
 
