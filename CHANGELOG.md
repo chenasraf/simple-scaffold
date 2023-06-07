@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.1-develop.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1-develop.1) (2023-06-07)
+
+
+### Bug Fixes
+
+* local config file load error ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
+
 ## [1.7.0-develop.7](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.6...v1.7.0-develop.7) (2023-06-07)
 
 
