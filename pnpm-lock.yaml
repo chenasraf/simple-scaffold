@@ -20,7 +20,7 @@ dependencies:
 devDependencies:
   '@knodes/typedoc-plugin-pages':
     specifier: ^0.23.4
-    version: 0.23.4(lunr@2.3.9)(typedoc@0.24.6)
+    version: 0.23.4(lunr@2.3.9)(typedoc@0.24.7)
   '@semantic-release/changelog':
     specifier: ^6.0.3
     version: 6.0.3(semantic-release@21.0.1)
@@ -73,8 +73,8 @@ devDependencies:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@18.16.0)(typescript@5.0.4)
   typedoc:
-    specifier: ^0.24.6
-    version: 0.24.6(typescript@5.0.4)
+    specifier: ^0.24.7
+    version: 0.24.7(typescript@5.0.4)
   typescript:
     specifier: ^5.0.4
     version: 5.0.4
@@ -734,19 +734,19 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@knodes/typedoc-plugin-pages@0.23.4(lunr@2.3.9)(typedoc@0.24.6):
+  /@knodes/typedoc-plugin-pages@0.23.4(lunr@2.3.9)(typedoc@0.24.7):
     resolution: {integrity: sha512-3LMS2TDV/lH/BKfxNEjCEhAwSCxOuQRF742EoYoP63/AQmIM/EZKDwShn1AYu4CtVAHvJpixuKF0VeFDLjgrbQ==}
     peerDependencies:
       lunr: ^2.3.0
       typedoc: ^0.23.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.23.4(typedoc@0.24.6)
+      '@knodes/typedoc-pluginutils': 0.23.4(typedoc@0.24.7)
       lodash: 4.17.21
       lunr: 2.3.9
-      typedoc: 0.24.6(typescript@5.0.4)
+      typedoc: 0.24.7(typescript@5.0.4)
     dev: true
 
-  /@knodes/typedoc-pluginutils@0.23.4(typedoc@0.24.6):
+  /@knodes/typedoc-pluginutils@0.23.4(typedoc@0.24.7):
     resolution: {integrity: sha512-uO7t9XxYW1DMjVFTgmRs2p431+AsmvnX4CrrB/zkauo8mZSLS3CppMKHBVE/Lk1cFO73vgfyJReRK98X/8BzUA==}
     peerDependencies:
       typedoc: ^0.23.0
@@ -755,7 +755,7 @@ packages:
       lodash: 4.17.21
       pkg-up: 3.1.0
       semver: 7.5.0
-      typedoc: 0.24.6(typescript@5.0.4)
+      typedoc: 0.24.7(typescript@5.0.4)
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
@@ -4508,8 +4508,8 @@ packages:
       typescript: 5.0.4
     dev: true
 
-  /typedoc@0.24.6(typescript@5.0.4):
-    resolution: {integrity: sha512-c3y3h45xJv3qYwKDAwU6Cl+26CjT0ZvblHzfHJ+SjQDM4p1mZxtgHky4lhmG0+nNarRht8kADfZlbspJWdZarQ==}
+  /typedoc@0.24.7(typescript@5.0.4):
+    resolution: {integrity: sha512-zzfKDFIZADA+XRIp2rMzLe9xZ6pt12yQOhCr7cD7/PBTjhPmMyMvGrkZ2lPNJitg3Hj1SeiYFNzCsSDrlpxpKw==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:

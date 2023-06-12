@@ -8,7 +8,7 @@
   "license": "MIT",
   "main": "index.js",
   "bin": "cmd.js",
-  "packageManager": "pnpm@8.5.0",
+  "packageManager": "pnpm@8.6.2",
   "keywords": [
     "javascript",
     "cli",
@@ -60,7 +60,7 @@
     "semantic-release-conventional-commits": "^3.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.24.6",
+    "typedoc": "^0.24.7",
     "typescript": "^5.0.4"
   }
 }
