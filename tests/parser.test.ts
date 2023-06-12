@@ -1,5 +1,5 @@
 import { ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
-import path from "path"
+import path from "node:path"
 import * as dateFns from "date-fns"
 import { OptionsBase } from "massarg/types"
 import { dateHelper, defaultHelpers, handlebarsParse, nowHelper } from "../src/parser"

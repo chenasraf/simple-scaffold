@@ -1,15 +1,14 @@
-import path from "path"
-import { F_OK } from "constants"
+import path from "node:path"
+import { F_OK } from "node:constants"
 import { LogLevel, ScaffoldConfig } from "./types"
-import { promises as fsPromises } from "fs"
-const { stat, access, mkdir } = fsPromises
+import fs from "node:fs/promises"
 import { glob, hasMagic } from "glob"
 import { log } from "./logger"
 import { getOptionValueForFile } from "./config"
 import { handlebarsParse } from "./parser"
 import { handleErr } from "./utils"
 
-const { readFile, writeFile } = fsPromises
+const { stat, access, mkdir, readFile, writeFile } = fs
 
 export async function createDirIfNotExists(dir: string, config: ScaffoldConfig): Promise<void> {
   const parentDir = path.dirname(dir)

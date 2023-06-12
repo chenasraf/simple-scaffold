@@ -1,23 +1,18 @@
-import path from "path"
+import path from "node:path"
 import {
-  AsyncResolver,
   ConfigLoadConfig,
   FileResponse,
   FileResponseHandler,
-  LogConfig,
   LogLevel,
-  Resolver,
   ScaffoldCmdConfig,
   ScaffoldConfig,
   ScaffoldConfigFile,
-  ScaffoldConfigMap,
 } from "./types"
 import { OptionsBase } from "massarg/types"
-import { spawn } from "node:child_process"
-import os from "node:os"
 import { handlebarsParse } from "./parser"
 import { log } from "./logger"
-import { resolve } from "./utils"
+import { resolve, wrapNoopResolver } from "./utils"
+import { getGitConfig } from "./git"
 
 export function getOptionValueForFile<T>(
   config: ScaffoldConfig,
@@ -109,14 +104,6 @@ export function githubPartToUrl(part: string): string {
   return gitUrl.toString()
 }
 
-function wrapNoopResolver<T, R = T>(value: Resolver<T, R>): Resolver<T, R> {
-  if (typeof value === "function") {
-    return value
-  }
-
-  return (_) => value
-}
-
 /** @internal */
 export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfigFile> {
   const { config: configFile, isRemote, ...logConfig } = config as Required<typeof config>
@@ -132,7 +119,6 @@ export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfi
   const isGit = url.protocol === "git:" || (isHttp && url.pathname.endsWith(".git"))
 
   if (isGit) {
-    console.log("Calling getGitConfig", getGitConfig)
     return getGitConfig(url, logConfig)
   }
 
@@ -141,46 +127,6 @@ export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfi
   }
 
   return wrapNoopResolver(import(path.resolve(process.cwd(), configFile)))
-}
-
-export async function getGitConfig(
-  url: URL,
-  logConfig: LogConfig,
-): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
-  console.log("Calling real getGitConfig")
-  const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
-
-  log(logConfig, LogLevel.Info, `Cloning git repo ${repoUrl}`)
-
-  const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
-
-  return new Promise((resolve, reject) => {
-    const clone = spawn("git", ["clone", "--depth", "1", repoUrl, tmpPath])
-
-    clone.on("error", reject)
-    clone.on("close", async (code) => {
-      if (code === 0) {
-        log(logConfig, LogLevel.Info, `Loading config from git repo: ${repoUrl}`)
-        const hashPath = url.hash?.replace("#", "") || "scaffold.config.js"
-        const absolutePath = path.resolve(tmpPath, hashPath)
-        const loadedConfig = (await import(absolutePath)).default as ScaffoldConfigMap
-        log(logConfig, LogLevel.Info, `Loaded config from git`)
-        log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
-        const fixedConfig: ScaffoldConfigMap = Object.fromEntries(
-          Object.entries(loadedConfig).map(([k, v]) => [
-            k,
-            // use absolute paths for template as config is necessarily in another directory
-            { ...v, templates: v.templates.map((t) => path.resolve(tmpPath, t)) },
-          ]),
-        )
-
-        resolve(wrapNoopResolver(fixedConfig))
-        return
-      }
-
-      reject(new Error(`Git clone failed with code ${code}`))
-    })
-  })
 }
 
 function count(string: string, substring: string): number {

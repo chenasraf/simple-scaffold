@@ -4,7 +4,7 @@
  *
  * See [readme](README.md)
  */
-import path from "path"
+import path from "node:path"
 import { handleErr, resolve } from "./utils"
 import {
   isDir,
@@ -109,7 +109,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function(
+Scaffold.fromConfig = async function (
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */

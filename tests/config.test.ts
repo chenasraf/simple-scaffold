@@ -2,8 +2,20 @@ import { ScaffoldCmdConfig } from "../src/types"
 import { OptionsBase } from "massarg/types"
 import * as config from "../src/config"
 import { resolve } from "../src/utils"
+// @ts-ignore
+import * as configFile from "../scaffold.config"
 
-const { getConfig, githubPartToUrl, parseAppendData, parseConfig, parseConfigSelection } = config
+jest.mock("../src/git", () => {
+  return {
+    __esModule: true,
+    ...jest.requireActual("../src/git"),
+    getGitConfig: () => {
+      return Promise.resolve({ default: blankCliConf })
+    },
+  }
+})
+
+const { githubPartToUrl, parseAppendData, parseConfig, parseConfigSelection } = config
 
 const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
   verbose: 0,
@@ -18,14 +30,6 @@ const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
   extras: [],
   help: false,
 }
-
-jest.mock("../src/config", () => {
-  console.log("mocking config")
-  return {
-    ...jest.requireActual("../src/config"),
-    getGitConfig: () => Promise.resolve({ default: blankCliConf }),
-  }
-})
 
 describe("config", () => {
   describe("parseAppendData", () => {
@@ -56,6 +60,13 @@ describe("config", () => {
   })
 
   describe("parseConfigSelection", () => {
+    test("no key", () => {
+      expect(parseConfigSelection("scaffold.config.js")).toEqual({
+        configFile: "scaffold.config.js",
+        key: "default",
+        isRemote: false,
+      })
+    })
     test("separate key", () => {
       expect(parseConfigSelection("scaffold.config.js", "component")).toEqual({
         configFile: "scaffold.config.js",
@@ -113,40 +124,29 @@ describe("config", () => {
         expect(result?.data?.num).toEqual("1234")
       })
     })
-    // describe("remote config", () => {
-    //   test("works", async () => {
-    //     // mock
-    //     const result = await parseConfig({
-    //       ...blankCliConf,
-    //       config: "https://github.com/chenasraf/simple-scaffold",
-    //     })
-    //   })
-    // })
   })
 
-  // TODO find how to mock getGitConfig properly
-  //
-  // describe("getConfig", () => {
-  //   test("gets git config", async () => {
-  //     // const original = config.githubPartToUrl
-  //     // config.githubPartToUrl = jest.fn().mockReturnValue(Promise.resolve(blankCliConf))
-  //     // const spy = jest.spyOn(config, "parseConfig").mockReturnValue(Promise.resolve(blankCliConf))
-  //
-  //     // jest.spyOn(config, "getGitConfig").mockImplementation(() => Promise.resolve({ default: blankCliConf }))
-  //     // jest.mock("../src/config", () => ({
-  //     //   ...jest.requireActual("../src/config"),
-  //     //   getGitConfig: () => Promise.resolve({ default: blankCliConf }),
-  //     // }))
-  //     const resultFn = await config.getConfig({
-  //       config: "https://github.com/chenasraf/simple-scaffold.git",
-  //       isRemote: true,
-  //       quiet: true,
-  //       verbose: 0,
-  //     })
-  //     const result = await resolve(resultFn, blankCliConf)
-  //     expect(result).toEqual({ default: blankCliConf })
-  //     // expect(spy.)
-  //     // config.githubPartToUrl = original
-  //   })
-  // })
+  describe("getConfig", () => {
+    test("gets git config", async () => {
+      const resultFn = await config.getConfig({
+        config: "https://github.com/chenasraf/simple-scaffold.git",
+        isRemote: true,
+        quiet: true,
+        verbose: 0,
+      })
+      const result = await resolve(resultFn, blankCliConf)
+      expect(result).toEqual({ default: blankCliConf })
+    })
+
+    test("gets local file config", async () => {
+      const resultFn = await config.getConfig({
+        config: "scaffold.config.js",
+        isRemote: false,
+        quiet: true,
+        verbose: 0,
+      })
+      const result = await resolve(resultFn, {} as any)
+      expect(result).toEqual(configFile)
+    })
+  })
 })

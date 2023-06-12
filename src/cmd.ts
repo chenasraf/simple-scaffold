@@ -3,8 +3,8 @@ import massarg from "massarg"
 import chalk from "chalk"
 import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
-import path from "path"
-import fs from "fs/promises"
+import path from "node:path"
+import fs from "node:fs/promises"
 import { parseAppendData, parseConfig } from "./config"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
