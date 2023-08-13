@@ -67,6 +67,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
           _template,
         )
         const files = await getFileList(config, template)
+        log(config, LogLevel.Debug, "Iterating files", { files, template })
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {
             continue

@@ -53,7 +53,7 @@ export async function isDir(path: string): Promise<boolean> {
 }
 
 export function removeGlob(template: string): string {
-  return template.replace(/\*/g, "").replace(/(\/\/|\\\\)/g, path.sep)
+  return path.normalize(template.replace(/\*/g, ""))
 }
 
 export function makeRelativePath(str: string): string {
@@ -68,6 +68,8 @@ export function getBasePath(relPath: string): string {
 }
 
 export async function getFileList(_config: ScaffoldConfig, template: string): Promise<string[]> {
+  template = template.replaceAll(/[\\]+/g, "/")
+  log(_config, LogLevel.Debug, `Getting file list for ${template}`)
   return (
     await glob(template, {
       dot: true,
@@ -92,8 +94,8 @@ export async function getTemplateGlobInfo(config: ScaffoldConfig, template: stri
   let nonGlobTemplate = isGlob ? removeGlob(template) : template
   nonGlobTemplate = path.normalize(nonGlobTemplate)
   const isDirOrGlob = isGlob ? true : await isDir(template)
-  log(config, LogLevel.Debug, "after isDir", isDirOrGlob)
   const _shouldAddGlob = !isGlob && isDirOrGlob
+  log(config, LogLevel.Debug, "after", { isDirOrGlob, _shouldAddGlob })
   const origTemplate = template
   if (_shouldAddGlob) {
     _template = path.join(template, "**", "*")
