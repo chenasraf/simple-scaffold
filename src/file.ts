@@ -11,6 +11,10 @@ import { handleErr } from "./utils"
 const { stat, access, mkdir, readFile, writeFile } = fs
 
 export async function createDirIfNotExists(dir: string, config: ScaffoldConfig): Promise<void> {
+  if (config.dryRun) {
+    log(config, LogLevel.Info, `Dry Run. Not creating dir ${dir}`)
+    return
+  }
   const parentDir = path.dirname(dir)
 
   if (!(await pathExists(parentDir))) {
@@ -147,7 +151,7 @@ export async function copyFileTransformed(
       log(config, LogLevel.Info, "Done.")
     } else {
       log(config, LogLevel.Info, "Dry Run. Output should be:")
-      log(config, LogLevel.Info, finalOutputContents)
+      log(config, LogLevel.Info, finalOutputContents.toString())
     }
   } else if (exists) {
     log(config, LogLevel.Info, `File ${outputPath} already exists, skipping`)
