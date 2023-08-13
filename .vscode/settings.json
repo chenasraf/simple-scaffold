@@ -14,9 +14,6 @@
     "variabletoken"
   ],
   "[markdown]": {
-    "editor.rulers": [
-      87,
-      100
-    ],
-  },
+    "editor.rulers": [87, 100]
+  }
 }
