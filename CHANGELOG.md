@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.2-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.1...v1.7.2-pre.1) (2023-08-15)
+
+
+### Bug Fixes
+
+* windows path resolution ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
+
 ## [1.7.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1) (2023-06-07)
 
 ### Bug Fixes
