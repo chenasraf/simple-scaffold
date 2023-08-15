@@ -38,8 +38,8 @@ describe("parser", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for windows paths", async () => {
-        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
-          Buffer.from("C:\\exports\\test.txt"),
+        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true }).toString()).toEqual(
+          "C:\\exports\\test.txt",
         )
       })
     })

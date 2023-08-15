@@ -14,7 +14,7 @@
       "problemMatcher": []
     },
     {
-      "command": "yarn typedoc --watch",
+      "command": "pnpm typedoc --watch",
       "label": "typedoc --watch",
       "type": "shell",
       "problemMatcher": []
@@ -32,8 +32,8 @@
       "problemMatcher": []
     },
     {
-      "command": "yarn test --watchAll",
-      "label": "yarn test --watchAll",
+      "command": "pnpm test --watchAll",
+      "label": "pnpm test --watchAll",
       "type": "shell",
       "problemMatcher": []
     },
