@@ -1,11 +1,18 @@
 # Change Log
 
-## [1.7.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1) (2023-06-07)
+## [1.7.2-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.1...v1.7.2-pre.1) (2023-08-15)
 
 
 ### Bug Fixes
 
-* local config file load error ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
+* windows path resolution ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
+
+## [1.7.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1) (2023-06-07)
+
+### Bug Fixes
+
+- local config file load error
+  ([2b74239](https://github.com/chenasraf/simple-scaffold/commit/2b7423993be06b2375631642455c801ae2acf75f))
 
 ## [1.7.0](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0-develop.5...v1.7.0) (2023-05-17)
 

@@ -1,5 +1,5 @@
 import { ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
-import path from "path"
+import path from "node:path"
 import * as dateFns from "date-fns"
 import { OptionsBase } from "massarg/types"
 import { dateHelper, defaultHelpers, handlebarsParse, nowHelper } from "../src/parser"
@@ -38,8 +38,8 @@ describe("parser", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for windows paths", async () => {
-        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true })).toEqual(
-          Buffer.from("C:\\exports\\test.txt"),
+        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true }).toString()).toEqual(
+          "C:\\exports\\test.txt",
         )
       })
     })

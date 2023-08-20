@@ -1,4 +1,4 @@
-import path from "path"
+import path from "node:path"
 import { DefaultHelpers, Helper, LogLevel, ScaffoldConfig } from "./types"
 import Handlebars from "handlebars"
 import dtAdd from "date-fns/add"
