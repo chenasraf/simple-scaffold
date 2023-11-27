@@ -39,11 +39,12 @@
     "date-fns": "^2.30.0",
     "glob": "^10.3.3",
     "handlebars": "^4.7.7",
-    "massarg": "^1.0.7-pre.1"
+    "massarg": "1.0.7-pre.1"
   },
   "devDependencies": {
     "@knodes/typedoc-plugin-pages": "^0.23.4",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/jest": "^29.5.1",

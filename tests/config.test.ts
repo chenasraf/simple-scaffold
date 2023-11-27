@@ -1,5 +1,4 @@
 import { ScaffoldCmdConfig } from "../src/types"
-import { OptionsBase } from "massarg/types"
 import * as config from "../src/config"
 import { resolve } from "../src/utils"
 // @ts-ignore
@@ -10,14 +9,14 @@ jest.mock("../src/git", () => {
     __esModule: true,
     ...jest.requireActual("../src/git"),
     getGitConfig: () => {
-      return Promise.resolve({ default: blankCliConf })
+      return Promise.resolve(blankCliConf)
     },
   }
 })
 
-const { githubPartToUrl, parseAppendData, parseConfig, parseConfigSelection } = config
+const { githubPartToUrl, parseAppendData, parseConfigFile, parseConfigSelection } = config
 
-const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
+const blankCliConf: ScaffoldCmdConfig = {
   verbose: 0,
   name: "",
   output: "",
@@ -27,8 +26,6 @@ const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
   createSubFolder: false,
   dryRun: false,
   quiet: false,
-  extras: [],
-  help: false,
 }
 
 describe("config", () => {
@@ -99,24 +96,24 @@ describe("config", () => {
     })
   })
 
-  describe("parseConfig", () => {
+  describe("parseConfigFile", () => {
     test("normal config does not change", async () => {
       expect(
-        await parseConfig({
+        await parseConfigFile({
           ...blankCliConf,
         }),
       ).toEqual(blankCliConf)
     })
     describe("appendData", () => {
       test("appends", async () => {
-        const result = await parseConfig({
+        const result = await parseConfigFile({
           ...blankCliConf,
           appendData: { key: "value" },
         })
         expect(result?.data?.key).toEqual("value")
       })
       test("overwrites existing value", async () => {
-        const result = await parseConfig({
+        const result = await parseConfigFile({
           ...blankCliConf,
           data: { num: "123" },
           appendData: { num: "1234" },
@@ -135,7 +132,7 @@ describe("config", () => {
         verbose: 0,
       })
       const result = await resolve(resultFn, blankCliConf)
-      expect(result).toEqual({ default: blankCliConf })
+      expect(result).toEqual(blankCliConf)
     })
 
     test("gets local file config", async () => {

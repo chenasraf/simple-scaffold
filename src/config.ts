@@ -8,7 +8,6 @@ import {
   ScaffoldConfig,
   ScaffoldConfigFile,
 } from "./types"
-import { OptionsBase } from "massarg/types"
 import { handlebarsParse } from "./parser"
 import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
@@ -30,7 +29,7 @@ export function getOptionValueForFile<T>(
   )
 }
 
-export function parseAppendData(value: string, options: ScaffoldCmdConfig & OptionsBase): unknown {
+export function parseAppendData(value: string, options: ScaffoldCmdConfig): unknown {
   const data = options.data ?? {}
   const [key, val] = value.split(/\:?=/)
   // raw
@@ -45,7 +44,7 @@ function isWrappedWithQuotes(string: string): boolean {
 }
 
 /** @internal */
-export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Promise<ScaffoldConfig> {
+export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
   let c: ScaffoldConfig = config
   if (config.github) {
     log(config, LogLevel.Info, `Loading config from github ${config.github}`)
@@ -61,16 +60,19 @@ export async function parseConfig(config: ScaffoldCmdConfig & OptionsBase): Prom
       quiet: config.quiet,
       verbose: config.verbose,
     })
-    const configImport = await resolve(configPromise, config)
-
+    let configImport = await resolve(configPromise, config)
+    if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
+      configImport = await resolve(configImport.default, config)
+    }
     if (!configImport[key]) {
       throw new Error(`Template "${key}" not found in ${configFile}`)
     }
+    const importedKey = configImport[key]
     c = {
       ...config,
-      ...configImport[key],
+      ...importedKey,
       data: {
-        ...configImport[key].data,
+        ...(importedKey as any).data,
         ...config.data,
       },
     }

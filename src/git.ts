@@ -1,9 +1,9 @@
 import path from "node:path"
 import os from "node:os"
 import { log } from "./logger"
-import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
+import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfig, ScaffoldConfigMap } from "./types"
 import { spawn } from "node:child_process"
-import { wrapNoopResolver } from "./utils"
+import { resolve, wrapNoopResolver } from "./utils"
 
 export async function getGitConfig(
   url: URL,
@@ -15,7 +15,7 @@ export async function getGitConfig(
 
   const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
 
-  return new Promise((resolve, reject) => {
+  return new Promise((res, reject) => {
     const clone = spawn("git", ["clone", "--depth", "1", repoUrl, tmpPath])
 
     clone.on("error", reject)
@@ -24,18 +24,21 @@ export async function getGitConfig(
         log(logConfig, LogLevel.Info, `Loading config from git repo: ${repoUrl}`)
         const hashPath = url.hash?.replace("#", "") || "scaffold.config.js"
         const absolutePath = path.resolve(tmpPath, hashPath)
-        const loadedConfig = (await import(absolutePath)).default as ScaffoldConfigMap
-        log(logConfig, LogLevel.Info, `Loaded config from git`)
-        log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
-        const fixedConfig: ScaffoldConfigMap = Object.fromEntries(
-          Object.entries(loadedConfig).map(([k, v]) => [
-            k,
-            // use absolute paths for template as config is necessarily in another directory
-            { ...v, templates: v.templates.map((t) => path.resolve(tmpPath, t)) },
-          ]),
+        const loadedConfig = await resolve(
+          async () => (await import(absolutePath)).default as ScaffoldConfigMap,
+          logConfig,
         )
 
-        resolve(wrapNoopResolver(fixedConfig))
+        log(logConfig, LogLevel.Info, `Loaded config from git`)
+        log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
+        const fixedConfig: ScaffoldConfigMap = {}
+        for (const [k, v] of Object.entries(loadedConfig)) {
+          fixedConfig[k] = {
+            ...v,
+            templates: v.templates.map((t) => path.resolve(tmpPath, t)),
+          }
+        }
+        res(wrapNoopResolver(fixedConfig))
         return
       }
 
