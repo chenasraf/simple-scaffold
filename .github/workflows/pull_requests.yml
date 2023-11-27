@@ -2,7 +2,7 @@ name: Pull Requests
 
 on:
   pull_request:
-    branches: [master, develop]
+    branches: [master, pre, develop]
 jobs:
   build:
     runs-on: ubuntu-latest

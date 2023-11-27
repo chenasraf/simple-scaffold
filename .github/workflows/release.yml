@@ -2,7 +2,7 @@ name: Test & Build
 
 on:
   push:
-    branches: [master, develop, pre, feat/*, fix/*]
+    branches: [master, pre, develop]
 permissions:
   contents: read # for checkout
 jobs:
