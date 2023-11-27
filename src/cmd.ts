@@ -5,7 +5,7 @@ import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import path from "node:path"
 import fs from "node:fs/promises"
-import { parseAppendData, parseConfig } from "./config"
+import { parseAppendData, parseConfigFile } from "./config"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const pkgFile = await fs.readFile(path.join(__dirname, "package.json"))
@@ -16,7 +16,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
   return (
     massarg<ScaffoldCmdConfig>()
       .main(async (config) => {
-        const _config = await parseConfig(config)
+        const _config = await parseConfigFile(config)
         return Scaffold(_config)
       })
       .option({

@@ -16,10 +16,9 @@ import {
   handleTemplateFile,
 } from "./file"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
-import { OptionsBase } from "massarg/types"
 import { defaultHelpers, registerHelpers } from "./parser"
 import { log, logInitStep, logInputFile } from "./logger"
-import { parseConfig } from "./config"
+import { parseConfigFile } from "./config"
 
 /**
  * Create a scaffold using given `options`.
@@ -110,7 +109,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function (
+Scaffold.fromConfig = async function(
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */
@@ -118,7 +117,7 @@ Scaffold.fromConfig = async function (
   /** Any overrides to the loaded config */
   overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
-  const _cmdConfig: ScaffoldCmdConfig & OptionsBase = {
+  const _cmdConfig: ScaffoldCmdConfig = {
     dryRun: false,
     output: process.cwd(),
     verbose: LogLevel.Info,
@@ -126,13 +125,11 @@ Scaffold.fromConfig = async function (
     templates: [],
     createSubFolder: false,
     quiet: false,
-    help: false,
-    extras: [],
     config: pathOrUrl,
     ...config,
   }
   const _overrides = resolve(overrides, _cmdConfig)
-  const _config = await parseConfig(_cmdConfig)
+  const _config = await parseConfigFile(_cmdConfig)
   return Scaffold({ ..._config, ..._overrides })
 }
 
