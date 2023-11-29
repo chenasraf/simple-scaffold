@@ -45,7 +45,7 @@ interface ScaffoldConfig {
 If you want to supply functions inside the configurations, you must use a `.js` file as JSON does
 not support non-primitives.
 
-A `.js` file is just like a `.json` file, make sure to export the final configuration:
+A `.js` file can be just like a `.json` file, make sure to export the final configuration:
 
 ```js
 /** @type {import('simple-scaffold').ScaffoldConfigFile} */
@@ -54,6 +54,23 @@ module.exports = {
     templates: ["templates/component"],
     output: "src/components",
   },
+}
+```
+
+Another feature of using a JS file is you can export a function which will be loaded with the CMD
+config provided to Simple Scaffold. The `extras` key contains any values not consumed by built-in
+flags, so you can pre-process your args before outputting a config:
+
+```js
+/** @type {import('simple-scaffold').ScaffoldConfigFile} */
+module.exports = (config) => {
+  console.log("Config:", config)
+  return {
+    component: {
+      templates: ["templates/component"],
+      output: "src/components",
+    },
+  }
 }
 ```
 
