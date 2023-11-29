@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.8.0](https://github.com/chenasraf/simple-scaffold/compare/v1.7.2...v1.8.0) (2023-11-29)
+
+
+### Bug Fixes
+
+* **config:** fn config load ([457c904](https://github.com/chenasraf/simple-scaffold/commit/457c90470b0f138862469ff878c7e061c7afd18a)), closes [#63](https://github.com/chenasraf/simple-scaffold/issues/63)
+
 ## [1.8.0-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.2...v1.8.0-pre.1) (2023-11-27)
 
 
