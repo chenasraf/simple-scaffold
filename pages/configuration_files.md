@@ -126,12 +126,12 @@ simple-scaffold -c <git_url>[#<git_file>][:<template_key>]
 For example, to use this repository's example as base:
 
 ```shell
-simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#examples/test-input/scaffold.config.js:component
+simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js:component
 ```
 
-When the filename is omitted, `/scaffold.config.js` will be used as default.
+When the `filename` is omitted, `/scaffold.config.js` will be used as default.
 
-When the template_key is ommitted, `default` will be used as default.
+When the `template_key` is ommitted, `default` will be used as default.
 
 ### GitHub Templates
 
@@ -147,7 +147,7 @@ simple-scaffold -gh <username>/<project_name>[#<git_file>][:<template_key>]
 This example is equivalent to the above, just shorter to write:
 
 ```shell
-simple-scaffold -c chenasraf/simple-scaffold#examples/test-input/scaffold.config.js:component
+simple-scaffold -c chenasraf/simple-scaffold#scaffold.config.js:component
 ```
 
 ## Use In Node.js
