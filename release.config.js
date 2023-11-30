@@ -5,24 +5,8 @@ module.exports = {
     path: "semantic-release-conventional-commits",
   },
   plugins: [
-    [
-      "@semantic-release/commit-analyzer",
-      {
-        preset: "conventionalcommits",
-        parserOpts: {
-          noteKeywords: ["breaking:", "breaking-fix:", "breaking-feat:"],
-        },
-      },
-    ],
-    [
-      "@semantic-release/release-notes-generator",
-      {
-        preset: "conventionalcommits",
-        parserOpts: {
-          noteKeywords: ["breaking", "major"],
-        },
-      },
-    ],
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
     [
       "@semantic-release/changelog",
       {
