@@ -16,7 +16,7 @@ export async function getGitConfig(
   const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
 
   return new Promise((res, reject) => {
-    const clone = spawn("git", ["clone", "--depth", "1", repoUrl, tmpPath])
+    const clone = spawn("git", ["clone", "--recurse-submodules", "--depth", "1", repoUrl, tmpPath])
 
     clone.on("error", reject)
     clone.on("close", async (code) => {
