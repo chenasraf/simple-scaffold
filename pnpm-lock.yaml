@@ -18,8 +18,8 @@ dependencies:
     specifier: ^4.7.7
     version: 4.7.7
   massarg:
-    specifier: ^1.0.7-pre.1
-    version: 1.0.7-pre.1
+    specifier: file:../massarg/build
+    version: file:../massarg/build
 
 devDependencies:
   '@knodes/typedoc-plugin-pages':
@@ -3193,6 +3193,7 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: true
 
   /lru-cache@10.0.1:
     resolution: {integrity: sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==}
@@ -3268,13 +3269,6 @@ packages:
     engines: {node: '>= 12'}
     hasBin: true
     dev: true
-
-  /massarg@1.0.7-pre.1:
-    resolution: {integrity: sha512-+n+qRe+yAxFBOXf3sWu/ST43A9DgUw+/7le/gIKIwVKOetjipYvK/Qy/JOYlHBERWaXgPb2aRGuRelSMhMbe+Q==}
-    dependencies:
-      chalk: 4.1.2
-      lodash: 4.17.21
-    dev: false
 
   /meow@8.1.2:
     resolution: {integrity: sha512-r85E3NdZ+mpYk1C6RjPFEMSE+s1iZMuHtsHAqY0DT3jZczl0diWUZ8g6oU7h0M9cD2EL+PzaYghhCLzR0ZNn5Q==}
@@ -4765,3 +4759,15 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
+
+  file:../massarg/build:
+    resolution: {directory: ../massarg/build, type: directory}
+    name: massarg
+    dependencies:
+      massarg: link:../massarg
+      zod: 3.22.4
+    dev: false

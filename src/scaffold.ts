@@ -57,7 +57,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 
   registerHelpers(config)
   try {
-    config.data = { name: config.name, Name: defaultHelpers.pascalCase(config.name), ...config.data }
+    config.data = { name: config.name, Name: defaultHelpers.pascalCase(config.name ?? ""), ...config.data }
     logInitStep(config)
     for (let _template of config.templates) {
       try {
