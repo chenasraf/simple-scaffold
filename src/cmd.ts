@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import massarg from "massarg"
+import { massarg } from "massarg"
 import chalk from "chalk"
 import { LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
@@ -14,7 +14,10 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
     args.includes("--config") || args.includes("-c") || args.includes("--github") || args.includes("-gh")
 
   return (
-    massarg<ScaffoldCmdConfig>()
+    massarg<ScaffoldCmdConfig>({
+      name: "simple-scaffold",
+      description: "Create structured files based on templates.",
+    })
       .main(async (config) => {
         const _config = await parseConfigFile(config)
         return Scaffold(_config)
@@ -23,7 +26,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "name",
         aliases: ["n"],
         description:
-          "Name to be passed to the generated files. {{name}} and {{Name}} inside contents and file names will be replaced accordingly.",
+          "Name to be passed to the generated files. {{name}} and {{Name}} inside contents and file names will be " +
+          "replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
         isDefault: true,
         required: true,
       })
@@ -31,24 +35,29 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "config",
         aliases: ["c"],
         description:
-          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js script. See examples for syntax.",
+          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js " +
+          "script. See examples for syntax.",
       })
       .option({
         name: "github",
         aliases: ["gh"],
         description:
-          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. See examples for syntax.",
+          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. See " +
+          "examples for syntax.",
       })
       .option({
         name: "key",
         aliases: ["k"],
         description:
-          "Key to load inside the config file. This overwrites the config key provided after the colon in --config (e.g. --config scaffold.cmd.js:component)",
+          "Key to load inside the config file. This overwrites the config key provided after the colon in --config " +
+          "(e.g. --config scaffold.cmd.js:component)",
       })
       .option({
         name: "output",
         aliases: ["o"],
-        description: `Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside this path. ${chalk.reset`${chalk.white`(default: current dir)`}`}`,
+        description:
+          "Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside " +
+          "this path. Default is current working directory.",
         required: !isConfigProvided,
       })
       .option({
@@ -56,14 +65,14 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["t"],
         array: true,
         description:
-          "Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path, " +
+          "Template files to use as input. You may provide multiple files, each of which can be a relative or " +
+          "absolute path, " +
           "or a glob pattern for multiple file matching easily.",
         required: !isConfigProvided,
       })
-      .option({
+      .flag({
         name: "overwrite",
         aliases: ["w"],
-        boolean: true,
         defaultValue: false,
         description: "Enable to override output files, even if they already exist.",
       })
@@ -77,13 +86,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "append-data",
         aliases: ["D"],
         description:
-          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax, which is easier to use with CLI: -D key1=string -D key2:=raw",
+          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax, " +
+          "which is easier to use with CLI: -D key1=string -D key2:=raw",
         parse: parseAppendData,
       })
-      .option({
+      .flag({
         name: "create-sub-folder",
         aliases: ["s"],
-        boolean: true,
         defaultValue: false,
         description: "Create subfolder with the input name",
       })
@@ -92,10 +101,9 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["sh"],
         description: "Default helper to apply to subfolder name when using `--create-sub-folder true`.",
       })
-      .option({
+      .flag({
         name: "quiet",
         aliases: ["q"],
-        boolean: true,
         defaultValue: false,
         description: "Suppress output logs (Same as --verbose 0)",
       })
@@ -109,10 +117,9 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           "The provided level will display messages of the same level or higher.",
         parse: Number,
       })
-      .option({
+      .flag({
         name: "dry-run",
         aliases: ["dr"],
-        boolean: true,
         defaultValue: false,
         description:
           "Don't emit files. This is good for testing your scaffolds and making sure they " +
@@ -148,12 +155,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         input: "simple-scaffold -gh chenasraf/simple-scaffold MyComponent",
       })
       .help({
-        binName: "simple-scaffold",
-        useGlobalColumns: true,
-        usageExample: "[options]",
-        printWidth: 100,
-        header: [`Create structured files based on templates.`].join("\n"),
-        footer: [
+        bindOption: true,
+        lineLength: 100,
+        useGlobalTableColumns: true,
+        // optionOptions: {
+        //   displayNegations: true,
+        // },
+        footerText: [
           `Version:  ${pkg.version}`,
           `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
           ``,
