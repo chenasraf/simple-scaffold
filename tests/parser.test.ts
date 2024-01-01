@@ -1,7 +1,6 @@
-import { ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
+import { ScaffoldConfig } from "../src/types"
 import path from "node:path"
 import * as dateFns from "date-fns"
-import { OptionsBase } from "massarg/types"
 import { dateHelper, defaultHelpers, handlebarsParse, nowHelper } from "../src/parser"
 
 const blankConf: ScaffoldConfig = {
@@ -10,20 +9,6 @@ const blankConf: ScaffoldConfig = {
   output: "",
   templates: [],
   data: { name: "test" },
-}
-
-const blankCliConf: ScaffoldCmdConfig & OptionsBase = {
-  verbose: 0,
-  name: "",
-  output: "",
-  templates: [],
-  data: { name: "test" },
-  overwrite: false,
-  createSubFolder: false,
-  dryRun: false,
-  quiet: false,
-  extras: [],
-  help: false,
 }
 
 describe("parser", () => {
