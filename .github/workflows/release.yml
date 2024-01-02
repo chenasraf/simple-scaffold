@@ -1,4 +1,4 @@
-name: Test & Build
+name: Release
 
 on:
   push:
@@ -6,31 +6,8 @@ on:
 permissions:
   contents: read # for checkout
 jobs:
-  test:
-    name: Test
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - name: Install PNPM
-        run: npm i -g pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Run Tests
-        run: pnpm test
-  build:
-    name: Build
+  release:
+    name: Release
     runs-on: ubuntu-latest
     needs: test
     permissions:
@@ -51,6 +28,8 @@ jobs:
         run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Run Tests
+        run: pnpm test
       - name: Build Package
         run: pnpm build
       - name: Pack
