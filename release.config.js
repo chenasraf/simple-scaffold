@@ -36,12 +36,7 @@ module.exports = {
     [
       "@semantic-release/github",
       {
-        assets: [
-          {
-            path: "*.tgz",
-            name: "simple-scaffold.tgz",
-          },
-        ],
+        assets: ["*.tgz"],
       },
     ],
   ],
