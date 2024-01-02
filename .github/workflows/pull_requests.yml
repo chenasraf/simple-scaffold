@@ -5,6 +5,7 @@ on:
     branches: [master, pre, develop]
 jobs:
   build:
+    name: Test & Build PR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
