@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.9.0](https://github.com/chenasraf/simple-scaffold/compare/v1.8.0...v1.9.0) (2024-01-02)
+
+
+### Features
+
+* add --recurse-submodules to git clone ([cbaf130](https://github.com/chenasraf/simple-scaffold/commit/cbaf130a0cce45a2d20a3c2d132ac98e2f105b4f))
+
 ## [1.8.0](https://github.com/chenasraf/simple-scaffold/compare/v1.7.2...v1.8.0) (2023-11-29)
 
 
