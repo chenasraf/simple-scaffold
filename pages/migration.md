@@ -1,3 +1,20 @@
+# v1.x to v2.x
+
+- The `:template_key` syntax has been removed. You can still use `-k template_key` to achieve the
+  same result.
+- Data is no longer auto-populated with `Name` (PascalCase) by default. You can just use the helper
+  in your templates contents and file names, simply use `{{ pascalCase name }}` instead of
+  `{{ Name }}`. `Name` was arbitrary and it is confusing (is it `Title Case`? `PascalCase`? only
+  reading the docs can tell). Alternatively, you can inject the transformed name into your `data`
+  manually using a scaffold config file, by using the Node API or by appending the data to the CLI
+  invocation.
+- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
+  as usual by using the numbering from before.
+- All boolean flags no longer take a value. `-q` instead of `-q 1` or `-q true`, `-s` instead of
+  `-s 1`, `-w` instead of `-w 1`, etc.
+
+# v0.x to v1.x
+
 In Simple Scaffold v1.0, the entire codebase was overhauled, yet usage remains mostly the same
 between versions. With these notable exceptions:
 
