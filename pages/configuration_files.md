@@ -77,20 +77,20 @@ module.exports = (config) => {
 ## Using a config file
 
 Once your config is created, you can use it by providing the file name to the `--config` (or `-c`
-for brevity), optionally followed by a colon, then your scaffold config name.
+for brevity), optionally alongside `--key` or `-k`, denoting the key to use as the config object, as
+you define in your config:
 
 ```shell
-simple-scaffold -c <file>[:<template_key>]
+simple-scaffold -c <file> -k <template_key>
 ```
 
 For example:
 
 ```shell
-simple-scaffold -c scaffold.json:component MyComponentName
+simple-scaffold -c scaffold.json -k component MyComponentName
 ```
 
-If you don't want to supply a template/config name (e.g. `component`), you can omit the colon and
-the name, and it will use the configuration named `default`:
+If you don't want to supply a template/config name (e.g. `component`), `default` will be used:
 
 ```js
 /** @type {import('simple-scaffold').ScaffoldConfigFile} */
@@ -108,6 +108,19 @@ And then:
 simple-scaffold -c scaffold.json MyComponentName
 ```
 
+Any importable file is supported, depending on your build process.
+
+Common files include:
+
+- `*.json`
+- `*.js`
+- `*.mjs`
+- `*.cjs`
+
+Note that you might need to find the correct extension of `.js`, `.cjs` or `.mjs` depending on your
+build process and your package type (for example, packages with `"type": "module"` in their
+`package.json` might be required to use `.mjs`.
+
 ## Remote Templates
 
 You can load template groups remotely, similar to how you would pass a config normally.
@@ -120,13 +133,13 @@ When passing a git URL to `--config`, you will clone that repo and use the files
 The syntax is as follows:
 
 ```shell
-simple-scaffold -c <git_url>[#<git_file>][:<template_key>]
+simple-scaffold -c <git_url>[#<git_file>] [-k <template_key>]
 ```
 
 For example, to use this repository's example as base:
 
 ```shell
-simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js:component
+simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js -k component
 ```
 
 When the `filename` is omitted, `/scaffold.config.js` will be used as default.
@@ -141,13 +154,13 @@ URL without specifying the whole path.
 The syntax is as follows:
 
 ```shell
-simple-scaffold -gh <username>/<project_name>[#<git_file>][:<template_key>]
+simple-scaffold -gh <username>/<project_name>[#<git_file>] [-k <template_key>]
 ```
 
 This example is equivalent to the above, just shorter to write:
 
 ```shell
-simple-scaffold -c chenasraf/simple-scaffold#scaffold.config.js:component
+simple-scaffold -c chenasraf/simple-scaffold#scaffold.config.js -k component
 ```
 
 ## Use In Node.js

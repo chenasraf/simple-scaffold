@@ -124,7 +124,3 @@ export async function getConfig(config: ConfigLoadConfig): Promise<ScaffoldConfi
 
   return wrapNoopResolver(import(path.resolve(process.cwd(), configFile)))
 }
-
-function count(string: string, substring: string): number {
-  return string.split(substring).length - 1
-}
