@@ -18,8 +18,8 @@ dependencies:
     specifier: ^4.7.7
     version: 4.7.7
   massarg:
-    specifier: file:../massarg/build
-    version: file:../massarg/build
+    specifier: 2.0.0-pre.10
+    version: 2.0.0-pre.10
 
 devDependencies:
   '@knodes/typedoc-plugin-pages':
@@ -3270,6 +3270,12 @@ packages:
     hasBin: true
     dev: true
 
+  /massarg@2.0.0-pre.10:
+    resolution: {integrity: sha512-0ngO00xzP9qxB4K0SsGoUzsc0X+/XTN+ctwflK+JNM1zuAPwq8Znucl5PfmTSFpXw764IrhNH5A1Xv+DINAweQ==}
+    dependencies:
+      zod: 3.22.4
+    dev: false
+
   /meow@8.1.2:
     resolution: {integrity: sha512-r85E3NdZ+mpYk1C6RjPFEMSE+s1iZMuHtsHAqY0DT3jZczl0diWUZ8g6oU7h0M9cD2EL+PzaYghhCLzR0ZNn5Q==}
     engines: {node: '>=10'}
@@ -4762,12 +4768,4 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false
-
-  file:../massarg/build:
-    resolution: {directory: ../massarg/build, type: directory}
-    name: massarg
-    dependencies:
-      massarg: link:../massarg
-      zod: 3.22.4
     dev: false
