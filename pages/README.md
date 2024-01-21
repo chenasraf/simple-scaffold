@@ -4,4 +4,4 @@ See full documentation [here](https://chenasraf.github.io/simple-scaffold).
 - [Node.js usage](https://chenasraf.github.io/simple-scaffold/pages/node.html)
 - [Templates](https://chenasraf.github.io/simple-scaffold/pages/templates.html)
 - [Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html)
-- [Migrating v0.x to v1.x](https://chenasraf.github.io/simple-scaffold/pages/migration.html)
+- [Migrating between major versions](https://chenasraf.github.io/simple-scaffold/pages/migration.html)
