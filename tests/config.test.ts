@@ -72,7 +72,7 @@ describe("config", () => {
       })
     })
     test("key override", () => {
-      expect(parseConfigSelection("scaffold.config.js:component", "main")).toEqual({
+      expect(parseConfigSelection("scaffold.config.js", "main")).toEqual({
         configFile: "scaffold.config.js",
         key: "main",
         isRemote: false,
@@ -87,7 +87,7 @@ describe("config", () => {
     })
     test("isRemote: true", () => {
       expect(
-        parseConfigSelection("https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js:component", "main"),
+        parseConfigSelection("https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js", "main"),
       ).toEqual({
         configFile: "https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js",
         key: "main",

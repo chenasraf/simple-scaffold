@@ -88,14 +88,8 @@ export function parseConfigSelection(
   key?: string,
 ): { configFile: string; key: string; isRemote: boolean } {
   const isUrl = config.includes("://")
-
-  const hasColonToken = (!isUrl && config.includes(":")) || (isUrl && count(config, ":") > 1)
-  const colonIndex = config.lastIndexOf(":")
-  const [configFile, templateKey = "default"] = hasColonToken
-    ? [config.substring(0, colonIndex), config.substring(colonIndex + 1)]
-    : [config, undefined]
-  const _key = (key ?? templateKey) || "default"
-  return { configFile, key: _key, isRemote: isUrl }
+  const _key = key || "default"
+  return { configFile: config, key: _key, isRemote: isUrl }
 }
 
 export function githubPartToUrl(part: string): string {
