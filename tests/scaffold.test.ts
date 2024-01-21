@@ -32,7 +32,7 @@ const fileStructWithData = {
 const fileStructNested = {
   input: {
     "{{name}}-1.txt": "This should be in root",
-    "{{Name}}": {
+    "{{pascalCase name}}": {
       "{{name}}-2.txt": "Hello, my value is {{value}}",
       moreNesting: {
         "{{name}}-3.txt": "Hi! My value is actually NOT {{value}}!",
@@ -257,7 +257,7 @@ describe("Scaffold", () => {
       test("should allow override function", async () => {
         await Scaffold({
           name: "app_name",
-          output: (fullPath, basedir, basename) => join("custom-output", `${basename.split(".")[0]}`),
+          output: (_, __, basename) => join("custom-output", `${basename.split(".")[0]}`),
           templates: ["input"],
           data: { value: "1" },
           verbose: 0,

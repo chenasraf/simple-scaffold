@@ -16,7 +16,7 @@ import {
   handleTemplateFile,
 } from "./file"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
-import { defaultHelpers, registerHelpers } from "./parser"
+import { registerHelpers } from "./parser"
 import { log, logInitStep, logInputFile } from "./logger"
 import { parseConfigFile } from "./config"
 
@@ -57,7 +57,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 
   registerHelpers(config)
   try {
-    config.data = { name: config.name, Name: defaultHelpers.pascalCase(config.name ?? ""), ...config.data }
+    config.data = { name: config.name, ...config.data }
     logInitStep(config)
     for (let _template of config.templates) {
       try {
@@ -109,7 +109,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function(
+Scaffold.fromConfig = async function (
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */
