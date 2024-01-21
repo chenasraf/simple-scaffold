@@ -1,7 +1,7 @@
 import * as React from "react"
-import * as css from "./{{Name}}.css"
+import * as css from "./{{pascalCae name}}.css"
 
-class {{Name}} extends React.Component<any> {
+class {{pascalCae name}} extends React.Component<any> {
   private {{ property }}
 
   constructor(props: any) {
@@ -10,8 +10,8 @@ class {{Name}} extends React.Component<any> {
   }
 
   public render() {
-    return <div className={ css.{{Name}} } />
+    return <div className={ css.{{pascalCae name}} } />
   }
 }
 
-export default {{Name}}
+export default {pascalCae nName}}
