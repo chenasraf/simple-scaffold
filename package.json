@@ -29,8 +29,8 @@
     "cmd": "node --trace-warnings dist/cmd.js",
     "build-test": "pnpm build && pnpm test",
     "build-cmd": "pnpm build && pnpm cmd",
-    "build-docs": "typedoc",
-    "watch-docs": "pnpm typedoc --watch",
+    "build-docs": "cd docs && pnpm build",
+    "watch-docs": "cd docs && pnpm start",
     "audit-fix": "pnpm audit --fix",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0; echo \"# Change Log\n\n$(cat CHANGELOG.md)\" > CHANGELOG.md"
   },

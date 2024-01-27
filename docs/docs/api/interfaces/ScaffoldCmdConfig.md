@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[types.ts:337](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L337)
+[types.ts:337](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L337)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[types.ts:342](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L342)
+[types.ts:342](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L342)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[types.ts:335](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L335)
+[types.ts:335](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L335)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[types.ts:336](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L336)
+[types.ts:336](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L336)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[types.ts:341](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L341)
+[types.ts:341](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L341)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[types.ts:345](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L345)
+[types.ts:345](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L345)
 
 ___
 
@@ -76,7 +76,7 @@ The key to use for the file which contains the template configurations.
 
 #### Defined in
 
-[types.ts:344](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L344)
+[types.ts:344](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L344)
 
 ___
 
@@ -89,7 +89,7 @@ accordingly.
 
 #### Defined in
 
-[types.ts:332](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L332)
+[types.ts:332](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L332)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[types.ts:334](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L334)
+[types.ts:334](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L334)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[types.ts:338](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L338)
+[types.ts:338](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L338)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[types.ts:339](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L339)
+[types.ts:339](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L339)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[types.ts:333](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L333)
+[types.ts:333](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L333)
 
 ___
 
@@ -139,4 +139,4 @@ ___
 
 #### Defined in
 
-[types.ts:340](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L340)
+[types.ts:340](https://github.com/chenasraf/simple-scaffold/blob/8fcc7a1/src/types.ts#L340)

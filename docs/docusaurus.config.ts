@@ -37,6 +37,21 @@ const config: Config = {
       {
         entryPoints: ["../src/index.ts"],
         tsconfig: "../tsconfig.json",
+
+        // typedoc options
+        watch: process.env.NODE_ENV === "development",
+        excludePrivate: true,
+        excludeProtected: true,
+        excludeInternal: true,
+        // includeVersion: true,
+        categorizeByGroup: false,
+        sort: ["visibility"],
+        categoryOrder: ["Main", "*"],
+        media: "media",
+        entryPointStrategy: "expand",
+        validation: {
+          invalidLink: true,
+        },
       },
     ],
   ],
