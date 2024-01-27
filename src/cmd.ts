@@ -15,12 +15,12 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
 
   return (
     massarg<ScaffoldCmdConfig>({
-      name: "simple-scaffold",
-      description: "Create structured files based on templates.",
+      name: pkg.name,
+      description: pkg.description,
     })
       .main(async (config) => {
-        const _config = await parseConfigFile(config)
-        return Scaffold(_config)
+        const parsed = await parseConfigFile(config)
+        return Scaffold(parsed)
       })
       .option({
         name: "name",
