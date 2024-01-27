@@ -4,18 +4,30 @@ title: Migration
 
 ## v1.x to v2.x
 
+### CLI option changes
+
 - The `:template_key` syntax has been removed. You can still use `-k template_key` to achieve the
   same result.
+- Several changes to how remote configs are loaded via CLI:
+  - The `--github` (`-gh`) flag has been replaced by a generic `--git` (`-g`) one, which handles any
+    git URL. Providing a partial GitHub path will default to trying to find the project on GitHub,
+    e.g. `-g username/project`
+  - The `#template_file` syntax has been removed, you may use `--config` or `-c` to tell Simple
+    Scaffold which file to look for inside the git project. There is a default file priority list
+    which can find the file for you if it is in one of the supported filenames.
+- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
+  as usual by using the numbering from before.
+- All boolean flags no longer take a value. `-q` instead of `-q 1` or `-q true`, `-s` instead of
+  `-s 1`, `-w` instead of `-w 1`, etc.
+
+### Behavior changes
+
 - Data is no longer auto-populated with `Name` (PascalCase) by default. You can just use the helper
   in your templates contents and file names, simply use `{{ pascalCase name }}` instead of
   `{{ Name }}`. `Name` was arbitrary and it is confusing (is it `Title Case`? `PascalCase`? only
   reading the docs can tell). Alternatively, you can inject the transformed name into your `data`
   manually using a scaffold config file, by using the Node API or by appending the data to the CLI
   invocation.
-- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
-  as usual by using the numbering from before.
-- All boolean flags no longer take a value. `-q` instead of `-q 1` or `-q true`, `-s` instead of
-  `-s 1`, `-w` instead of `-w 1`, etc.
 
 ## v0.x to v1.x
 
