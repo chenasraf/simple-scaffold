@@ -5,11 +5,12 @@ import dtAdd from "date-fns/add"
 import dtFormat from "date-fns/format"
 import dtParseISO from "date-fns/parseISO"
 import { log } from "./logger"
+import { Duration } from "date-fns"
 
 const dateFns = {
-  add: dtAdd,
-  format: dtFormat,
-  parseISO: dtParseISO,
+  add: dtAdd.add,
+  format: dtFormat.format,
+  parseISO: dtParseISO.parseISO,
 }
 
 export const defaultHelpers: Record<DefaultHelpers, Helper> = {
