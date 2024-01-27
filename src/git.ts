@@ -1,7 +1,7 @@
 import path from "node:path"
 import os from "node:os"
 import { log } from "./logger"
-import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfig, ScaffoldConfigMap } from "./types"
+import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
 import { spawn } from "node:child_process"
 import { resolve, wrapNoopResolver } from "./utils"
 
