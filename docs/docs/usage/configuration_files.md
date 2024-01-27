@@ -8,22 +8,23 @@ scaffolding configurations.
 
 ## Creating config files
 
-Configuration files should be valid `.js`/`.json` files that contain valid Scaffold configurations.
+Configuration files should be valid `.js`/`.mjs`/`.cjs`/`.json` files that contain valid Scaffold
+configurations.
 
 Each file hold multiple scaffolds. Each scaffold is a key, and its value is the configuration. For
 example:
 
-```json
-{
-  "component": {
-    "templates": ["templates/component"],
-    "output": "src/components"
-  }
+```js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+  },
 }
 ```
 
 The configuration contents are identical to the
-[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/pages/node.md):
+[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/docs/usage/node):
 
 ```ts
 interface ScaffoldConfig {
@@ -46,8 +47,8 @@ interface ScaffoldConfig {
 }
 ```
 
-If you want to supply functions inside the configurations, you must use a `.js` file as JSON does
-not support non-primitives.
+If you want to supply functions inside the configurations, you must use a `.js`/`.cjs`/`.mjs` file
+as JSON does not support non-primitives.
 
 A `.js` file can be just like a `.json` file, make sure to export the final configuration:
 
@@ -62,7 +63,7 @@ module.exports = {
 ```
 
 Another feature of using a JS file is you can export a function which will be loaded with the CMD
-config provided to Simple Scaffold. The `extras` key contains any values not consumed by built-in
+config provided to Simple Scaffold. The `extra` key contains any values not consumed by built-in
 flags, so you can pre-process your args before outputting a config:
 
 ```js
@@ -84,13 +85,13 @@ Once your config is created, you can use it by providing the file name to the `-
 for brevity), optionally alongside `--key` or `-k`, denoting the key to use as the config object, as
 you define in your config:
 
-```shell
+```sh
 simple-scaffold -c <file> -k <template_key>
 ```
 
 For example:
 
-```shell
+```sh
 simple-scaffold -c scaffold.json -k component MyComponentName
 ```
 
@@ -107,64 +108,55 @@ module.exports = {
 
 And then:
 
-```shell
+```sh
 # will use 'default' template
 simple-scaffold -c scaffold.json MyComponentName
 ```
+
+- When the filename is omitted, the following files will be tried in order:
+
+  - `scaffold.config.*`
+  - `scaffold.*`
+
+  Where `*` denotes any supported file extension, in the priority listed in
+  [Supported file types](#supported-file-types)
+
+- When the `template_key` is ommitted, `default` will be used as default.
+
+### Supported file types
 
 Any importable file is supported, depending on your build process.
 
 Common files include:
 
-- `*.json`
-- `*.js`
 - `*.mjs`
 - `*.cjs`
+- `*.js`
+- `*.json`
+
+When filenames are ommited when loading configs, these are the file extensions that will be
+automatically tried, by the specified order of priority.
 
 Note that you might need to find the correct extension of `.js`, `.cjs` or `.mjs` depending on your
 build process and your package type (for example, packages with `"type": "module"` in their
-`package.json` might be required to use `.mjs`.
+`package.json` might be required to use `.mjs`.)
 
-## Remote Templates
+### Git/GitHub Templates
 
-You can load template groups remotely, similar to how you would pass a config normally.
+You may specify a git or GitHub url to use remote templates.
 
-The main difference is the templates will be hosted on a remote location such as a git server, and
-not locally in your project. This can be done to easily share & reuse templates.
+The command line option is `--git` or `-g`.
 
-When passing a git URL to `--config`, you will clone that repo and use the files there as template.
+- You may specify a full git or HTTPS git URL, which will be tried
+- You may specify a git username and project if the project is on GitHub
 
-The syntax is as follows:
+```sh
+# GitHub shorthand
+simple-scaffold -gh <username>/<project_name> [-c <filename>] [-k <template_key>]
 
-```shell
-simple-scaffold -c <git_url>[#<git_file>] [-k <template_key>]
-```
-
-For example, to use this repository's example as base:
-
-```shell
-simple-scaffold -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js -k component
-```
-
-When the `filename` is omitted, `/scaffold.config.js` will be used as default.
-
-When the `template_key` is ommitted, `default` will be used as default.
-
-### GitHub Templates
-
-As a shorter alternative to the above example, you can use `--github` or `-gh` to reference a GitHub
-URL without specifying the whole path.
-
-The syntax is as follows:
-
-```shell
-simple-scaffold -gh <username>/<project_name>[#<git_file>] [-k <template_key>]
-```
-
-This example is equivalent to the above, just shorter to write:
-
-```shell
-simple-scaffold -c chenasraf/simple-scaffold#scaffold.config.js -k component
+# Any git URL, git:// and https:// are supported
+simple-scaffold -g git://gitlab.com/<username>/<project_name> [-c <filename>] [-k <template_key>]
+simple-scaffold -g https://gitlab.com/<username>/<project_name>.git [-c <filename>] [-k <template_key>]
 ```
 
 ## Use In Node.js

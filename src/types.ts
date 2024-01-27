@@ -3,8 +3,8 @@ import { HelperDelegate } from "handlebars/runtime"
 /**
  * The config object for defining a scaffolding group.
  *
- * @see {@link https://chenasraf.github.io/simple-scaffold/pages/node.html | Node.js usage}
- * @see {@link https://chenasraf.github.io/simple-scaffold/pages/cli.html | CLI usage}
+ * @see {@link https://chenasraf.github.io/simple-scaffold/docs/usage/node| Node.js usage}
+ * @see {@link https://chenasraf.github.io/simple-scaffold/docs/usage/cli| CLI usage}
  * @see {@link DefaultHelpers}
  * @see {@link CaseHelpers}
  * @see {@link DateHelpers}

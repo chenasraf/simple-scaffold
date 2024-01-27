@@ -18,6 +18,18 @@ show `Warning` and `Error`.
 
 ## Enumeration Members
 
+### None
+
+• **None** = ``0``
+
+Silent output
+
+#### Defined in
+
+[types.ts:279](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L279)
+
+___
+
 ### Debug
 
 • **Debug** = ``1``
@@ -26,19 +38,7 @@ Debugging information. Very verbose and only recommended for troubleshooting.
 
 #### Defined in
 
-[types.ts:281](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L281)
-
-___
-
-### Error
-
-• **Error** = ``4``
-
-Errors, such as missing files, bad replacement token syntax, or un-writable directories.
-
-#### Defined in
-
-[types.ts:291](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L291)
+[types.ts:281](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L281)
 
 ___
 
@@ -56,19 +56,7 @@ The regular level of logging. Major actions are logged to show the scaffold prog
 
 #### Defined in
 
-[types.ts:287](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L287)
-
-___
-
-### None
-
-• **None** = ``0``
-
-Silent output
-
-#### Defined in
-
-[types.ts:279](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L279)
+[types.ts:287](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L287)
 
 ___
 
@@ -80,4 +68,16 @@ Warnings such as when file fails to replace token values properly in template.
 
 #### Defined in
 
-[types.ts:289](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L289)
+[types.ts:289](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L289)
+
+___
+
+### Error
+
+• **Error** = ``4``
+
+Errors, such as missing files, bad replacement token syntax, or un-writable directories.
+
+#### Defined in
+
+[types.ts:291](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L291)

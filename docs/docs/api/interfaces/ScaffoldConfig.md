@@ -10,13 +10,64 @@ The config object for defining a scaffolding group.
 
 **`See`**
 
- - [Node.js usage](https://chenasraf.github.io/simple-scaffold/pages/node.html)
- - [CLI usage](https://chenasraf.github.io/simple-scaffold/pages/cli.html)
+ - [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node|)
+ - [CLI usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli|)
  - [DefaultHelpers](../modules.md#defaulthelpers)
  - [CaseHelpers](../modules.md#casehelpers)
  - [DateHelpers](../modules.md#datehelpers)
 
 ## Properties
+
+### name
+
+• **name**: `string`
+
+Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
+accordingly.
+
+#### Defined in
+
+[types.ts:19](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L19)
+
+___
+
+### templates
+
+• **templates**: `string`[]
+
+Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path,
+or a glob pattern for multiple file matching easily.
+
+**`Default`**
+
+```ts
+Current working directory
+```
+
+#### Defined in
+
+[types.ts:27](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L27)
+
+___
+
+### output
+
+• **output**: [`FileResponse`](../modules.md#fileresponse)\<`string`\>
+
+Path to output to. If `createSubFolder` is `true`, the subfolder will be created inside this path.
+
+May also be a [FileResponseHandler](../modules.md#fileresponsehandler) which returns a new output path to override the default one.
+
+**`See`**
+
+ - [FileResponse](../modules.md#fileresponse)
+ - [FileResponseHandler](../modules.md#fileresponsehandler)
+
+#### Defined in
+
+[types.ts:37](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L37)
+
+___
 
 ### createSubFolder
 
@@ -33,7 +84,7 @@ the directory name.
 
 #### Defined in
 
-[types.ts:47](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L47)
+[types.ts:47](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L47)
 
 ___
 
@@ -47,7 +98,72 @@ This can be any object that will be usable by Handlebars.
 
 #### Defined in
 
-[types.ts:54](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L54)
+[types.ts:54](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L54)
+
+___
+
+### overwrite
+
+• `Optional` **overwrite**: [`FileResponse`](../modules.md#fileresponse)\<`boolean`\>
+
+Enable to override output files, even if they already exist.
+
+You may supply a function to this option, which can take the arguments `(fullPath, baseDir, baseName)` and returns
+a boolean for each file.
+
+May also be a [FileResponseHandler](../modules.md#fileresponsehandler) which returns a boolean value per file.
+
+**`See`**
+
+ - [FileResponse](../modules.md#fileresponse)
+ - [FileResponseHandler](../modules.md#fileresponsehandler)
+
+**`Default`**
+
+`false`
+
+#### Defined in
+
+[types.ts:69](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L69)
+
+___
+
+### quiet
+
+• `Optional` **quiet**: `boolean`
+
+Suppress output logs (Same as `verbose: 0` or `verbose: LogLevel.None`)
+
+**`See`**
+
+[verbose](ScaffoldConfig.md#verbose)
+
+#### Defined in
+
+[types.ts:75](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L75)
+
+___
+
+### verbose
+
+• `Optional` **verbose**: [`LogLevel`](../enums/LogLevel.md)
+
+Determine amount of logs to display.
+
+The values are: `0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`. The provided level will display messages
+of the same level or higher.
+
+**`See`**
+
+[LogLevel](../enums/LogLevel.md)
+
+**`Default`**
+
+`2 (info)`
+
+#### Defined in
+
+[types.ts:87](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L87)
 
 ___
 
@@ -64,7 +180,7 @@ actual file contents or create directories.
 
 #### Defined in
 
-[types.ts:95](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L95)
+[types.ts:95](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L95)
 
 ___
 
@@ -115,81 +231,7 @@ Simple Scaffold uses Handlebars.js, so all the syntax from there is supported. S
 
 #### Defined in
 
-[types.ts:137](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L137)
-
-___
-
-### name
-
-• **name**: `string`
-
-Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
-accordingly.
-
-#### Defined in
-
-[types.ts:19](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L19)
-
-___
-
-### output
-
-• **output**: [`FileResponse`](../modules.md#fileresponse)\<`string`\>
-
-Path to output to. If `createSubFolder` is `true`, the subfolder will be created inside this path.
-
-May also be a [FileResponseHandler](../modules.md#fileresponsehandler) which returns a new output path to override the default one.
-
-**`See`**
-
- - [FileResponse](../modules.md#fileresponse)
- - [FileResponseHandler](../modules.md#fileresponsehandler)
-
-#### Defined in
-
-[types.ts:37](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L37)
-
-___
-
-### overwrite
-
-• `Optional` **overwrite**: [`FileResponse`](../modules.md#fileresponse)\<`boolean`\>
-
-Enable to override output files, even if they already exist.
-
-You may supply a function to this option, which can take the arguments `(fullPath, baseDir, baseName)` and returns
-a boolean for each file.
-
-May also be a [FileResponseHandler](../modules.md#fileresponsehandler) which returns a boolean value per file.
-
-**`See`**
-
- - [FileResponse](../modules.md#fileresponse)
- - [FileResponseHandler](../modules.md#fileresponsehandler)
-
-**`Default`**
-
-`false`
-
-#### Defined in
-
-[types.ts:69](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L69)
-
-___
-
-### quiet
-
-• `Optional` **quiet**: `boolean`
-
-Suppress output logs (Same as `verbose: 0` or `verbose: LogLevel.None`)
-
-**`See`**
-
-[verbose](ScaffoldConfig.md#verbose)
-
-#### Defined in
-
-[types.ts:75](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L75)
+[types.ts:137](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L137)
 
 ___
 
@@ -209,49 +251,7 @@ transformation is done.
 
 #### Defined in
 
-[types.ts:148](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L148)
-
-___
-
-### templates
-
-• **templates**: `string`[]
-
-Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path,
-or a glob pattern for multiple file matching easily.
-
-**`Default`**
-
-```ts
-Current working directory
-```
-
-#### Defined in
-
-[types.ts:27](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L27)
-
-___
-
-### verbose
-
-• `Optional` **verbose**: [`LogLevel`](../enums/LogLevel.md)
-
-Determine amount of logs to display.
-
-The values are: `0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`. The provided level will display messages
-of the same level or higher.
-
-**`See`**
-
-[LogLevel](../enums/LogLevel.md)
-
-**`Default`**
-
-`2 (info)`
-
-#### Defined in
-
-[types.ts:87](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L87)
+[types.ts:148](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L148)
 
 ## Methods
 
@@ -282,4 +282,4 @@ contents-only, after further modifications - or `undefined` to use the original 
 
 #### Defined in
 
-[types.ts:164](https://github.com/chenasraf/simple-scaffold/blob/3343df7/src/types.ts#L164)
+[types.ts:164](https://github.com/chenasraf/simple-scaffold/blob/d9508cd/src/types.ts#L164)
