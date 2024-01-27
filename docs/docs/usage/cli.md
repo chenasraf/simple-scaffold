@@ -14,7 +14,7 @@ To see this and more information anytime, add the `-h` or `--help` flag to your 
 | Command \| alias                  |                                                                                                                                                                                                     |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--help`\|`-h`                    | Display help information                                                                                                                                                                            |
-| `--name`\|`-n`                    | Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced accordingly.                                                                        |
+| `--name`\|`-n`                    | Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced accordingly.                                                                    |
 | `--config`\|`-c`                  | Filename or HTTPS git URL to load config from instead of passing arguments to CLI or using a Node.js script.                                                                                        |
 | `--github`\|`-gh`                 | GitHub path to load config from instead of passing arguments to CLI or using a Node.js script.                                                                                                      |
 | `--key`\|`-k`                     | Key to load inside the config file. This overwrites the config key provided after the colon in --config (e.g. --config scaffold.cmd.js:component)                                                   |
@@ -32,7 +32,7 @@ To see this and more information anytime, add the `-h` or `--help` flag to your 
 ## Examples:
 
 > See
-> [Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/docs/configuration_files.md)
+> [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files)
 > for organizing multiple scaffold types into easy-to-maintain files
 
 Usage with config file
