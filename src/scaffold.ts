@@ -66,7 +66,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
           _template,
         )
         const files = await getFileList(config, template)
-        log(config, LogLevel.Debug, "Iterating files", { files, template })
+        log(config, LogLevel.debug, "Iterating files", { files, template })
         for (const inputFilePath of files) {
           if (await isDir(inputFilePath)) {
             continue
@@ -93,7 +93,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
       }
     }
   } catch (e: any) {
-    log(config, LogLevel.Error, e)
+    log(config, LogLevel.error, e)
     throw e
   }
 }
@@ -109,7 +109,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function (
+Scaffold.fromConfig = async function(
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */
@@ -120,7 +120,7 @@ Scaffold.fromConfig = async function (
   const _cmdConfig: ScaffoldCmdConfig = {
     dryRun: false,
     output: process.cwd(),
-    verbose: LogLevel.Info,
+    logLevel: LogLevel.info,
     overwrite: false,
     templates: [],
     createSubFolder: false,

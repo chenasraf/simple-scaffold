@@ -18,8 +18,7 @@ example:
 }
 ```
 
-The configuration contents are identical to the
-[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/pages/node.md):
+The configuration contents are identical to the [Node.js configuration structure](./node):
 
 ```ts
 interface ScaffoldConfig {
@@ -29,8 +28,7 @@ interface ScaffoldConfig {
   createSubFolder?: boolean
   data?: Record<string, any>
   overwrite?: FileResponse<boolean>
-  quiet?: boolean
-  verbose?: LogLevel
+  logLevel?: LogLevel
   dryRun?: boolean
   helpers?: Record<string, Helper>
   subFolderNameHelper?: DefaultHelpers | string

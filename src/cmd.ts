@@ -105,15 +105,15 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "quiet",
         aliases: ["q"],
         defaultValue: false,
-        description: "Suppress output logs (Same as --verbose 0)",
+        description: "Suppress output logs (Same as --log-level none)",
       })
       .option({
-        name: "verbose",
-        aliases: ["v"],
-        defaultValue: LogLevel.Info,
+        name: "log-level",
+        aliases: ["l"],
+        defaultValue: LogLevel.info,
         description:
           "Determine amount of logs to display. The values are: " +
-          `${chalk.bold`0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`}. ` +
+          `${chalk.bold`none | debug | info | warn | error`}. ` +
           "The provided level will display messages of the same level or higher.",
         parse: Number,
       })
