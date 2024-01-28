@@ -12,7 +12,7 @@ const { stat, access, mkdir, readFile, writeFile } = fs
 
 export async function createDirIfNotExists(dir: string, config: ScaffoldConfig): Promise<void> {
   if (config.dryRun) {
-    log(config, LogLevel.Info, `Dry Run. Not creating dir ${dir}`)
+    log(config, LogLevel.info, `Dry Run. Not creating dir ${dir}`)
     return
   }
   const parentDir = path.dirname(dir)
@@ -23,7 +23,7 @@ export async function createDirIfNotExists(dir: string, config: ScaffoldConfig):
 
   if (!(await pathExists(dir))) {
     try {
-      log(config, LogLevel.Debug, `Creating dir ${dir}`)
+      log(config, LogLevel.debug, `Creating dir ${dir}`)
       await mkdir(dir)
       return
     } catch (e: any) {
@@ -69,12 +69,11 @@ export function getBasePath(relPath: string): string {
 
 export async function getFileList(_config: ScaffoldConfig, template: string): Promise<string[]> {
   template = template.replaceAll(/[\\]+/g, "/")
-  log(_config, LogLevel.Debug, `Getting file list for ${template}`)
+  log(_config, LogLevel.debug, `Getting file list for ${template}`)
   return (
     await glob(template, {
       dot: true,
       nodir: true,
-      // debug: config.verbose === LogLevel.Debug,
     })
   ).map(path.normalize)
 }
@@ -89,13 +88,13 @@ export interface GlobInfo {
 
 export async function getTemplateGlobInfo(config: ScaffoldConfig, template: string): Promise<GlobInfo> {
   const isGlob = hasMagic(template)
-  log(config, LogLevel.Debug, "before isDir", "isGlob:", isGlob, template)
+  log(config, LogLevel.debug, "before isDir", "isGlob:", isGlob, template)
   let _template = template
   let nonGlobTemplate = isGlob ? removeGlob(template) : template
   nonGlobTemplate = path.normalize(nonGlobTemplate)
   const isDirOrGlob = isGlob ? true : await isDir(template)
   const _shouldAddGlob = !isGlob && isDirOrGlob
-  log(config, LogLevel.Debug, "after", { isDirOrGlob, _shouldAddGlob })
+  log(config, LogLevel.debug, "after", { isDirOrGlob, _shouldAddGlob })
   const origTemplate = template
   if (_shouldAddGlob) {
     _template = path.join(template, "**", "*")
@@ -141,7 +140,7 @@ export async function copyFileTransformed(
 ): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
-      log(config, LogLevel.Info, `File ${outputPath} exists, overwriting`)
+      log(config, LogLevel.info, `File ${outputPath} exists, overwriting`)
     }
     const templateBuffer = await readFile(inputPath)
     const unprocessedOutputContents = handlebarsParse(config, templateBuffer)
@@ -150,13 +149,13 @@ export async function copyFileTransformed(
 
     if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
-      log(config, LogLevel.Info, "Done.")
+      log(config, LogLevel.info, "Done.")
     } else {
-      log(config, LogLevel.Info, "Dry Run. Output should be:")
-      log(config, LogLevel.Info, finalOutputContents.toString())
+      log(config, LogLevel.info, "Dry Run. Output should be:")
+      log(config, LogLevel.info, finalOutputContents.toString())
     }
   } else if (exists) {
-    log(config, LogLevel.Info, `File ${outputPath} already exists, skipping`)
+    log(config, LogLevel.info, `File ${outputPath} already exists, skipping`)
   }
 }
 
@@ -189,7 +188,7 @@ export async function handleTemplateFile(
 
       log(
         config,
-        LogLevel.Debug,
+        LogLevel.debug,
         `\nParsing ${templatePath}`,
         `\nBase path: ${basePath}`,
         `\nFull input path: ${inputPath}`,
@@ -201,7 +200,7 @@ export async function handleTemplateFile(
 
       await createDirIfNotExists(path.dirname(outputPath), config)
 
-      log(config, LogLevel.Info, `Writing to ${outputPath}`)
+      log(config, LogLevel.info, `Writing to ${outputPath}`)
       await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
       resolve()
     } catch (e: any) {

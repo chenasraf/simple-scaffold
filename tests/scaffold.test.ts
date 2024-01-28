@@ -99,7 +99,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
         })
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
@@ -111,7 +111,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           createSubFolder: true,
-          verbose: 0,
+          logLevel: "none",
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
@@ -128,7 +128,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
         })
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
@@ -147,7 +147,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          verbose: 0,
+          logLevel: "none",
         })
 
         await Scaffold({
@@ -155,7 +155,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "2" },
-          verbose: 0,
+          logLevel: "none",
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
@@ -168,7 +168,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          verbose: 0,
+          logLevel: "none",
         })
 
         await Scaffold({
@@ -177,7 +177,7 @@ describe("Scaffold", () => {
           templates: ["input"],
           data: { value: "2" },
           overwrite: true,
-          verbose: 0,
+          logLevel: "none",
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name.txt"))
@@ -205,7 +205,7 @@ describe("Scaffold", () => {
             output: "output",
             templates: ["non-existing-input"],
             data: { value: "1" },
-            verbose: 0,
+            logLevel: "none",
           }),
         ).rejects.toThrow()
 
@@ -215,7 +215,7 @@ describe("Scaffold", () => {
             output: "output",
             templates: ["non-existing-input/non-existing-file.txt"],
             data: { value: "1" },
-            verbose: 0,
+            logLevel: "none",
           }),
         ).rejects.toThrow()
 
@@ -242,7 +242,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          verbose: 0,
+          logLevel: "none",
           dryRun: true,
         })
 
@@ -260,7 +260,7 @@ describe("Scaffold", () => {
           output: (_, __, basename) => join("custom-output", `${basename.split(".")[0]}`),
           templates: ["input"],
           data: { value: "1" },
-          verbose: 0,
+          logLevel: "none",
         })
         const data = readFileSync(join(process.cwd(), "/custom-output/app_name/app_name.txt"))
         expect(data.toString()).toEqual("Hello, my app is app_name")
@@ -277,7 +277,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           data: { value: "1" },
-          verbose: 0,
+          logLevel: "none",
         })
 
         const rootDir = readdirSync(join(process.cwd(), "output"))
@@ -309,7 +309,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           helpers: _helpers,
         })
 
@@ -342,7 +342,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           data: { customDate },
         })
 
@@ -380,7 +380,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           helpers: _helpers,
         })
 
@@ -403,7 +403,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           createSubFolder: true,
-          verbose: 0,
+          logLevel: "none",
         })
 
         const data = readFileSync(join(process.cwd(), "output", "app_name", "app_name.txt"))
@@ -416,7 +416,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           createSubFolder: true,
-          verbose: 0,
+          logLevel: "none",
           subFolderNameHelper: "upperCase",
         })
 
@@ -430,7 +430,7 @@ describe("Scaffold", () => {
           output: "output",
           templates: ["input"],
           createSubFolder: true,
-          verbose: 0,
+          logLevel: "none",
           subFolderNameHelper: "test",
           helpers: {
             test: () => "REPLACED",
@@ -450,7 +450,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           data: {
             value: "value",
           },
@@ -465,7 +465,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           data: {
             value: "value",
           },
@@ -487,7 +487,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          verbose: 0,
+          logLevel: "none",
           data: {
             value: "value",
           },

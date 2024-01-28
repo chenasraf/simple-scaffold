@@ -11,7 +11,7 @@ export async function getGitConfig(
 ): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
   const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
 
-  log(logConfig, LogLevel.Info, `Cloning git repo ${repoUrl}`)
+  log(logConfig, LogLevel.info, `Cloning git repo ${repoUrl}`)
 
   const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
 
@@ -21,7 +21,7 @@ export async function getGitConfig(
     clone.on("error", reject)
     clone.on("close", async (code) => {
       if (code === 0) {
-        log(logConfig, LogLevel.Info, `Loading config from git repo: ${repoUrl}`)
+        log(logConfig, LogLevel.info, `Loading config from git repo: ${repoUrl}`)
         const hashPath = url.hash?.replace("#", "") || "scaffold.config.js"
         const absolutePath = path.resolve(tmpPath, hashPath)
         const loadedConfig = await resolve(
@@ -29,8 +29,8 @@ export async function getGitConfig(
           logConfig,
         )
 
-        log(logConfig, LogLevel.Info, `Loaded config from git`)
-        log(logConfig, LogLevel.Debug, `Raw config:`, loadedConfig)
+        log(logConfig, LogLevel.info, `Loaded config from git`)
+        log(logConfig, LogLevel.debug, `Raw config:`, loadedConfig)
         const fixedConfig: ScaffoldConfigMap = {}
         for (const [k, v] of Object.entries(loadedConfig)) {
           fixedConfig[k] = {
