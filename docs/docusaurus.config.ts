@@ -15,8 +15,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "chenasraf", // Usually your GitHub org/user name.
+  projectName: "simple-scaffold", // Usually your repo name.
 
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
@@ -85,7 +85,7 @@ const config: Config = {
     navbar: {
       title: "Simple Scaffold",
       logo: {
-        alt: "My Site Logo",
+        alt: "Simple Scaffold",
         src: "img/logo.svg",
       },
       items: [
@@ -94,6 +94,11 @@ const config: Config = {
           sidebarId: "tutorialSidebar",
           position: "left",
           label: "Docs",
+        },
+        {
+          href: "https://npmjs.com/package/simple-scaffold",
+          label: "NPM",
+          position: "right",
         },
         {
           href: "https://github.com/facebook/docusaurus",
@@ -135,12 +140,12 @@ const config: Config = {
           title: "More",
           items: [
             {
-              label: "Blog",
-              to: "/blog",
+              label: "npm",
+              href: "https://npmjs.com/package/simple-scaffold",
             },
             {
               label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              href: "https://github.com/chenasraf/simple-scaffold",
             },
           ],
         },
