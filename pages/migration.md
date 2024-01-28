@@ -8,8 +8,8 @@
   reading the docs can tell). Alternatively, you can inject the transformed name into your `data`
   manually using a scaffold config file, by using the Node API or by appending the data to the CLI
   invocation.
-- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
-  as usual by using the numbering from before.
+- `verbose` has been renamed to `log-level`, and now takes the names `debug`, `info`, `warn`,
+  `error` or `none` (case insensitive) instead of using the numbering from before.
 - All boolean flags no longer take a value. `-q` instead of `-q 1` or `-q true`, `-s` instead of
   `-s 1`, `-w` instead of `-w 1`, etc.
 

@@ -16,8 +16,7 @@ interface ScaffoldConfig {
   createSubFolder?: boolean
   data?: Record<string, any>
   overwrite?: FileResponse<boolean>
-  quiet?: boolean
-  verbose?: LogLevel
+  logLevel?: LogLevel
   dryRun?: boolean
   helpers?: Record<string, Helper>
   subFolderNameHelper?: DefaultHelpers | string

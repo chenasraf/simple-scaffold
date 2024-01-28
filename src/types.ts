@@ -69,12 +69,6 @@ export interface ScaffoldConfig {
   overwrite?: FileResponse<boolean>
 
   /**
-   * Suppress output logs (Same as `verbose: 0` or `verbose: LogLevel.None`)
-   *  @see {@link verbose}
-   */
-  quiet?: boolean
-
-  /**
    * Determine amount of logs to display.
    *
    * The values are: `0 (none) | 1 (debug) | 2 (info) | 3 (warn) | 4 (error)`. The provided level will display messages
@@ -84,7 +78,7 @@ export interface ScaffoldConfig {
    *
    * @default `2 (info)`
    */
-  verbose?: LogLevel
+  logLevel?: LogLevel
 
   /**
    * Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write
@@ -263,6 +257,23 @@ export type DefaultHelpers = CaseHelpers | DateHelpers
  */
 export type Helper = HelperDelegate
 
+export const LogLevel = {
+  /** Silent output */
+  none: "none",
+  /** Debugging information. Very verbose and only recommended for troubleshooting. */
+  debug: "debug",
+  /**
+   * The regular level of logging. Major actions are logged to show the scaffold progress.
+   *
+   * @default
+   */
+  info: "info",
+  /** Warnings such as when file fails to replace token values properly in template. */
+  warning: "warning",
+  /** Errors, such as missing files, bad replacement token syntax, or un-writable directories. */
+  error: "error",
+} as const
+
 /**
  * The amount of information to log when generating scaffold.
  * When not `None`, the selected level will be the lowest level included.
@@ -270,26 +281,14 @@ export type Helper = HelperDelegate
  * For example, level `Info` (2) will include `Info`, `Warning` and `Error`, but not `Debug`; and `Warning` will only
  * show `Warning` and `Error`.
  *
+ * You may use either the number or the name of the level.
+ * For example, `2` or `info` are both valid.
+ *
  * @default `2 (info)`
  *
  * @category Logging
  */
-export enum LogLevel {
-  /** Silent output */
-  None = 0,
-  /** Debugging information. Very verbose and only recommended for troubleshooting. */
-  Debug = 1,
-  /**
-   * The regular level of logging. Major actions are logged to show the scaffold progress.
-   *
-   * @default
-   */
-  Info = 2,
-  /** Warnings such as when file fails to replace token values properly in template. */
-  Warning = 3,
-  /** Errors, such as missing files, bad replacement token syntax, or un-writable directories. */
-  Error = 4,
-}
+export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel]
 
 /**
  * A function that takes path information about file, and returns a value of type `T`
@@ -315,8 +314,6 @@ export type FileResponseHandler<T> = (fullPath: string, basedir: string, basenam
  *    (fullPath: string, basedir: string, basename: string) => T
  *    ```
  *
- * @typedef T The return type
- *
  * @see {@link FileResponseHandler}
  *
  * @category Config
@@ -337,7 +334,7 @@ export interface ScaffoldCmdConfig {
   appendData?: Record<string, string>
   overwrite: boolean
   quiet: boolean
-  verbose: LogLevel
+  logLevel: LogLevel
   dryRun: boolean
   config?: string
   /** The key to use for the file which contains the template configurations. */
@@ -373,8 +370,9 @@ export type Resolver<T, R = T> = R | ((value: T) => R)
 export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>
 
 /** @internal */
-export type LogConfig = Pick<ScaffoldConfig, "quiet" | "verbose">
+export type LogConfig = Pick<ScaffoldConfig, "logLevel">
 
+// TODO deprecat isRemote
 /** @internal */
 export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config"> & { isRemote: boolean }
 

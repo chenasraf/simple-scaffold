@@ -97,7 +97,7 @@ function pascalCase(s: string): string {
 export function registerHelpers(config: ScaffoldConfig): void {
   const _helpers = { ...defaultHelpers, ...config.helpers }
   for (const helperName in _helpers) {
-    log(config, LogLevel.Debug, `Registering helper: ${helperName}`)
+    log(config, LogLevel.debug, `Registering helper: ${helperName}`)
     Handlebars.registerHelper(helperName, _helpers[helperName as keyof typeof _helpers])
   }
 }
@@ -120,8 +120,8 @@ export function handlebarsParse(
     }
     return Buffer.from(outputContents)
   } catch (e) {
-    log(config, LogLevel.Debug, e)
-    log(config, LogLevel.Warning, "Couldn't parse file with handlebars, returning original content")
+    log(config, LogLevel.debug, e)
+    log(config, LogLevel.warning, "Couldn't parse file with handlebars, returning original content")
     return Buffer.from(templateBuffer)
   }
 }
