@@ -4,7 +4,7 @@ import * as dateFns from "date-fns"
 import { dateHelper, defaultHelpers, handlebarsParse, nowHelper } from "../src/parser"
 
 const blankConf: ScaffoldConfig = {
-  verbose: 0,
+  logLevel: "none",
   name: "",
   output: "",
   templates: [],

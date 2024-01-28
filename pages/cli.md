@@ -21,8 +21,8 @@ To see this and more information anytime, add the `-h` or `--help` flag to your 
 | `--append-data`\|`-D`             | Append additional custom data to the templates, which will overwrite --data, using an alternate syntax, which is easier to use with CLI: -D key1=string -D key2:=raw                                |
 | `--create-sub-folder`\|`-s`       | Create subfolder with the input name (default: false)                                                                                                                                               |
 | `--sub-folder-name-helper`\|`-sh` | Default helper to apply to subfolder name when using `--create-sub-folder true`.                                                                                                                    |
-| `--quiet`\|`-q`                   | Suppress output logs (Same as --verbose 0) (default: false)                                                                                                                                         |
-| `--verbose`\|`-v`                 | Determine amount of logs to display. The values are: 0 (none) \| 1 (debug) \| 2 (info) \| 3 (warn) \| 4 (error). The provided level will display messages of the same level or higher. (default: 2) |
+| `--quiet`\|`-q`                   | Suppress output logs (Same as --log-level 0) (default: false)                                                                                                                                       |
+| `--log-level`\|`-v`               | Determine amount of logs to display. The values are: 0 (none) \| 1 (debug) \| 2 (info) \| 3 (warn) \| 4 (error). The provided level will display messages of the same level or higher. (default: 2) |
 | `--dry-run`\|`-dr`                | Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories. (default: false)                     |
 
 ## Examples:

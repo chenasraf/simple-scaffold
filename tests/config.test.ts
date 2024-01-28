@@ -1,4 +1,4 @@
-import { ScaffoldCmdConfig } from "../src/types"
+import { LogLevel, ScaffoldCmdConfig } from "../src/types"
 import * as config from "../src/config"
 import { resolve } from "../src/utils"
 // @ts-ignore
@@ -17,7 +17,7 @@ jest.mock("../src/git", () => {
 const { githubPartToUrl, parseAppendData, parseConfigFile, parseConfigSelection } = config
 
 const blankCliConf: ScaffoldCmdConfig = {
-  verbose: 0,
+  logLevel: LogLevel.none,
   name: "",
   output: "",
   templates: [],
@@ -128,8 +128,7 @@ describe("config", () => {
       const resultFn = await config.getConfig({
         config: "https://github.com/chenasraf/simple-scaffold.git",
         isRemote: true,
-        quiet: true,
-        verbose: 0,
+        logLevel: LogLevel.none,
       })
       const result = await resolve(resultFn, blankCliConf)
       expect(result).toEqual(blankCliConf)
@@ -139,8 +138,7 @@ describe("config", () => {
       const resultFn = await config.getConfig({
         config: "scaffold.config.js",
         isRemote: false,
-        quiet: true,
-        verbose: 0,
+        logLevel: LogLevel.none,
       })
       const result = await resolve(resultFn, {} as any)
       expect(result).toEqual(configFile)
