@@ -26,8 +26,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "name",
         aliases: ["n"],
         description:
-          "Name to be passed to the generated files. {{name}} and {{Name}} inside contents and file names will be " +
-          "replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
+          "Name to be passed to the generated files. `{{name}}` and other data parameters inside " +
+          "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
         isDefault: true,
         required: true,
       })
@@ -49,14 +49,14 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "key",
         aliases: ["k"],
         description:
-          "Key to load inside the config file. This overwrites the config key provided after the colon in --config " +
-          "(e.g. --config scaffold.cmd.js:component)",
+          "Key to load inside the config file. This overwrites the config key provided after the colon in `--config` " +
+          "(e.g. `--config scaffold.cmd.js:component)`",
       })
       .option({
         name: "output",
         aliases: ["o"],
         description:
-          "Path to output to. If --create-sub-folder is enabled, the subfolder will be created inside " +
+          "Path to output to. If `--create-sub-folder` is enabled, the subfolder will be created inside " +
           "this path. Default is current working directory.",
         required: !isConfigProvided,
       })
@@ -86,8 +86,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "append-data",
         aliases: ["D"],
         description:
-          "Append additional custom data to the templates, which will overwrite --data, using an alternate syntax, " +
-          "which is easier to use with CLI: -D key1=string -D key2:=raw",
+          "Append additional custom data to the templates, which will overwrite `--data`, using an alternate syntax, " +
+          "which is easier to use with CLI: `-D key1=string -D key2:=raw`",
         parse: parseAppendData,
       })
       .flag({
@@ -105,7 +105,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "quiet",
         aliases: ["q"],
         defaultValue: false,
-        description: "Suppress output logs (Same as --log-level none)",
+        description: "Suppress output logs (Same as `--log-level none`)",
       })
       .option({
         name: "log-level",
@@ -113,7 +113,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         defaultValue: LogLevel.info,
         description:
           "Determine amount of logs to display. The values are: " +
-          `${chalk.bold`none | debug | info | warn | error`}. ` +
+          `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
           "The provided level will display messages of the same level or higher.",
         parse: Number,
       })
