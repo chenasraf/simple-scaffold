@@ -5,6 +5,7 @@ import {
   FileResponseHandler,
   LogConfig,
   LogLevel,
+  RemoteConfigLoadConfig,
   ScaffoldCmdConfig,
   ScaffoldConfig,
   ScaffoldConfigFile,
@@ -14,6 +15,7 @@ import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
 import { getGitConfig } from "./git"
 
+/** @internal */
 export function getOptionValueForFile<T>(
   config: ScaffoldConfig,
   filePath: string,
@@ -30,6 +32,7 @@ export function getOptionValueForFile<T>(
   )
 }
 
+/** @internal */
 export function parseAppendData(value: string, options: ScaffoldCmdConfig): unknown {
   const data = options.data ?? {}
   const [key, val] = value.split(/\:?=/)
@@ -46,7 +49,7 @@ function isWrappedWithQuotes(string: string): boolean {
 
 /** @internal */
 export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
-  let c: ScaffoldConfig = config
+  let output: ScaffoldConfig = config
 
   if (config.quiet) {
     config.logLevel = LogLevel.none
@@ -54,26 +57,34 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
 
   if (config.github) {
     log(config, LogLevel.info, `Loading config from github ${config.github}`)
-    config.config = githubPartToUrl(config.github)
+    config.git = githubPartToUrl(config.github)
   }
 
-  if (config.config) {
-    const { configFile, key, isRemote } = parseConfigSelection(config.config, config.key)
+  if (config.config || config.git) {
+    const isGit = Boolean(config.git)
+    const key = config.key ?? "default"
+    const configFile = config.config
+    const loadPath = isGit ? config.git : configFile
+
     log(config, LogLevel.info, `Loading config from ${configFile} with key ${key}`)
-    const configPromise = await getConfig({
-      config: configFile,
-      isRemote,
-      logLevel: config.logLevel,
-    })
+    const configPromise = await (config.git
+      ? getRemoteConfig({ git: loadPath, config: configFile, logLevel: config.logLevel })
+      : getLocalConfig({ config: configFile, logLevel: config.logLevel }))
+
+    // resolve the config
     let configImport = await resolve(configPromise, config)
+
+    // If the config is a function or promise, return the output
     if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
       configImport = await resolve(configImport.default, config)
     }
+
     if (!configImport[key]) {
       throw new Error(`Template "${key}" not found in ${configFile}`)
     }
+
     const importedKey = configImport[key]
-    c = {
+    output = {
       ...config,
       ...importedKey,
       data: {
@@ -83,20 +94,12 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
     }
   }
 
-  c.data = { ...c.data, ...config.appendData }
+  output.data = { ...output.data, ...config.appendData }
   delete config.appendData
-  return c
+  return output
 }
 
-export function parseConfigSelection(
-  config: string,
-  key?: string,
-): { configFile: string; key: string; isRemote: boolean } {
-  const isUrl = config.includes("://")
-  const _key = key || "default"
-  return { configFile: config, key: _key, isRemote: isUrl }
-}
-
+/** @internal */
 export function githubPartToUrl(part: string): string {
   const gitUrl = new URL(`https://github.com/${part}`)
   if (!gitUrl.pathname.endsWith(".git")) {
@@ -106,26 +109,29 @@ export function githubPartToUrl(part: string): string {
 }
 
 /** @internal */
-export async function getConfig(config: ConfigLoadConfig & Partial<LogConfig>): Promise<ScaffoldConfigFile> {
-  const { config: configFile, isRemote, ...logConfig } = config as Required<typeof config>
+export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfig>): Promise<ScaffoldConfigFile> {
+  const { config: configFile, ...logConfig } = config as Required<typeof config>
 
-  if (!isRemote) {
-    log(logConfig, LogLevel.info, `Loading config from file ${configFile}`)
-    const absolutePath = path.resolve(process.cwd(), configFile)
-    return wrapNoopResolver(import(absolutePath))
-  }
+  log(logConfig, LogLevel.info, `Loading config from file ${configFile}`)
+  const absolutePath = path.resolve(process.cwd(), configFile)
+  return wrapNoopResolver(import(absolutePath))
+}
 
-  const url = new URL(configFile)
+/** @internal */
+export async function getRemoteConfig(
+  config: RemoteConfigLoadConfig & Partial<LogConfig>,
+): Promise<ScaffoldConfigFile> {
+  const { config: configFile, git, ...logConfig } = config as Required<typeof config>
+
+  log(logConfig, LogLevel.info, `Loading config from remote ${git}, file ${configFile}`)
+
+  const url = new URL(git!)
   const isHttp = url.protocol === "http:" || url.protocol === "https:"
   const isGit = url.protocol === "git:" || (isHttp && url.pathname.endsWith(".git"))
 
-  if (isGit) {
-    return getGitConfig(url, logConfig)
-  }
-
-  if (!isHttp) {
+  if (!isGit) {
     throw new Error(`Unsupported protocol ${url.protocol}`)
   }
 
-  return wrapNoopResolver(import(path.resolve(process.cwd(), configFile)))
+  return getGitConfig(url, configFile, logConfig)
 }
