@@ -14,7 +14,7 @@ jest.mock("../src/git", () => {
   }
 })
 
-const { githubPartToUrl, parseAppendData, parseConfigFile, parseConfigSelection } = config
+const { githubPartToUrl, parseAppendData, parseConfigFile } = config
 
 const blankCliConf: ScaffoldCmdConfig = {
   logLevel: LogLevel.none,
@@ -56,46 +56,6 @@ describe("config", () => {
     })
   })
 
-  describe("parseConfigSelection", () => {
-    test("no key", () => {
-      expect(parseConfigSelection("scaffold.config.js")).toEqual({
-        configFile: "scaffold.config.js",
-        key: "default",
-        isRemote: false,
-      })
-    })
-    test("separate key", () => {
-      expect(parseConfigSelection("scaffold.config.js", "component")).toEqual({
-        configFile: "scaffold.config.js",
-        key: "component",
-        isRemote: false,
-      })
-    })
-    test("key override", () => {
-      expect(parseConfigSelection("scaffold.config.js", "main")).toEqual({
-        configFile: "scaffold.config.js",
-        key: "main",
-        isRemote: false,
-      })
-    })
-    test("isRemote: false", () => {
-      expect(parseConfigSelection("scaffold.config.js", "main")).toEqual({
-        configFile: "scaffold.config.js",
-        key: "main",
-        isRemote: false,
-      })
-    })
-    test("isRemote: true", () => {
-      expect(
-        parseConfigSelection("https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js", "main"),
-      ).toEqual({
-        configFile: "https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js",
-        key: "main",
-        isRemote: true,
-      })
-    })
-  })
-
   describe("parseConfigFile", () => {
     test("normal config does not change", async () => {
       expect(
@@ -125,9 +85,8 @@ describe("config", () => {
 
   describe("getConfig", () => {
     test("gets git config", async () => {
-      const resultFn = await config.getConfig({
-        config: "https://github.com/chenasraf/simple-scaffold.git",
-        isRemote: true,
+      const resultFn = await config.getRemoteConfig({
+        git: "https://github.com/chenasraf/simple-scaffold.git",
         logLevel: LogLevel.none,
       })
       const result = await resolve(resultFn, blankCliConf)
@@ -135,9 +94,8 @@ describe("config", () => {
     })
 
     test("gets local file config", async () => {
-      const resultFn = await config.getConfig({
+      const resultFn = await config.getLocalConfig({
         config: "scaffold.config.js",
-        isRemote: false,
         logLevel: LogLevel.none,
       })
       const result = await resolve(resultFn, {} as any)

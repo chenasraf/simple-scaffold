@@ -39,7 +39,7 @@
     "date-fns": "^3.3.1",
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
-    "massarg": "2.0.0-pre.10"
+    "massarg": "2.0.0-pre.11"
   },
   "devDependencies": {
     "@knodes/typedoc-plugin-pages": "^0.23.4",

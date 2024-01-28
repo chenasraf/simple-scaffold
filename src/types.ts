@@ -322,10 +322,6 @@ export type FileResponse<T> = T | FileResponseHandler<T>
 
 /** @internal */
 export interface ScaffoldCmdConfig {
-  /**
-   * Name to be passed to the generated files. `{{name}}` and `{{Name}}` inside contents and file names will be replaced
-   * accordingly.
-   */
   name: string
   templates: string[]
   output: string
@@ -337,8 +333,8 @@ export interface ScaffoldCmdConfig {
   logLevel: LogLevel
   dryRun: boolean
   config?: string
-  /** The key to use for the file which contains the template configurations. */
   key?: string
+  git?: string
   github?: string
 }
 
@@ -372,9 +368,11 @@ export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>
 /** @internal */
 export type LogConfig = Pick<ScaffoldConfig, "logLevel">
 
-// TODO deprecat isRemote
 /** @internal */
-export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config"> & { isRemote: boolean }
+export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
+
+/** @internal */
+export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config" | "git">
 
 /** @internal */
 export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">
