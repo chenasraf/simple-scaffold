@@ -90,11 +90,34 @@ const config: Config = {
       },
       items: [
         {
-          type: "docSidebar",
-          sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Docs",
+          type: "docSidebar",
+          sidebarId: "api",
+          label: "API",
+          to: "docs/api",
         },
+        {
+          position: "left",
+          type: "docSidebar",
+          sidebarId: "usage",
+          label: "Usage",
+          to: "docs/usage",
+        },
+        // {
+        //   position: "left",
+        //   type: "docSidebar",
+        //   sidebarId: "docs",
+        // },
+        // {
+        //   label: "API",
+        //   href: "/docs/api",
+        //   position: "left",
+        // },
+        // {
+        //   label: "Usage",
+        //   href: "/docs/usage",
+        //   position: "left",
+        // },
         {
           href: "https://npmjs.com/package/simple-scaffold",
           label: "NPM",
@@ -120,19 +143,15 @@ const config: Config = {
           ],
         },
         {
-          title: "Community",
+          title: "More from @casraf",
           items: [
             {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              label: "Massarg - CLI Argument Parser",
+              href: "https://chenasraf.github.io/massarg",
             },
             {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              label: "Website",
+              href: "https://casraf.dev",
             },
           ],
         },
@@ -150,7 +169,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Chen Asraf. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
