@@ -7,6 +7,7 @@ import { resolve, wrapNoopResolver } from "./utils"
 
 export async function getGitConfig(
   url: URL,
+  file: string,
   logConfig: LogConfig,
 ): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
   const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
@@ -22,8 +23,9 @@ export async function getGitConfig(
     clone.on("close", async (code) => {
       if (code === 0) {
         log(logConfig, LogLevel.info, `Loading config from git repo: ${repoUrl}`)
-        const hashPath = url.hash?.replace("#", "") || "scaffold.config.js"
-        const absolutePath = path.resolve(tmpPath, hashPath)
+        // TODO search for dynamic config file in repo if not provided
+        const filename = file || "scaffold.config.js"
+        const absolutePath = path.resolve(tmpPath, filename)
         const loadedConfig = await resolve(
           async () => (await import(absolutePath)).default as ScaffoldConfigMap,
           logConfig,

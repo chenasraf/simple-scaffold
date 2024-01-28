@@ -35,8 +35,16 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         name: "config",
         aliases: ["c"],
         description:
-          "Filename or https git URL to load config from instead of passing arguments to CLI or using a Node.js " +
-          "script. See examples for syntax.",
+          "Filename to load config from instead of passing arguments to CLI or using a Node.js " +
+          "script. See examples for syntax. This can also work in conjunction with `--git` or `--github` to point " +
+          "to remote files, and with `--key` to denote which key to select from the file.",
+      })
+      .option({
+        name: "git",
+        aliases: ["g"],
+        description:
+          "Git URL to load config from instead of passing arguments to CLI or using a Node.js script. See " +
+          "examples for syntax.",
       })
       .option({
         name: "github",
