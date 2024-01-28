@@ -18,8 +18,8 @@ dependencies:
     specifier: ^4.7.8
     version: 4.7.8
   massarg:
-    specifier: 2.0.0-pre.10
-    version: 2.0.0-pre.10
+    specifier: 2.0.0-pre.11
+    version: 2.0.0-pre.11
 
 devDependencies:
   '@knodes/typedoc-plugin-pages':
@@ -3231,8 +3231,8 @@ packages:
     hasBin: true
     dev: true
 
-  /massarg@2.0.0-pre.10:
-    resolution: {integrity: sha512-0ngO00xzP9qxB4K0SsGoUzsc0X+/XTN+ctwflK+JNM1zuAPwq8Znucl5PfmTSFpXw764IrhNH5A1Xv+DINAweQ==}
+  /massarg@2.0.0-pre.11:
+    resolution: {integrity: sha512-MrN5ZllZyGI8DPSA8o164WgeEhfpDYnFvtA0xRoWrGJ2eCDUeyyCItUk3EB55tV3kwysqi6AAOei49xUQ5BG4w==}
     dependencies:
       zod: 3.22.4
     dev: false
