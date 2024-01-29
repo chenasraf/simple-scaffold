@@ -1,8 +1,12 @@
+import mockFs from "mock-fs"
+import FileSystem from "mock-fs/lib/filesystem"
+import { Console } from "console"
 import { LogLevel, ScaffoldCmdConfig } from "../src/types"
 import * as config from "../src/config"
 import { resolve } from "../src/utils"
 // @ts-ignore
 import * as configFile from "../scaffold.config"
+import { findConfigFile } from "../src/git"
 
 jest.mock("../src/git", () => {
   return {
@@ -26,6 +30,11 @@ const blankCliConf: ScaffoldCmdConfig = {
   createSubFolder: false,
   dryRun: false,
   quiet: false,
+}
+
+const blankConfig: ScaffoldCmdConfig = {
+  ...blankCliConf,
+  data: {},
 }
 
 describe("config", () => {
@@ -101,5 +110,49 @@ describe("config", () => {
       const result = await resolve(resultFn, {} as any)
       expect(result).toEqual(configFile)
     })
+  })
+
+  describe("findConfigFile", () => {
+    const struct1 = {
+      "scaffold.config.js": `module.exports = '${JSON.stringify(blankConfig)}'`,
+    }
+    const struct2 = {
+      "scaffold.js": `module.exports = '${JSON.stringify(blankConfig)}'`,
+    }
+    const struct3 = {
+      "scaffold.cjs": `module.exports = '${JSON.stringify(blankConfig)}'`,
+    }
+    const struct4 = {
+      "scaffold.json": JSON.stringify(blankConfig),
+    }
+
+    function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
+      return () => {
+        beforeEach(() => {
+          // console.log("Mocking:", fileStruct)
+          console = new Console(process.stdout, process.stderr)
+
+          mockFs(fileStruct)
+          // logMock = jest.spyOn(console, 'log').mockImplementation((...args) => {
+          //   logsTemp.push(args)
+          // })
+        })
+        testFn()
+        afterEach(() => {
+          // console.log("Restoring mock")
+          mockFs.restore()
+        })
+      }
+    }
+
+    for (const struct of [struct1, struct2, struct3, struct4]) {
+      const [k] = Object.keys(struct)
+      describe(`finds config file ${k}`, () => {
+        withMock(struct, async () => {
+          const result = await findConfigFile(process.cwd())
+          expect(result).toEqual(k)
+        })
+      })
+    }
   })
 })
