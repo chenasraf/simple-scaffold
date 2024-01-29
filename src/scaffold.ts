@@ -109,7 +109,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function(
+Scaffold.fromConfig = async function (
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */
