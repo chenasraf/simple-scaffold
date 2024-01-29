@@ -57,7 +57,7 @@ export default {{pascalCase name}}: React.FC = (props) => {
 
 To generate the template output, run:
 
-```shell
+```sh
 # generate single component
 $ npx simple-scaffold@latest \
   -t templates/component -o src/components PageWrapper
@@ -98,7 +98,7 @@ module.exports = {
 
 Then call your scaffold like this:
 
-```shell
+```sh
 $ npx simple-scaffold@latest -c scaffold.config.js PageWrapper
 ```
 
@@ -118,24 +118,30 @@ repository.
 
 A remote config can be loaded in one of these ways:
 
-- If it's on GitHub, you can use `-gh user/repository_name`
+- If it's on GitHub, you can use `-g user/repository_name`
 - If it's on another git server (such as GitLab), you can use
   `-c https://example.com/user/repository_name.git`
 
 Configurations can hold multiple scaffold groups. Each group can be accessed using its key by
-supplying the `--key` or `-k` argument, or by appending a hash and then the key name, like so:
-`-gh user/repository_name#key_name` - this also works for the `-c` flag.
+supplying the `--key` or `-k` argument, like so:
+
+```sh
+-g user/repository_name -c scaffold.js -k key_name`.
+```
 
 Here is an example for loading the example component templates in this very repository:
 
-```shell
+```sh
 $ npx simple-scaffold@latest \
-  -gh chenasraf/simple-scaffold#scaffold.config.js:component \
+  -g chenasraf/simple-scaffold \
+  -k component \
   PageWrapper
 
 # equivalent to:
 $ npx simple-scaffold@latest \
-  -c https://github.com/chenasraf/simple-scaffold.git#scaffold.config.js:component \
+  -g https://github.com/chenasraf/simple-scaffold.git \
+  -c scaffold.config.js \
+  -k component \
   PageWrapper
 ```
 
@@ -174,8 +180,8 @@ don't hesitate to open an appropriate issue and I will do my best to reply promp
 If you are a developer and want to contribute code, here are some starting tips:
 
 1. Fork this repository
-2. Run `yarn install`
-3. Run `yarn dev` to start file watch mode
+2. Run `pnpm install`
+3. Run `pnpm dev` to start file watch mode
 4. Make any changes you would like
 5. Create tests for your changes
 6. Update the relevant documentation (readme, code comments, type comments)
@@ -183,22 +189,22 @@ If you are a developer and want to contribute code, here are some starting tips:
 
 Some tips on getting around the code:
 
-- Use `yarn dev` for development - it runs TypeScript compile in watch mode, allowing you to make
-  changes and immediately be able to try them using `yarn cmd`.
-- Use `yarn build` to build the output once
-- Use `yarn test` to run tests
-- Use `yarn cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
-  you to test different behaviors. See `yarn cmd -h` for more information.
+- Use `pnpm dev` for development - it runs TypeScript compile in watch mode, allowing you to make
+  changes and immediately be able to try them using `pnpm cmd`.
+- Use `pnpm build` to build the output once
+- Use `pnpm test` to run tests
+- Use `pnpm cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
+  you to test different behaviors. See `pnpm cmd -h` for more information.
 
   > This requires an updated build, and does not trigger one itself. From here you have several
   > options:
   >
-  > - Run `yarn dev` to watch for file changes and build automatically
-  > - Run `yarn build` before running this to trigger a one-time build
-  > - Run `yarn build-cmd` which triggers a build right before running `yarn cmd` automatically with
+  > - Run `pnpm dev` to watch for file changes and build automatically
+  > - Run `pnpm build` before running this to trigger a one-time build
+  > - Run `pnpm build-cmd` which triggers a build right before running `pnpm cmd` automatically with
   >   the rest of the given arguments.
 
-- Use `yarn build-docs` to build the documentation once
-- Use `yarn watch-docs` to start docs in watch mode
+- Use `pnpm build-docs` to build the documentation once
+- Use `pnpm watch-docs` to start docs in watch mode
 - To see the documentation, currently you have to serve the directory yourself with a static web
   server (like node's built in serve, VS code's "Go Live" mode, etc)

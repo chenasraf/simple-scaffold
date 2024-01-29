@@ -2,38 +2,40 @@
 
 # [1.9.0](https://github.com/chenasraf/simple-scaffold/compare/v1.8.0...v1.9.0) (2024-01-02)
 
-
 ### Features
 
-* add --recurse-submodules to git clone ([cbaf130](https://github.com/chenasraf/simple-scaffold/commit/cbaf130a0cce45a2d20a3c2d132ac98e2f105b4f))
+- add --recurse-submodules to git clone
+  ([cbaf130](https://github.com/chenasraf/simple-scaffold/commit/cbaf130a0cce45a2d20a3c2d132ac98e2f105b4f))
 
 ## [1.8.0](https://github.com/chenasraf/simple-scaffold/compare/v1.7.2...v1.8.0) (2023-11-29)
 
-
 ### Bug Fixes
 
-* **config:** fn config load ([457c904](https://github.com/chenasraf/simple-scaffold/commit/457c90470b0f138862469ff878c7e061c7afd18a)), closes [#63](https://github.com/chenasraf/simple-scaffold/issues/63)
+- **config:** fn config load
+  ([457c904](https://github.com/chenasraf/simple-scaffold/commit/457c90470b0f138862469ff878c7e061c7afd18a)),
+  closes [#63](https://github.com/chenasraf/simple-scaffold/issues/63)
 
 ## [1.8.0-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.2...v1.8.0-pre.1) (2023-11-27)
 
-
 ### Bug Fixes
 
-* **config:** fn config load ([457c904](https://github.com/chenasraf/simple-scaffold/commit/457c90470b0f138862469ff878c7e061c7afd18a)), closes [#63](https://github.com/chenasraf/simple-scaffold/issues/63)
+- **config:** fn config load
+  ([457c904](https://github.com/chenasraf/simple-scaffold/commit/457c90470b0f138862469ff878c7e061c7afd18a)),
+  closes [#63](https://github.com/chenasraf/simple-scaffold/issues/63)
 
 ## [1.7.2](https://github.com/chenasraf/simple-scaffold/compare/v1.7.1...v1.7.2) (2023-08-20)
 
-
 ### Bug Fixes
 
-* windows path resolution ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
+- windows path resolution
+  ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
 
 ## [1.7.2-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.1...v1.7.2-pre.1) (2023-08-15)
 
-
 ### Bug Fixes
 
-* windows path resolution ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
+- windows path resolution
+  ([98ee000](https://github.com/chenasraf/simple-scaffold/commit/98ee00031fc1ad67a53797a9e28e5c4759bc8bce))
 
 ## [1.7.1](https://github.com/chenasraf/simple-scaffold/compare/v1.7.0...v1.7.1) (2023-06-07)
 
