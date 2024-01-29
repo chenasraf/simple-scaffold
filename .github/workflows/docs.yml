@@ -3,8 +3,6 @@ name: Documentation
 on:
   push:
     branches: [master, pre, develop]
-  pull_request:
-    branches: []
 
 jobs:
   docs:
@@ -22,7 +20,7 @@ jobs:
       - name: Install PNPM
         run: npm i -g pnpm
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: cd docs && pnpm install --frozen-lockfile
       - name: Build Docs
         run: pnpm docs:build
       - name: Deploy on GitHub Pages
