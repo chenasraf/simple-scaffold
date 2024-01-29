@@ -152,7 +152,7 @@ The command line option is `--git` or `-g`.
 
 ```sh
 # GitHub shorthand
-simple-scaffold -gh <username>/<project_name> [-c <filename>] [-k <template_key>]
+simple-scaffold -g <username>/<project_name> [-c <filename>] [-k <template_key>]
 
 # Any git URL, git:// and https:// are supported
 simple-scaffold -g git://gitlab.com/<username>/<project_name> [-c <filename>] [-k <template_key>]
