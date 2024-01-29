@@ -11,7 +11,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
   const pkgFile = await fs.readFile(path.join(__dirname, "package.json"))
   const pkg = JSON.parse(pkgFile.toString())
   const isConfigProvided =
-    args.includes("--config") || args.includes("-c") || args.includes("--github") || args.includes("-gh")
+    args.includes("--config") || args.includes("-c") || args.includes("--git") || args.includes("-g")
 
   return (
     massarg<ScaffoldCmdConfig>({
@@ -44,13 +44,6 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["g"],
         description:
           "Git URL to load config from instead of passing arguments to CLI or using a Node.js script. See " +
-          "examples for syntax.",
-      })
-      .option({
-        name: "github",
-        aliases: ["gh"],
-        description:
-          "GitHub path to load config from instead of passing arguments to CLI or using a Node.js script. See " +
           "examples for syntax.",
       })
       .option({
@@ -144,23 +137,20 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       })
       .example({
         description: "Usage with GitHub config file",
-        input: "simple-scaffold -gh chenasraf/simple-scaffold --key component",
+        input: "simple-scaffold -g chenasraf/simple-scaffold --key component",
       })
       .example({
         description: "Usage with https git URL (for non-GitHub)",
-        input: "simple-scaffold -c https://example.com/user/template.git#scaffold.cmd.js --key component",
-      })
-      .example({
-        description: "Full syntax with config path and template key (applicable to all above methods)",
-        input: "simple-scaffold -c scaffold.cmd.js:component MyComponent",
+        input: "simple-scaffold -g https://example.com/user/template.git -c scaffold.cmd.js --key component",
       })
       .example({
         description: "Excluded template key, assumes 'default' key",
         input: "simple-scaffold -c scaffold.cmd.js MyComponent",
       })
       .example({
-        description: "Shortest syntax for GitHub, assumes file 'scaffold.cmd.js' and template key 'default'",
-        input: "simple-scaffold -gh chenasraf/simple-scaffold MyComponent",
+        description:
+          "Shortest syntax for GitHub, searches for config file automaticlly, assumes and template key 'default'",
+        input: "simple-scaffold -g chenasraf/simple-scaffold MyComponent",
       })
       .help({
         bindOption: true,

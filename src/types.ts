@@ -335,7 +335,6 @@ export interface ScaffoldCmdConfig {
   config?: string
   key?: string
   git?: string
-  github?: string
 }
 
 /**

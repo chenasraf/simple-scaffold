@@ -55,21 +55,23 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
     config.logLevel = LogLevel.none
   }
 
-  if (config.github) {
-    log(config, LogLevel.info, `Loading config from github ${config.github}`)
-    config.git = githubPartToUrl(config.github)
+  if (config.git && !config.git.includes("://")) {
+    log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
+    config.git = githubPartToUrl(config.git)
   }
 
-  if (config.config || config.git) {
+  const shouldLoadConfig = config.config || config.git
+
+  if (shouldLoadConfig) {
     const isGit = Boolean(config.git)
     const key = config.key ?? "default"
-    const configFile = config.config
-    const loadPath = isGit ? config.git : configFile
+    const configFilename = config.config
+    const configPath = isGit ? config.git : configFilename
 
-    log(config, LogLevel.info, `Loading config from ${configFile} with key ${key}`)
+    log(config, LogLevel.info, `Loading config from ${configFilename} with key ${key}`)
     const configPromise = await (config.git
-      ? getRemoteConfig({ git: loadPath, config: configFile, logLevel: config.logLevel })
-      : getLocalConfig({ config: configFile, logLevel: config.logLevel }))
+      ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel })
+      : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
     // resolve the config
     let configImport = await resolve(configPromise, config)
@@ -80,7 +82,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
     }
 
     if (!configImport[key]) {
-      throw new Error(`Template "${key}" not found in ${configFile}`)
+      throw new Error(`Template "${key}" not found in ${configFilename}`)
     }
 
     const importedKey = configImport[key]
