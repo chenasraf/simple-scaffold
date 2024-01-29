@@ -1,5 +1,7 @@
 # Change Log
 
+# [2.0.0-pre.2](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0-pre.1...v2.0.0-pre.2) (2024-01-29)
+
 # [2.0.0-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v2.0.0-pre.1) (2024-01-29)
 
 
