@@ -120,7 +120,7 @@ A remote config can be loaded in one of these ways:
 
 - If it's on GitHub, you can use `-g user/repository_name`
 - If it's on another git server (such as GitLab), you can use
-  `-c https://example.com/user/repository_name.git`
+  `-g https://example.com/user/repository_name.git`
 
 Configurations can hold multiple scaffold groups. Each group can be accessed using its key by
 supplying the `--key` or `-k` argument, like so:
@@ -145,7 +145,7 @@ $ npx simple-scaffold@latest \
   PageWrapper
 ```
 
-When template name (`:component`) is omitted, `default` is used.
+When template name (`-k component`) is omitted, `default` is used.
 
 See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli) and
 [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
