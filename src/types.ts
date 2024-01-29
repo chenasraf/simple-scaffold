@@ -126,7 +126,7 @@ export interface ScaffoldConfig {
    * @see {@link DefaultHelpers}
    * @see {@link CaseHelpers}
    * @see {@link DateHelpers}
-   * @see {@link https://chenasraf.github.io/simple-scaffold/pages/templates.html | Templates}
+   * @see {@link https://chenasraf.github.io/simple-scaffold/docs/usage/templates| Templates}
    * */
   helpers?: Record<string, Helper>
 

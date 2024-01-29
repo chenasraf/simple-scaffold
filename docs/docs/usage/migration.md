@@ -45,8 +45,8 @@ between versions. With these notable exceptions:
 - `locals` has been renamed to `data`. The appropriate command line args have been updated as well
   to `--data` | `-d`.
 - Additional options have been added to both CLI and Node interfaces. See
-  [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/pages/cli.html)
-  and [Node.js usage](https://chenasraf.github.io/simple-scaffold/pages/node.html) for more
+  [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli)
+  and [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node) for more
   information.
 
 ### Template syntax changes
