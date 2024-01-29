@@ -147,18 +147,18 @@ $ npx simple-scaffold@latest \
 
 When template name (`:component`) is omitted, `default` is used.
 
-See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html) and
-[Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html).
+See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli) and
+[Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
 
 ## Documentation
 
 See full documentation [here](https://chenasraf.github.io/simple-scaffold).
 
-- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/pages/cli.html)
-- [Node.js usage](https://chenasraf.github.io/simple-scaffold/pages/node.html)
-- [Templates](https://chenasraf.github.io/simple-scaffold/pages/templates.html)
-- [Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html)
-- [Migrating v0.x to v1.x](https://chenasraf.github.io/simple-scaffold/pages/migration.html)
+- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli)
+- [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node)
+- [Templates](https://chenasraf.github.io/simple-scaffold/docs/usage/templates)
+- [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files)
+- [Migration](https://chenasraf.github.io/simple-scaffold/docs/usage/migration)
 
 ## Contributing
 
