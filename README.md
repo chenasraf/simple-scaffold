@@ -108,8 +108,8 @@ This will allow you to avoid needing to remember which configs are needed or to 
 Also, this allows you to define more complex scaffolds with logic without having to use the Node.js
 API directly. (Of course you always have the option to still do so if you wish)
 
-See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/pages/cli.html) and
-[Configuration Files](https://chenasraf.github.io/simple-scaffold/pages/configuration_files.html).
+See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli) and
+[Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
 
 ### Remote Configurations
 
