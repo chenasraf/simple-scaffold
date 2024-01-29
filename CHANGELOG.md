@@ -1,5 +1,17 @@
 # Change Log
 
+# [2.0.0-pre.1](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v2.0.0-pre.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* remove gh flag ([e66d6ba](https://github.com/chenasraf/simple-scaffold/commit/e66d6ba86a787c2184be5a5caf4153d4ccd1b787))
+
+
+### Features
+
+* try multiple default config files ([f25cda7](https://github.com/chenasraf/simple-scaffold/commit/f25cda738b6b2b10b684f4d2c98a9dc823e4538c))
+
 # [1.9.0](https://github.com/chenasraf/simple-scaffold/compare/v1.8.0...v1.9.0) (2024-01-02)
 
 ### Features
