@@ -35,21 +35,20 @@
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0; echo \"# Change Log\n\n$(cat CHANGELOG.md)\" > CHANGELOG.md"
   },
   "dependencies": {
-    "chalk": "<5",
+    "chalk": "^4.1.2",
     "date-fns": "^3.3.1",
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
     "massarg": "2.0.0-pre.11"
   },
   "devDependencies": {
-    "@knodes/typedoc-plugin-pages": "^0.23.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@types/jest": "^29.5.11",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^20.11.7",
+    "@types/node": "^20.11.10",
     "@types/semantic-release": "^20.0.6",
     "conventional-changelog": "^5.1.0",
     "conventional-changelog-cli": "^4.1.0",
@@ -59,7 +58,6 @@
     "semantic-release-conventional-commits": "^3.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
   }
 }
