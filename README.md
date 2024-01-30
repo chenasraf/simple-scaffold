@@ -6,7 +6,8 @@
 [Documentation](https://chenasraf.github.io/simple-scaffold) |
 [NPM](https://npmjs.com/package/simple-scaffold) | [casraf.dev](https://casraf.dev)
 
-![version](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=version)
+![latest](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/master?label=latest)
+![pre](https://img.shields.io/github/package-json/v/chenasraf/simple-scaffold/pre?label=pre)
 ![build](https://img.shields.io/github/actions/workflow/status/chenasraf/simple-scaffold/release.yml?branch=master)
 
 </h2>
