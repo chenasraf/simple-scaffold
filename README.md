@@ -25,7 +25,7 @@ lifting for you and start building your projects faster and more efficiently tod
 
 <div align="center">
 
-![Intro](https://github.com/chenasraf/simple-scaffold/assets/167217/6341efab-f961-4f1a-83e2-831b1308b9eb)
+![Intro](https://chenasraf.github.io/simple-scaffold/img/intro.gif)
 
 </div>
 
