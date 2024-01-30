@@ -125,7 +125,7 @@ config.helpers = {
 ```
 
 All of the above helpers (built in and custom) will also be available to you when using
-`subFolderNameHelper` (`--sub-folder-name-helper`/`-sh`) as a possible value.
+`subdirHelper` (`--sub-dir-helper`/`-H`) as a possible value.
 
 > To see more information on how helpers work and more features, see
 > [Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).

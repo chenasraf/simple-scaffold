@@ -24,11 +24,9 @@
     "clean": "rm -rf dist/",
     "build": "pnpm clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
     "dev": "tsc --watch",
-    "start": "node dist/scaffold.js",
+    "start": "ts-node src/scaffold.ts",
     "test": "jest",
-    "cmd": "node --trace-warnings dist/cmd.js",
-    "build-test": "pnpm build && pnpm test",
-    "build-cmd": "pnpm build && pnpm cmd",
+    "cmd": "ts-node src/cmd.ts",
     "docs:build": "cd docs && pnpm build",
     "docs:watch": "cd docs && pnpm start",
     "audit-fix": "pnpm audit --fix",
@@ -39,7 +37,7 @@
     "date-fns": "^3.3.1",
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
-    "massarg": "2.0.0-pre.11"
+    "massarg": "2.0.0-pre.12"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

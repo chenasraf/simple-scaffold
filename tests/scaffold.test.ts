@@ -110,7 +110,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          createSubFolder: true,
+          subdir: true,
           logLevel: "none",
         })
 
@@ -402,7 +402,7 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          createSubFolder: true,
+          subdir: true,
           logLevel: "none",
         })
 
@@ -415,9 +415,9 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          createSubFolder: true,
+          subdir: true,
           logLevel: "none",
-          subFolderNameHelper: "upperCase",
+          subdirHelper: "upperCase",
         })
 
         const data = readFileSync(join(process.cwd(), "output", "APP_NAME", "app_name.txt"))
@@ -429,9 +429,9 @@ describe("Scaffold", () => {
           name: "app_name",
           output: "output",
           templates: ["input"],
-          createSubFolder: true,
+          subdir: true,
           logLevel: "none",
-          subFolderNameHelper: "test",
+          subdirHelper: "test",
           helpers: {
             test: () => "REPLACED",
           },

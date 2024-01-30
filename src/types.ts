@@ -27,7 +27,7 @@ export interface ScaffoldConfig {
   templates: string[]
 
   /**
-   * Path to output to. If `createSubFolder` is `true`, the subfolder will be created inside this path.
+   * Path to output to. If `subdir` is `true`, the subfolder will be created inside this path.
    *
    * May also be a {@link FileResponseHandler} which returns a new output path to override the default one.
    *
@@ -39,12 +39,12 @@ export interface ScaffoldConfig {
   /**
    * Whether to create subfolder with the input name.
    *
-   * When `true`, you may also use {@link subFolderNameHelper} to determine a pre-process helper on
+   * When `true`, you may also use {@link subdirHelper} to determine a pre-process helper on
    * the directory name.
    *
    * @default `false`
    */
-  createSubFolder?: boolean
+  subdir?: boolean
 
   /**
    * Add custom data to the templates. By default, only your app name is included as `{{name}}` and `{{Name}}`.
@@ -131,15 +131,15 @@ export interface ScaffoldConfig {
   helpers?: Record<string, Helper>
 
   /**
-   * Default transformer to apply to subfolder name when using `createSubFolder: true`. Can be one of the default
+   * Default transformer to apply to subfolder name when using `subdir: true`. Can be one of the default
    * capitalization helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no
    * transformation is done.
    *
-   * @see {@link createSubFolder}
+   * @see {@link subdir}
    * @see {@link CaseHelpers}
    * @see {@link DefaultHelpers}
    */
-  subFolderNameHelper?: DefaultHelpers | string
+  subdirHelper?: DefaultHelpers | string
 
   /**
    * This callback runs right before content is being written to the disk. If you supply this function, you may return
@@ -182,7 +182,7 @@ export interface ScaffoldConfig {
  * @see {@link DefaultHelpers}
  * @see {@link DateHelpers}
  * @see {@link ScaffoldConfig}
- * @see {@link ScaffoldConfig.subFolderNameHelper}
+ * @see {@link ScaffoldConfig.subdirHelper}
  *
  * @category Helpers
  */
@@ -320,20 +320,42 @@ export type FileResponseHandler<T> = (fullPath: string, basedir: string, basenam
  * */
 export type FileResponse<T> = T | FileResponseHandler<T>
 
-/** @internal */
+/**
+ * The Scaffold config for CLI
+ * Contains less and more specific options than {@link ScaffoldConfig}
+ */
 export interface ScaffoldCmdConfig {
+  /** The name of the scaffold template to use. */
   name: string
+  /** The templates to use for generation */
   templates: string[]
+  /** The output path to write to */
   output: string
-  createSubFolder: boolean
+  /** Whether to create subfolder with the input name */
+  subdir: boolean
+  /** Default transformer to apply to subfolder name when using `subdir: true` */
+  subdirHelper?: string
+  /** Add custom data to the templates */
   data?: Record<string, string>
+  /** Add custom data to the template in a CLI-friendly syntax (and not JSON) */
   appendData?: Record<string, string>
+  /** Enable to override output files, even if they already exist */
   overwrite: boolean
+  /** Silence logs, same as `logLevel: "none"` */
   quiet: boolean
+  /**
+   * Determine amount of logs to display.
+   *
+   * @see {@link LogLevel}
+   */
   logLevel: LogLevel
+  /** Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories. */
   dryRun: boolean
+  /** Config file path to use */
   config?: string
+  /** The key of the template to use */
   key?: string
+  /** The git repository to use to fetch the config file */
   git?: string
 }
 
