@@ -32,19 +32,19 @@ title: Examples
 
 - Output file path:
 
-  - With `createSubFolder = false` (default):
+  - With `subdir = false` (default):
 
     ```text
     project → src → components → MyComponent.js
     ```
 
-  - With `createSubFolder = true`:
+  - With `subdir = true`:
 
     ```text
     project → src → components → MyComponent → MyComponent.js
     ```
 
-  - With `createSubFolder = true` and `subFolderNameHelper = 'upperCase'`:
+  - With `subdir = true` and `subdirHelper = 'upperCase'`:
 
     ```text
     project → src → components → MYCOMPONENT → MyComponent.js

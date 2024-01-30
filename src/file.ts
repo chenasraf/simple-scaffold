@@ -165,9 +165,9 @@ export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, base
     ...([
       outputPathOpt,
       basePath,
-      config.createSubFolder
-        ? config.subFolderNameHelper
-          ? handlebarsParse(config, `{{ ${config.subFolderNameHelper} name }}`).toString()
+      config.subdir
+        ? config.subdirHelper
+          ? handlebarsParse(config, `{{ ${config.subdirHelper} name }}`).toString()
           : config.name
         : undefined,
     ].filter(Boolean) as string[]),

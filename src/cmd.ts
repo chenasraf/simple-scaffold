@@ -8,7 +8,8 @@ import fs from "node:fs/promises"
 import { parseAppendData, parseConfigFile } from "./config"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
-  const pkgFile = await fs.readFile(path.join(__dirname, "package.json"))
+  const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
+  const pkgFile = await fs.readFile(path.resolve(__dirname, isProjectRoot ? "." : "..", "package.json"))
   const pkg = JSON.parse(pkgFile.toString())
   const isConfigProvided =
     args.includes("--config") || args.includes("-c") || args.includes("--git") || args.includes("-g")
@@ -56,7 +57,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       name: "output",
       aliases: ["o"],
       description:
-        "Path to output to. If `--create-sub-folder` is enabled, the subfolder will be created inside " +
+        "Path to output to. If `--subdir` is enabled, the subfolder will be created inside " +
         "this path. Default is current working directory.",
       required: !isConfigProvided,
     })
@@ -75,6 +76,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       aliases: ["w"],
       defaultValue: false,
       description: "Enable to override output files, even if they already exist.",
+      negatable: true,
     })
     .option({
       name: "data",
@@ -91,15 +93,17 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       parse: parseAppendData,
     })
     .flag({
-      name: "create-sub-folder",
+      name: "subdir",
       aliases: ["s"],
       defaultValue: false,
-      description: "Create subfolder with the input name",
+      description: "Create a parent directory with the input name (and possibly `--subdir-helper`",
+      negatable: true,
+      negationName: "no-subdir",
     })
     .option({
-      name: "sub-folder-name-helper",
-      aliases: ["sh"],
-      description: "Default helper to apply to subfolder name when using `--create-sub-folder true`.",
+      name: "subdir-helper",
+      aliases: ["H"],
+      description: "Default helper to apply to subfolder name when using `--subdir`.",
     })
     .flag({
       name: "quiet",
@@ -150,16 +154,17 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       bindOption: true,
       lineLength: 100,
       useGlobalTableColumns: true,
-      // optionOptions: {
-      //   displayNegations: true,
-      // },
+      usageText: [chalk.yellow`simple-scaffold`, chalk.gray`[options]`, chalk.cyan`<name>`].join(" "),
+      optionOptions: {
+        displayNegations: true,
+      },
       footerText: [
         `Version:  ${pkg.version}`,
         `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
         ``,
-        `Documentation:\n  ${chalk.underline`https://chenasraf.github.io/simple-scaffold`}`,
-        `NPM:\n  ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
-        `GitHub:\n  ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
+        `Documentation:  ${chalk.underline`https://chenasraf.github.io/simple-scaffold`}`,
+        `NPM:  ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
+        `GitHub:  ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
       ].join("\n"),
     })
     .parse(args)

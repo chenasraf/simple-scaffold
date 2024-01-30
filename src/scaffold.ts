@@ -123,7 +123,7 @@ Scaffold.fromConfig = async function (
     logLevel: LogLevel.info,
     overwrite: false,
     templates: [],
-    createSubFolder: false,
+    subdir: false,
     quiet: false,
     config: pathOrUrl,
     ...config,

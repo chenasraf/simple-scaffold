@@ -6,9 +6,9 @@ title: Migration
 
 ### CLI option changes
 
-- The `:template_key` syntax has been removed. You can still use `-k template_key` to achieve the
-  same result.
 - Several changes to how remote configs are loaded via CLI:
+  - The `:template_key` syntax has been removed. You can still use `-k template_key` to achieve the
+    same result.
   - The `--github` (`-gh`) flag has been replaced by a generic `--git` (`-g`) one, which handles any
     git URL. Providing a partial GitHub path will default to trying to find the project on GitHub,
     e.g. `-g username/project`
@@ -17,6 +17,10 @@ title: Migration
     which can find the file for you if it is in one of the supported filenames.
 - `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
   as usual by using the numbering from before.
+- `--create-sub-folder` (`-s`) has been renamed to `--subdir` (`-s`) in the CLI. The Node.js names
+  have been changed as well.
+- `--sub-folder-name-helper` (`-sh`) has been renamed to `--subdir-helper` (`-sh`). The Node.js
+  names have been changed as well.
 - All boolean flags no longer take a value. `-q` instead of `-q 1` or `-q true`, `-s` instead of
   `-s 1`, `-w` instead of `-w 1`, etc.
 

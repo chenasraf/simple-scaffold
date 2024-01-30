@@ -31,14 +31,17 @@ interface ScaffoldConfig {
   name: string
   templates: string[]
   output: FileResponse<string>
-  createSubFolder?: boolean
+  subdir?: boolean
+  git?: string
+  config?: string
+  key?: string
   data?: Record<string, any>
   overwrite?: FileResponse<boolean>
   quiet?: boolean
   verbose?: LogLevel
   dryRun?: boolean
   helpers?: Record<string, Helper>
-  subFolderNameHelper?: DefaultHelpers | string
+  subdirHelper?: DefaultHelpers | string
   beforeWrite?(
     content: Buffer,
     rawContent: Buffer,

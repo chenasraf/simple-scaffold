@@ -2,7 +2,15 @@ import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import chalk from "chalk"
 
 export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
-  if (config.logLevel === LogLevel.none || level < (config.logLevel ?? LogLevel.info)) {
+  const priority: Record<LogLevel, number> = {
+    [LogLevel.none]: 0,
+    [LogLevel.debug]: 1,
+    [LogLevel.info]: 2,
+    [LogLevel.warning]: 3,
+    [LogLevel.error]: 4,
+  }
+
+  if (config.logLevel === LogLevel.none || priority[level] < priority[config.logLevel ?? LogLevel.info]) {
     return
   }
 
@@ -49,10 +57,10 @@ export function logInitStep(config: ScaffoldConfig): void {
     name: config.name,
     templates: config.templates,
     output: config.output,
-    createSubFolder: config.createSubFolder,
+    subdir: config.subdir,
     data: config.data,
     overwrite: config.overwrite,
-    subFolderNameHelper: config.subFolderNameHelper,
+    subdirHelper: config.subdirHelper,
     helpers: Object.keys(config.helpers ?? {}),
     logLevel: config.logLevel,
     dryRun: config.dryRun,
