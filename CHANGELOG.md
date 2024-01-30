@@ -1,5 +1,12 @@
 # Change Log
 
+# [2.0.0-pre.3](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0-pre.2...v2.0.0-pre.3) (2024-01-30)
+
+
+### Bug Fixes
+
+* tests ([c219d38](https://github.com/chenasraf/simple-scaffold/commit/c219d382e6df8b2ca1157544a7785f6645d04be2))
+
 ## 2.0.0-pre.2 (2024-01-29)
 
 * Update README.md ([e012d51](https://github.com/chenasraf/simple-scaffold/commit/e012d51))
