@@ -27,7 +27,7 @@ const blankCliConf: ScaffoldCmdConfig = {
   templates: [],
   data: { name: "test" },
   overwrite: false,
-  createSubFolder: false,
+  subdir: false,
   dryRun: false,
   quiet: false,
 }
