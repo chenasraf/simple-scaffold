@@ -27,8 +27,8 @@ module.exports = {
     [
       "@semantic-release/npm",
       {
-        // publish from build dir instead of root
-        pkgRoot: "build",
+        // publish from dist dir instead of root
+        pkgRoot: "dist",
       },
     ],
     [
