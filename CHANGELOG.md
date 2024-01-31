@@ -13,6 +13,19 @@
 
 * try multiple default config files ([89aacb5](https://github.com/chenasraf/simple-scaffold/commit/89aacb58fd90a892f4994c758c61c43b2a6b1fba))
 
+# [1.10.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v1.10.0) (2024-01-31)
+
+
+### Bug Fixes
+
+* remove gh flag ([939200c](https://github.com/chenasraf/simple-scaffold/commit/939200c9f21be240485ea602a73b983ba2f47aaf))
+* tests ([ff92fd7](https://github.com/chenasraf/simple-scaffold/commit/ff92fd7607f1b86f36fc6b62652fdfc81cb391a3))
+
+
+### Features
+
+* try multiple default config files ([89aacb5](https://github.com/chenasraf/simple-scaffold/commit/89aacb58fd90a892f4994c758c61c43b2a6b1fba))
+
 # [2.0.0-pre.3](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0-pre.2...v2.0.0-pre.3) (2024-01-30)
 
 
