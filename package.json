@@ -37,7 +37,7 @@
     "date-fns": "^3.3.1",
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
-    "massarg": "2.0.0-pre.12"
+    "massarg": "2.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -46,7 +46,7 @@
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@types/jest": "^29.5.11",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^20.11.10",
+    "@types/node": "^20.11.14",
     "@types/semantic-release": "^20.0.6",
     "conventional-changelog": "^5.1.0",
     "conventional-changelog-cli": "^4.1.0",
