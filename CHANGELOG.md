@@ -1,5 +1,15 @@
 # Change Log
 
+# [2.0.0](https://github.com/chenasraf/simple-scaffold/compare/v1.10.0...v2.0.0) (2024-01-31)
+
+
+* fix!: version number ([bc0a18d](https://github.com/chenasraf/simple-scaffold/commit/bc0a18dce01fefec6187192cb20c9303f7f7dbfa))
+
+
+### BREAKING CHANGES
+
+* see changelog
+
 # [1.10.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v1.10.0) (2024-01-31)
 
 
