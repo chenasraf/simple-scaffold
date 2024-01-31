@@ -1,6 +1,6 @@
 {
   "name": "simple-scaffold",
-  "version": "0.0.0",
+  "version": "1.9.0",
   "description": "Generate any file structure - from single components to entire app boilerplates, with a single command.",
   "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": "https://github.com/chenasraf/simple-scaffold.git",
