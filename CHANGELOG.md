@@ -1,57 +1,13 @@
 # Change Log
 
-# [2.0.0](https://github.com/chenasraf/simple-scaffold/compare/v1.10.0...v2.0.0) (2024-01-31)
-
+# [2.0.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v2.0.0) (2024-01-31)
 
 * fix!: version number ([bc0a18d](https://github.com/chenasraf/simple-scaffold/commit/bc0a18dce01fefec6187192cb20c9303f7f7dbfa))
-
-
-### BREAKING CHANGES
-
-* see changelog
-
-# [1.10.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v1.10.0) (2024-01-31)
-
-
-### Bug Fixes
-
 * remove gh flag ([939200c](https://github.com/chenasraf/simple-scaffold/commit/939200c9f21be240485ea602a73b983ba2f47aaf))
 * tests ([ff92fd7](https://github.com/chenasraf/simple-scaffold/commit/ff92fd7607f1b86f36fc6b62652fdfc81cb391a3))
-
-
-### Features
-
 * try multiple default config files ([89aacb5](https://github.com/chenasraf/simple-scaffold/commit/89aacb58fd90a892f4994c758c61c43b2a6b1fba))
-
-# [1.10.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v1.10.0) (2024-01-31)
-
-
-### Bug Fixes
-
-* remove gh flag ([939200c](https://github.com/chenasraf/simple-scaffold/commit/939200c9f21be240485ea602a73b983ba2f47aaf))
-* tests ([ff92fd7](https://github.com/chenasraf/simple-scaffold/commit/ff92fd7607f1b86f36fc6b62652fdfc81cb391a3))
-
-
-### Features
-
-* try multiple default config files ([89aacb5](https://github.com/chenasraf/simple-scaffold/commit/89aacb58fd90a892f4994c758c61c43b2a6b1fba))
-
-# [2.0.0-pre.3](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0-pre.2...v2.0.0-pre.3) (2024-01-30)
-
-
-### Bug Fixes
-
-* tests ([c219d38](https://github.com/chenasraf/simple-scaffold/commit/c219d382e6df8b2ca1157544a7785f6645d04be2))
-
-## 2.0.0-pre.2 (2024-01-29)
-
 * Update README.md ([e012d51](https://github.com/chenasraf/simple-scaffold/commit/e012d51))
 * docs: fix readme doc links ([55e561b](https://github.com/chenasraf/simple-scaffold/commit/55e561b))
-
-
-
-## 2.0.0-pre.1 (2024-01-29)
-
 * chore: fix docs & formatting ([b4f0731](https://github.com/chenasraf/simple-scaffold/commit/b4f0731))
 * chore: update deps ([22ad5d4](https://github.com/chenasraf/simple-scaffold/commit/22ad5d4))
 * chore: update deps ([b2373aa](https://github.com/chenasraf/simple-scaffold/commit/b2373aa))
