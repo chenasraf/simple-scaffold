@@ -15,8 +15,7 @@ title: Migration
   - The `#template_file` syntax has been removed, you may use `--config` or `-c` to tell Simple
     Scaffold which file to look for inside the git project. There is a default file priority list
     which can find the file for you if it is in one of the supported filenames.
-- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive) or
-  as usual by using the numbering from before.
+- `verbose` can now take the names `debug`, `info`, `warn`, `error` or `none` (case insensitive).
 - `--create-sub-folder` (`-s`) has been renamed to `--subdir` (`-s`) in the CLI. The Node.js names
   have been changed as well.
 - `--sub-folder-name-helper` (`-sh`) has been renamed to `--subdir-helper` (`-sh`). The Node.js
