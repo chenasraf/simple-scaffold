@@ -12,10 +12,12 @@ function HomepageHeader() {
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
+        <img className={styles.logo} src="img/logo-lg.svg" alt="Simple Scaffold" />
         <Heading as="h1" className="hero__title">
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <img className={styles.heroImage} src="img/intro.gif" alt="Simple-Scaffold doing its thing" />
         <div className={styles.buttons}>
           <Link className="button button--secondary button--lg" to="/docs/api">
             API

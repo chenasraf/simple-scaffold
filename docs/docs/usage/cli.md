@@ -28,6 +28,7 @@ To see this and more information anytime, add the `-h` or `--help` flag to your 
 | `--log-level` \| `-l`               | Determine amount of logs to display. The values are: `none \| debug \| info \| warn \| error`. The provided level will display messages of the same level or higher.                                                                                                       |
 | `--dry-run` \| `-dr`                | Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories.                                                                                                             |
 | `--help` \| `-h`                    | Show this help message                                                                                                                                                                                                                                                     |
+| `--version` \| `-v`                 | Display version.                                                                                                                                                                                                                                                           |
 
 ## Examples:
 
