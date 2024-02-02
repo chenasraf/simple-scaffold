@@ -25,16 +25,16 @@ module.exports = {
     //   },
     // ]
     [
+      "@semantic-release/exec",
+      {
+        publish: "cd ./dist && pnpm pack --pack-destination=../",
+      },
+    ],
+    [
       "@semantic-release/npm",
       {
         // publish from dist dir instead of root
         pkgRoot: "dist",
-      },
-    ],
-    [
-      "@semantic-release/exec",
-      {
-        publish: "cd ./dist && pnpm pack --pack-destination=../",
       },
     ],
     [
