@@ -126,7 +126,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         "Determine amount of logs to display. The values are: " +
         `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
         "The provided level will display messages of the same level or higher.",
-      parse: Number,
+      parse: (v) => v.toLowerCase(),
     })
     .flag({
       name: "dry-run",
