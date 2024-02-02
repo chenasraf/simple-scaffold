@@ -32,6 +32,12 @@ module.exports = {
       },
     ],
     [
+      "@semantic-release/exec",
+      {
+        publish: "cd ./dist && pnpm pack --pack-destination=../",
+      },
+    ],
+    [
       "@semantic-release/github",
       {
         assets: ["*.tgz"],
