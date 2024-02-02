@@ -43,6 +43,15 @@ module.exports = {
         assets: ["*.tgz"],
       },
     ],
+    branch === "master"
+      ? [
+          "@semantic-release/changelog",
+          {
+            changelogFile: "CHANGELOG.md",
+            changelogTitle: "# Change Log",
+          },
+        ]
+      : undefined,
     [
       "@semantic-release/git",
       {
@@ -56,16 +65,5 @@ module.exports = {
     //     verifyReleaseCmd: 'echo ${nextRelease.version} > .VERSION',
     //   },
     // ],
-  ],
-}
-
-if (branch === "master") {
-  const gitIdx = module.exports.plugins.findIndex((plugin) => plugin[0] === "@semantic-release/git")
-  module.exports.plugins.splice(gitIdx, 0, [
-    "@semantic-release/changelog",
-    {
-      changelogFile: "CHANGELOG.md",
-      changelogTitle: "# Change Log",
-    },
-  ])
+  ].filter(Boolean),
 }
