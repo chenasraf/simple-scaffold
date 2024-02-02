@@ -121,7 +121,7 @@ const config: Config = {
           position: "right",
         },
         {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/chenasraf/simple-scaffold",
           label: "GitHub",
           position: "right",
         },
