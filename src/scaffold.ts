@@ -128,6 +128,7 @@ Scaffold.fromConfig = async function (
     subdir: false,
     quiet: false,
     config: pathOrUrl,
+    version: false,
     ...config,
   }
   const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)

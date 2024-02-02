@@ -257,6 +257,18 @@ export type DefaultHelpers = CaseHelpers | DateHelpers
  */
 export type Helper = HelperDelegate
 
+/**
+ * The amount of information to log when generating scaffold.
+ * When not `none`, the selected level will be the lowest level included.
+ *
+ * For example, level `info`  will include `info`, `warning` and `error`, but not `debug`; and `warning` will only
+ * show `warning` and `error`, but not `info` or `debug`.
+ *
+ * @default `info`
+ *
+ * @category Logging (const)
+ */
+
 export const LogLevel = {
   /** Silent output */
   none: "none",
@@ -276,17 +288,14 @@ export const LogLevel = {
 
 /**
  * The amount of information to log when generating scaffold.
- * When not `None`, the selected level will be the lowest level included.
+ * When not `none`, the selected level will be the lowest level included.
  *
- * For example, level `Info` (2) will include `Info`, `Warning` and `Error`, but not `Debug`; and `Warning` will only
- * show `Warning` and `Error`.
+ * For example, level `info`  will include `info`, `warning` and `error`, but not `debug`; and `warning` will only
+ * show `warning` and `error`, but not `info` or `debug`.
  *
- * You may use either the number or the name of the level.
- * For example, `2` or `info` are both valid.
+ * @default `info`
  *
- * @default `2 (info)`
- *
- * @category Logging
+ * @category Logging (type)
  */
 export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel]
 
@@ -324,7 +333,7 @@ export type FileResponse<T> = T | FileResponseHandler<T>
  * The Scaffold config for CLI
  * Contains less and more specific options than {@link ScaffoldConfig}
  */
-export interface ScaffoldCmdConfig {
+export type ScaffoldCmdConfig = {
   /** The name of the scaffold template to use. */
   name: string
   /** The templates to use for generation */
@@ -357,6 +366,8 @@ export interface ScaffoldCmdConfig {
   key?: string
   /** The git repository to use to fetch the config file */
   git?: string
+  /** Display version */
+  version: boolean
 }
 
 /**
@@ -369,14 +380,19 @@ export interface ScaffoldCmdConfig {
  * When no template key is provided to the scaffold command, the "default" template is used.
  *
  * @see {@link ScaffoldConfig}
+ *
+ * @category Config
  */
 export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
 
-/** The scaffold config file is either:
+/**
+ * The scaffold config file is either:
  * - A {@link ScaffoldConfigMap} object
  * - A function that returns a {@link ScaffoldConfigMap} object
  * - A promise that resolves to a {@link ScaffoldConfigMap} object
  * - A function that returns a promise that resolves to a {@link ScaffoldConfigMap} object
+ *
+ * @category Config
  */
 export type ScaffoldConfigFile = AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>
 
