@@ -8,19 +8,26 @@ import { Scaffold } from "./scaffold"
 import path from "node:path"
 import fs from "node:fs/promises"
 import { parseAppendData, parseConfigFile } from "./config"
+import { log } from "./logger"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
   const pkgFile = await fs.readFile(path.resolve(__dirname, isProjectRoot ? "." : "..", "package.json"))
   const pkg = JSON.parse(pkgFile.toString())
+  const isVersionFlag = args.includes("--version") || args.includes("-v")
   const isConfigProvided =
-    args.includes("--config") || args.includes("-c") || args.includes("--git") || args.includes("-g")
+    args.includes("--config") || args.includes("-c") || args.includes("--git") || args.includes("-g") || isVersionFlag
 
   return massarg<ScaffoldCmdConfig>({
     name: pkg.name,
     description: pkg.description,
   })
     .main(async (config) => {
+      if (config.version) {
+        console.log(pkg.version)
+        return
+      }
+      log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
       const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
       const parsed = await parseConfigFile(config, tmpPath)
       try {
@@ -36,7 +43,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         "Name to be passed to the generated files. `{{name}}` and other data parameters inside " +
         "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
       isDefault: true,
-      required: true,
+      required: !isVersionFlag,
     })
     .option({
       name: "config",
@@ -135,6 +142,11 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       description:
         "Don't emit files. This is good for testing your scaffolds and making sure they " +
         "don't fail, without having to write actual file contents or create directories.",
+    })
+    .flag({
+      name: "version",
+      aliases: ["v"],
+      description: "Display version.",
     })
     .example({
       description: "Usage with config file",
