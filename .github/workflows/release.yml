@@ -31,8 +31,6 @@ jobs:
         run: pnpm test
       - name: Build Package
         run: pnpm build
-      - name: Pack
-        run: cd ./dist && pnpm pack --pack-destination=../
       - name: Semantic Release
         run: npx semantic-release
         env:
