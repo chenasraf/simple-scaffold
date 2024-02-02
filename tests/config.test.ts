@@ -30,6 +30,7 @@ const blankCliConf: ScaffoldCmdConfig = {
   subdir: false,
   dryRun: false,
   quiet: false,
+  version: false,
 }
 
 const blankConfig: ScaffoldCmdConfig = {
