@@ -1,4 +1,6 @@
 import path from "node:path"
+import os from "node:os"
+import fs from "node:fs/promises"
 import {
   ConfigLoadConfig,
   FileResponse,
@@ -48,7 +50,7 @@ function isWrappedWithQuotes(string: string): boolean {
 }
 
 /** @internal */
-export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
+export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfig> {
   let output: ScaffoldConfig = config
 
   if (config.quiet) {
@@ -69,8 +71,9 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
     const configPath = isGit ? config.git : configFilename
 
     log(config, LogLevel.info, `Loading config from ${configFilename} with key ${key}`)
-    const configPromise = await (config.git
-      ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel })
+
+    const configPromise = await (isGit
+      ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpPath })
       : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
     // resolve the config
@@ -123,7 +126,7 @@ export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfi
 export async function getRemoteConfig(
   config: RemoteConfigLoadConfig & Partial<LogConfig>,
 ): Promise<ScaffoldConfigFile> {
-  const { config: configFile, git, ...logConfig } = config as Required<typeof config>
+  const { config: configFile, git, tmpPath, ...logConfig } = config as Required<typeof config>
 
   log(logConfig, LogLevel.info, `Loading config from remote ${git}, file ${configFile}`)
 
@@ -135,5 +138,5 @@ export async function getRemoteConfig(
     throw new Error(`Unsupported protocol ${url.protocol}`)
   }
 
-  return getGitConfig(url, configFile, logConfig)
+  return getGitConfig(url, configFile, tmpPath, logConfig)
 }

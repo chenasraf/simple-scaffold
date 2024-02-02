@@ -393,7 +393,7 @@ export type LogConfig = Pick<ScaffoldConfig, "logLevel">
 export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
 
 /** @internal */
-export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config" | "git">
+export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config" | "git"> & { tmpPath: string }
 
 /** @internal */
 export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">

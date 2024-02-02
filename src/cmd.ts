@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+import os from "node:os"
 import { massarg } from "massarg"
 import chalk from "chalk"
 import { LogLevel, ScaffoldCmdConfig } from "./types"
@@ -19,8 +21,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
     description: pkg.description,
   })
     .main(async (config) => {
-      const parsed = await parseConfigFile(config)
-      return Scaffold(parsed)
+      const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
+      const parsed = await parseConfigFile(config, tmpPath)
+      try {
+        return Scaffold(parsed)
+      } finally {
+        await fs.rm(tmpPath, { recursive: true, force: true })
+      }
     })
     .option({
       name: "name",
