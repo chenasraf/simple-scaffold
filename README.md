@@ -195,16 +195,5 @@ Some tips on getting around the code:
 - Use `pnpm test` to run tests
 - Use `pnpm cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
   you to test different behaviors. See `pnpm cmd -h` for more information.
-
-  > This requires an updated build, and does not trigger one itself. From here you have several
-  > options:
-  >
-  > - Run `pnpm dev` to watch for file changes and build automatically
-  > - Run `pnpm build` before running this to trigger a one-time build
-  > - Run `pnpm build-cmd` which triggers a build right before running `pnpm cmd` automatically with
-  >   the rest of the given arguments.
-
-- Use `pnpm build-docs` to build the documentation once
-- Use `pnpm watch-docs` to start docs in watch mode
-- To see the documentation, currently you have to serve the directory yourself with a static web
-  server (like node's built in serve, VS code's "Go Live" mode, etc)
+- Use `pnpm docs:build` to build the documentation once
+- Use `pnpm docs:watch` to start docs in watch mode
