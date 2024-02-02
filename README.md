@@ -31,54 +31,76 @@ lifting for you and start building your projects faster and more efficiently tod
 
 ---
 
-## Quick Start
+## Documentation
 
-### Local Templates
+See full documentation [here](https://chenasraf.github.io/simple-scaffold).
 
-The fastest way to get started is to use `npx` to immediately start a scaffold process.
+- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli)
+- [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node)
+- [Templates](https://chenasraf.github.io/simple-scaffold/docs/usage/templates)
+- [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files)
+- [Migration](https://chenasraf.github.io/simple-scaffold/docs/usage/migration)
 
-Prepare any templates you want to use - for example, in the directory `templates/component`; and use
-that in the CLI args. Here is a simple example file:
+## Getting Started
 
-Simple Scaffold will maintain any file and directory structure you try to generate.
+### Cheat Sheet
 
-`templates/component/{{ pascalName name }}.tsx`
+A quick rundown of common usage scenarios:
 
-```tsx
-// Created: {{ now 'yyyy-MM-dd' }}
-import React from 'react'
+- Remote template config file on GitHub:
 
-export default {{pascalCase name}}: React.FC = (props) => {
-  return (
-    <div className="{{camelCase name}}">{{pascalCase name}} Component</div>
-  )
-}
-```
+  ```sh
+  npx simple-scaffold -g username/repository -c scaffold.js -k component NewComponentName
+  ```
 
-To generate the template output, run:
+- Local template config file:
+
+  ```sh
+  npx simple-scaffold -c scaffold.js -k component NewComponentName
+  ```
+
+- Local one-time usage:
+
+  ```sh
+  npx simple-scaffold -t templates/component -o src/components NewComponentName
+  ```
+
+### Remote Configurations
+
+The fastest way to get started is to is to re-use someone else's (or your own) work using a template
+repository.
+
+A remote config can be loaded in one of these ways:
+
+- For templates hosted on GitHub, the syntax is `-g user/repository_name`
+- For other Git platforms like GitLab, use `-g https://example.com/user/repository_name.git`
+
+These remote configurations support multiple scaffold groups, which can be specified using the
+`--key` or `-k` argument:
 
 ```sh
-# generate single component
-$ npx simple-scaffold@latest \
-  -t templates/component -o src/components PageWrapper
+$ npx simple-scaffold \
+  -g chenasraf/simple-scaffold \
+  -k component \
+  PageWrapper
+
+# equivalent to:
+$ npx simple-scaffold \
+  -g https://github.com/chenasraf/simple-scaffold.git \
+  -c scaffold.config.js \
+  -k component \
+  PageWrapper
 ```
 
-This will immediately create the following file: `src/components/PageWrapper.tsx`
+By default, the template name is set to `default` when the `--key` option is not provided.
 
-```tsx
-// Created: 2077-01-01
-import React from 'react'
-
-export default PageWrapper: React.FC = (props) => {
-  return (
-    <div className="pageWrapper">PageWrapper Component</div>
-  )
-}
-```
+See information about each option and flag using the `--help` flag, or read the
+[CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli). For information
+about how configuration files work, [see below](#configuration-files).
 
 ### Configuration Files
 
-You can also use a config file to more easily maintain all your scaffold definitions.
+You can use a config file to more easily maintain all your scaffold definitions.
 
 `scaffold.config.js`
 
@@ -99,66 +121,61 @@ module.exports = {
 Then call your scaffold like this:
 
 ```sh
-$ npx simple-scaffold@latest -c scaffold.config.js PageWrapper
+$ npx simple-scaffold -c scaffold.config.js PageWrapper
 ```
 
 This will allow you to avoid needing to remember which configs are needed or to store them in a
-1-liner in `packqge.json` which can get pretty long and messy, which is harder to maintain.
+one-liner in `package.json` which can get pretty long and messy, and harder to maintain.
 
 Also, this allows you to define more complex scaffolds with logic without having to use the Node.js
 API directly. (Of course you always have the option to still do so if you wish)
 
-See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli) and
-[Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
+More information can be found at the
+[Configuration Files documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
 
-### Remote Configurations
+### Templates Structure
 
-Another quick way to start is to re-use someone else's (or your own) work using a template
-repository.
+Templates are **any file** in the a directory given to `--templates`.
 
-A remote config can be loaded in one of these ways:
+Simple Scaffold will maintain any file and directory structure you try to generate, while replacing
+any tokens such as `{{ name }}` or other custom-data using
+[Handlebars.js](https://handlebarsjs.com/).
 
-- If it's on GitHub, you can use `-g user/repository_name`
-- If it's on another git server (such as GitLab), you can use
-  `-g https://example.com/user/repository_name.git`
+`templates/component/{{ pascalName name }}.tsx`
 
-Configurations can hold multiple scaffold groups. Each group can be accessed using its key by
-supplying the `--key` or `-k` argument, like so:
+```tsx
+// Created: {{ now 'yyyy-MM-dd' }}
+import React from 'react'
 
-```sh
--g user/repository_name -c scaffold.js -k key_name`.
+export default {{pascalCase name}}: React.FC = (props) => {
+  return (
+    <div className="{{camelCase name}}">{{pascalCase name}} Component</div>
+  )
+}
 ```
 
-Here is an example for loading the example component templates in this very repository:
+To generate the template output once without saving a configuration file, run:
 
 ```sh
-$ npx simple-scaffold@latest \
-  -g chenasraf/simple-scaffold \
-  -k component \
-  PageWrapper
-
-# equivalent to:
-$ npx simple-scaffold@latest \
-  -g https://github.com/chenasraf/simple-scaffold.git \
-  -c scaffold.config.js \
-  -k component \
+# generate single component
+$ npx simple-scaffold \
+  -t templates/component \
+  -o src/components \
   PageWrapper
 ```
 
-When template name (`-k component`) is omitted, `default` is used.
+This will immediately create the following file: `src/components/PageWrapper.tsx`
 
-See more at the [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli) and
-[Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
+```tsx
+// Created: 2077-01-01
+import React from 'react'
 
-## Documentation
-
-See full documentation [here](https://chenasraf.github.io/simple-scaffold).
-
-- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli)
-- [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node)
-- [Templates](https://chenasraf.github.io/simple-scaffold/docs/usage/templates)
-- [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files)
-- [Migration](https://chenasraf.github.io/simple-scaffold/docs/usage/migration)
+export default PageWrapper: React.FC = (props) => {
+  return (
+    <div className="pageWrapper">PageWrapper Component</div>
+  )
+}
+```
 
 ## Contributing
 
