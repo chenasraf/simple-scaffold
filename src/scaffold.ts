@@ -5,6 +5,8 @@
  * See [readme](README.md)
  */
 import path from "node:path"
+import os from "node:os"
+
 import { handleErr, resolve } from "./utils"
 import {
   isDir,
@@ -128,8 +130,9 @@ Scaffold.fromConfig = async function (
     config: pathOrUrl,
     ...config,
   }
+  const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
   const _overrides = resolve(overrides, _cmdConfig)
-  const _config = await parseConfigFile(_cmdConfig)
+  const _config = await parseConfigFile(_cmdConfig, tmpPath)
   return Scaffold({ ..._config, ..._overrides })
 }
 
