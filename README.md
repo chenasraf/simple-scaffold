@@ -189,11 +189,9 @@ If you are a developer and want to contribute code, here are some starting tips:
 
 Some tips on getting around the code:
 
-- Use `pnpm dev` for development - it runs TypeScript compile in watch mode, allowing you to make
-  changes and immediately be able to try them using `pnpm cmd`.
-- Use `pnpm build` to build the output once
-- Use `pnpm test` to run tests
 - Use `pnpm cmd` to use the CLI feature of Simple Scaffold from within the root directory, enabling
   you to test different behaviors. See `pnpm cmd -h` for more information.
+- Use `pnpm test` to run tests
 - Use `pnpm docs:build` to build the documentation once
 - Use `pnpm docs:watch` to start docs in watch mode
+- Use `pnpm build` to build the output
