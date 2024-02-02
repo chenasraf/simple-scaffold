@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.0.1](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0...v2.0.1) (2024-02-02)
+
+
+### Bug Fixes
+
+* log level flag ([5d7f449](https://github.com/chenasraf/simple-scaffold/commit/5d7f449050e50a6e4b2d00b7a2215cdb5fc9b611))
+* rm tmp dir too early ([4aa52c8](https://github.com/chenasraf/simple-scaffold/commit/4aa52c84bd8cf302031e9f7f6407466aa736beb7))
+
 # [2.0.0](https://github.com/chenasraf/simple-scaffold/compare/v1.9.0...v2.0.0) (2024-01-31)
 
 * fix!: version number ([bc0a18d](https://github.com/chenasraf/simple-scaffold/commit/bc0a18dce01fefec6187192cb20c9303f7f7dbfa))
