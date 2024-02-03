@@ -1,5 +1,3 @@
-<h1 align="center">Simple Scaffold</h1>
-
 <p align="center">
   <img src="https://chenasraf.github.io//simple-scaffold/img/logo-lg.png" alt="Logo" />
 </p>
