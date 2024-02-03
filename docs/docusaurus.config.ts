@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic"
 const config: Config = {
   title: "Simple Scaffold",
   tagline: "Generate any file structure - from single components to entire app boilerplates, with a single command.",
-  favicon: "img/logo.svg",
+  favicon: "img/favicon.svg",
 
   // Set the production url of your site here
   url: "https://chenasraf.github.io",
