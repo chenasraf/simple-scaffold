@@ -29,10 +29,12 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       }
       log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
       const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
-      const parsed = await parseConfigFile(config, tmpPath)
       try {
-        return Scaffold(parsed)
+        log(config, LogLevel.debug, "Parsing config file...", config)
+        const parsed = await parseConfigFile(config, tmpPath)
+        await Scaffold(parsed)
       } finally {
+        log(config, LogLevel.debug, "Cleaning up temporary files...", tmpPath)
         await fs.rm(tmpPath, { recursive: true, force: true })
       }
     })
@@ -133,7 +135,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         "Determine amount of logs to display. The values are: " +
         `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
         "The provided level will display messages of the same level or higher.",
-      parse: (v) => v.toLowerCase(),
+      parse: (v) => {
+        const val = v.toLowerCase()
+        if (!(val in LogLevel)) {
+          throw new Error(`Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`)
+        }
+        return val
+      },
     })
     .flag({
       name: "dry-run",
