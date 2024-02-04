@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.2](https://github.com/chenasraf/simple-scaffold/compare/v2.0.1...v2.0.2) (2024-02-04)
+
+
+### Bug Fixes
+
+* try to await scaffold before finally ([1b70897](https://github.com/chenasraf/simple-scaffold/commit/1b70897f9840e6365ff800490fbb813b9840177d))
+
 ## [2.0.1](https://github.com/chenasraf/simple-scaffold/compare/v2.0.0...v2.0.1) (2024-02-02)
 
 
