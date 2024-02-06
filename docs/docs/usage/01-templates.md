@@ -50,7 +50,6 @@ The contents of the file will be transformed in a similar fashion.
 
 Your `data` will be pre-populated with the following:
 
-- `{{Name}}`: PascalCase of the component name
 - `{{name}}`: raw name of the component as you entered it
 
 > Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
