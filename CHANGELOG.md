@@ -1,5 +1,13 @@
 # Change Log
 
+# [2.1.0](https://github.com/chenasraf/simple-scaffold/compare/v2.0.2...v2.1.0) (2024-02-12)
+
+
+### Features
+
+* support directory in --config flag ([e48b832](https://github.com/chenasraf/simple-scaffold/commit/e48b832e0b72a084d33fa2cbcca332e8209a734f))
+* support providing name in config ([4e7ac34](https://github.com/chenasraf/simple-scaffold/commit/4e7ac34db9bf67d012bbd1c06c1a26bc5ac93559))
+
 ## [2.0.2](https://github.com/chenasraf/simple-scaffold/compare/v2.0.1...v2.0.2) (2024-02-04)
 
 
