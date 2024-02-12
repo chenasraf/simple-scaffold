@@ -6,7 +6,7 @@ import * as config from "../src/config"
 import { resolve } from "../src/utils"
 // @ts-ignore
 import * as configFile from "../scaffold.config"
-import { findConfigFile } from "../src/git"
+import { findConfigFile } from "../src/config"
 
 jest.mock("../src/git", () => {
   return {
@@ -72,16 +72,18 @@ describe("config", () => {
         await parseConfigFile(
           {
             ...blankCliConf,
+            name: "-",
           },
           `/tmp/scaffold-config-${Date.now()}`,
         ),
-      ).toEqual(blankCliConf)
+      ).toEqual({ ...blankCliConf, name: "-" })
     })
     describe("appendData", () => {
       test("appends", async () => {
         const result = await parseConfigFile(
           {
             ...blankCliConf,
+            name: "-",
             appendData: { key: "value" },
           },
           `/tmp/scaffold-config-${Date.now()}`,
@@ -92,6 +94,7 @@ describe("config", () => {
         const result = await parseConfigFile(
           {
             ...blankCliConf,
+            name: "-",
             data: { num: "123" },
             appendData: { num: "1234" },
           },
