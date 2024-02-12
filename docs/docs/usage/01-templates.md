@@ -109,7 +109,15 @@ Further details:
   ```
 
 - **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as it
-  is implicitly the current date.
+  is implicitly the current date:
+
+  ```typescript
+  (
+    format: string,
+    offsetAmount?: number,
+    offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
+  )
+  ```
 
 ### Custom Helpers
 

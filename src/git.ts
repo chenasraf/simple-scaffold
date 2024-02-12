@@ -1,9 +1,9 @@
 import path from "node:path"
-import fs from "node:fs/promises"
 import { log } from "./logger"
 import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
 import { spawn } from "node:child_process"
 import { resolve, wrapNoopResolver } from "./utils"
+import { findConfigFile } from "./config"
 
 export async function getGitConfig(
   url: URL,
@@ -59,23 +59,4 @@ export async function loadGitConfig({
     }
   }
   return wrapNoopResolver(fixedConfig)
-}
-
-/** @internal */
-export async function findConfigFile(root: string): Promise<string> {
-  const allowed = ["mjs", "cjs", "js", "json"].reduce((acc, ext) => {
-    acc.push(`scaffold.config.${ext}`)
-    acc.push(`scaffold.${ext}`)
-    return acc
-  }, [] as string[])
-  for (const file of allowed) {
-    const exists = await fs
-      .stat(path.resolve(root, file))
-      .then(() => true)
-      .catch(() => false)
-    if (exists) {
-      return file
-    }
-  }
-  throw new Error(`Could not find config file in git repo`)
 }

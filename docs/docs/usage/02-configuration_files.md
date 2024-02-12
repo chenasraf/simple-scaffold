@@ -23,47 +23,10 @@ module.exports = {
 }
 ```
 
-The configuration contents are identical to the
-[Node.js configuration structure](https://chenasraf.github.io/simple-scaffold/docs/usage/node):
-
-```ts
-interface ScaffoldConfig {
-  name: string
-  templates: string[]
-  output: FileResponse<string>
-  subdir?: boolean
-  git?: string
-  config?: string
-  key?: string
-  data?: Record<string, any>
-  overwrite?: FileResponse<boolean>
-  quiet?: boolean
-  verbose?: LogLevel
-  dryRun?: boolean
-  helpers?: Record<string, Helper>
-  subdirHelper?: DefaultHelpers | string
-  beforeWrite?(
-    content: Buffer,
-    rawContent: Buffer,
-    outputPath: string,
-  ): string | Buffer | undefined | Promise<string | Buffer | undefined>
-}
-```
+For the full configuration options, see [ScaffoldConfigFile](../api/modules#scaffoldconfigfile).
 
 If you want to supply functions inside the configurations, you must use a `.js`/`.cjs`/`.mjs` file
 as JSON does not support non-primitives.
-
-A `.js` file can be just like a `.json` file, make sure to export the final configuration:
-
-```js
-/** @type {import('simple-scaffold').ScaffoldConfigFile} */
-module.exports = {
-  component: {
-    templates: ["templates/component"],
-    output: "src/components",
-  },
-}
-```
 
 Another feature of using a JS file is you can export a function which will be loaded with the CMD
 config provided to Simple Scaffold. The `extra` key contains any values not consumed by built-in
@@ -116,7 +79,7 @@ And then:
 simple-scaffold -c scaffold.json MyComponentName
 ```
 
-- When the filename is omitted, the following files will be tried in order:
+- When the a directory is given, the following files in the given directory will be tried in order:
 
   - `scaffold.config.*`
   - `scaffold.*`
@@ -161,6 +124,12 @@ simple-scaffold -g <username>/<project_name> [-c <filename>] [-k <template_key>]
 simple-scaffold -g git://gitlab.com/<username>/<project_name> [-c <filename>] [-k <template_key>]
 simple-scaffold -g https://gitlab.com/<username>/<project_name>.git [-c <filename>] [-k <template_key>]
 ```
+
+When a config file path is omitted, the files given in the list above will be tried on the root
+directory of the git repository.
+
+**Note:** The repository will be cloned to a temporary directory and removed after the scaffolding
+has been done.
 
 ## Use In Node.js
 
