@@ -1,4 +1,5 @@
 import path from "node:path"
+import fs from "node:fs/promises"
 import {
   ConfigLoadConfig,
   FileResponse,
@@ -14,6 +15,7 @@ import { handlebarsParse } from "./parser"
 import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
 import { getGitConfig } from "./git"
+import { isDir, pathExists } from "./file"
 
 /** @internal */
 export function getOptionValueForFile<T>(
@@ -68,7 +70,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
     const configFilename = config.config
     const configPath = isGit ? config.git : configFilename
 
-    log(config, LogLevel.info, `Loading config from ${configFilename} with key ${key}`)
+    log(config, LogLevel.info, `Loading config from file ${configFilename} with key ${key}`)
 
     const configPromise = await (isGit
       ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpPath })
@@ -115,8 +117,22 @@ export function githubPartToUrl(part: string): string {
 export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfig>): Promise<ScaffoldConfigFile> {
   const { config: configFile, ...logConfig } = config as Required<typeof config>
 
-  log(logConfig, LogLevel.info, `Loading config from file ${configFile}`)
   const absolutePath = path.resolve(process.cwd(), configFile)
+
+  const _isDir = await isDir(absolutePath)
+
+  if (_isDir) {
+    log(logConfig, LogLevel.debug, `Resolving config file from directory ${absolutePath}`)
+    const file = await findConfigFile(absolutePath)
+    const exists = await pathExists(file)
+    if (!exists) {
+      throw new Error(`Could not find config file in directory ${absolutePath}`)
+    }
+    log(logConfig, LogLevel.info, `Loading config from: ${path.resolve(absolutePath, file)}`)
+    return wrapNoopResolver(import(path.resolve(absolutePath, file)))
+  }
+
+  log(logConfig, LogLevel.info, `Loading config from: ${absolutePath}`)
   return wrapNoopResolver(import(absolutePath))
 }
 
@@ -137,4 +153,23 @@ export async function getRemoteConfig(
   }
 
   return getGitConfig(url, configFile, tmpPath, logConfig)
+}
+
+/** @internal */
+export async function findConfigFile(root: string): Promise<string> {
+  const allowed = ["mjs", "cjs", "js", "json"].reduce((acc, ext) => {
+    acc.push(`scaffold.config.${ext}`)
+    acc.push(`scaffold.${ext}`)
+    return acc
+  }, [] as string[])
+  for (const file of allowed) {
+    const exists = await fs
+      .stat(path.resolve(root, file))
+      .then(() => true)
+      .catch(() => false)
+    if (exists) {
+      return file
+    }
+  }
+  throw new Error(`Could not find config file in git repo`)
 }
