@@ -27,7 +27,7 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        publish: "cd ./dist && pnpm pack --pack-destination=../",
+        publishCmd: 'echo "Packing..."; cd ./dist && pnpm pack --pack-destination=../; echo "Done"',
       },
     ],
     [
@@ -45,12 +45,12 @@ module.exports = {
     ],
     branch === "master"
       ? [
-          "@semantic-release/changelog",
-          {
-            changelogFile: "CHANGELOG.md",
-            changelogTitle: "# Change Log",
-          },
-        ]
+        "@semantic-release/changelog",
+        {
+          changelogFile: "CHANGELOG.md",
+          changelogTitle: "# Change Log",
+        },
+      ]
       : undefined,
     [
       "@semantic-release/git",
