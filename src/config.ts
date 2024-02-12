@@ -81,6 +81,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
 
     // If the config is a function or promise, return the output
     if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
+      log(config, LogLevel.debug, "Config is a function or promise, resolving...")
       configImport = await resolve(configImport.default, config)
     }
 
@@ -88,19 +89,23 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
       throw new Error(`Template "${key}" not found in ${configFilename}`)
     }
 
-    const importedKey = configImport[key]
+    const imported = configImport[key]
+    log(config, LogLevel.debug, "Imported result", imported)
     output = {
       ...config,
-      ...importedKey,
+      ...imported,
       data: {
-        ...(importedKey as any).data,
+        ...(imported as any).data,
         ...config.data,
       },
     }
   }
 
   output.data = { ...output.data, ...config.appendData }
-  delete config.appendData
+  if (!output.name) {
+    throw new Error("simple-scaffold: Missing required option: name")
+  }
+  log(output, LogLevel.debug, "Parsed config", output)
   return output
 }
 
