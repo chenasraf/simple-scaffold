@@ -45,6 +45,12 @@ module.exports = (config) => {
 }
 ```
 
+If you want to provide templates that need no name (such as common config files which are easily
+portable between projects), you may provide the `name` property in the config object.
+
+You will always be able to override it using `--name NewName`, but it will be given a value by
+default and therefore it will no longer be required in the CLI arguments.
+
 ## Using a config file
 
 Once your config is created, you can use it by providing the file name to the `--config` (or `-c`

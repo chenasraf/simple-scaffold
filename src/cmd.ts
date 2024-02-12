@@ -33,6 +33,9 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         log(config, LogLevel.debug, "Parsing config file...", config)
         const parsed = await parseConfigFile(config, tmpPath)
         await Scaffold(parsed)
+      } catch (e) {
+        const message = "message" in (e as any) ? (e as any).message : e?.toString()
+        log(config, LogLevel.error, message)
       } finally {
         log(config, LogLevel.debug, "Cleaning up temporary files...", tmpPath)
         await fs.rm(tmpPath, { recursive: true, force: true })
@@ -45,7 +48,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         "Name to be passed to the generated files. `{{name}}` and other data parameters inside " +
         "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
       isDefault: true,
-      required: !isVersionFlag,
+      required: !isConfigProvided,
     })
     .option({
       name: "config",
