@@ -83,7 +83,7 @@ const config: Config = {
       title: "Simple Scaffold",
       logo: {
         alt: "Simple Scaffold",
-        src: "img/logo.svg",
+        src: "img/favicon.svg",
       },
       items: [
         {
