@@ -168,10 +168,7 @@ export async function findConfigFile(root: string): Promise<string> {
     return acc
   }, [] as string[])
   for (const file of allowed) {
-    const exists = await fs
-      .stat(path.resolve(root, file))
-      .then(() => true)
-      .catch(() => false)
+    const exists = await pathExists(path.resolve(root, file))
     if (exists) {
       return file
     }
