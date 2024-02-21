@@ -10,6 +10,7 @@ import {
   ScaffoldCmdConfig,
   ScaffoldConfig,
   ScaffoldConfigFile,
+  ScaffoldConfigMap,
 } from "./types"
 import { handlebarsParse } from "./parser"
 import { log } from "./logger"
@@ -50,6 +51,34 @@ function isWrappedWithQuotes(string: string): boolean {
 }
 
 /** @internal */
+export async function getConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfigMap> {
+  if (config.git && !config.git.includes("://")) {
+    log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
+    config.git = githubPartToUrl(config.git)
+  }
+
+  const isGit = Boolean(config.git)
+  const configFilename = config.config
+  const configPath = isGit ? config.git : configFilename
+
+  log(config, LogLevel.info, `Loading config from file ${configFilename}`)
+
+  const configPromise = await (isGit
+    ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpPath })
+    : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
+
+  // resolve the config
+  let configImport = await resolve(configPromise, config)
+
+  // If the config is a function or promise, return the output
+  if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
+    log(config, LogLevel.debug, "Config is a function or promise, resolving...")
+    configImport = await resolve(configImport.default, config)
+  }
+  return configImport
+}
+
+/** @internal */
 export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfig> {
   let output: ScaffoldConfig = config
 
@@ -57,36 +86,14 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
     config.logLevel = LogLevel.none
   }
 
-  if (config.git && !config.git.includes("://")) {
-    log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
-    config.git = githubPartToUrl(config.git)
-  }
-
-  const shouldLoadConfig = config.config || config.git
+  const shouldLoadConfig = Boolean(config.config || config.git)
 
   if (shouldLoadConfig) {
-    const isGit = Boolean(config.git)
     const key = config.key ?? "default"
-    const configFilename = config.config
-    const configPath = isGit ? config.git : configFilename
-
-    log(config, LogLevel.info, `Loading config from file ${configFilename} with key ${key}`)
-
-    const configPromise = await (isGit
-      ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpPath })
-      : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
-
-    // resolve the config
-    let configImport = await resolve(configPromise, config)
-
-    // If the config is a function or promise, return the output
-    if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
-      log(config, LogLevel.debug, "Config is a function or promise, resolving...")
-      configImport = await resolve(configImport.default, config)
-    }
+    const configImport = await getConfigFile(config, tmpPath)
 
     if (!configImport[key]) {
-      throw new Error(`Template "${key}" not found in ${configFilename}`)
+      throw new Error(`Template "${key}" not found in ${config.config}`)
     }
 
     const imported = configImport[key]

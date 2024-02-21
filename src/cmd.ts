@@ -3,20 +3,22 @@
 import os from "node:os"
 import { massarg } from "massarg"
 import chalk from "chalk"
-import { LogLevel, ScaffoldCmdConfig } from "./types"
+import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import path from "node:path"
 import fs from "node:fs/promises"
-import { parseAppendData, parseConfigFile } from "./config"
+import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
+import { MassargCommand } from "massarg/command"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
   const pkgFile = await fs.readFile(path.resolve(__dirname, isProjectRoot ? "." : "..", "package.json"))
   const pkg = JSON.parse(pkgFile.toString())
   const isVersionFlag = args.includes("--version") || args.includes("-v")
-  const isConfigProvided =
-    args.includes("--config") || args.includes("-c") || args.includes("--git") || args.includes("-g") || isVersionFlag
+  const isConfigFileProvided = args.includes("--config") || args.includes("-c")
+  const isGitProvided = args.includes("--git") || args.includes("-g")
+  const isConfigProvided = isConfigFileProvided || isGitProvided || isVersionFlag
 
   return massarg<ScaffoldCmdConfig>({
     name: pkg.name,
@@ -46,24 +48,20 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       aliases: ["n"],
       description:
         "Name to be passed to the generated files. `{{name}}` and other data parameters inside " +
-        "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` for this specific option.",
+        "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` " +
+        "for this specific option.",
       isDefault: true,
       required: !isConfigProvided,
     })
     .option({
       name: "config",
       aliases: ["c"],
-      description:
-        "Filename to load config from instead of passing arguments to CLI or using a Node.js " +
-        "script. See examples for syntax. This can also work in conjunction with `--git` or `--github` to point " +
-        "to remote files, and with `--key` to denote which key to select from the file.",
+      description: "Filename or directory to load config from",
     })
     .option({
       name: "git",
       aliases: ["g"],
-      description:
-        "Git URL to load config from instead of passing arguments to CLI or using a Node.js script. See " +
-        "examples for syntax.",
+      description: "Git URL or GitHub path to load a template from.",
     })
     .option({
       name: "key",
@@ -159,6 +157,67 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       aliases: ["v"],
       description: "Display version.",
     })
+    .command(
+      new MassargCommand<ListCommandCliOptions>({
+        name: "list",
+        aliases: ["ls"],
+        description: "List all available templates for a given config. See `list -h` for more information.",
+        run: async (_config) => {
+          const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
+          const config = {
+            templates: [],
+            name: "",
+            version: false,
+            output: "",
+            subdir: false,
+            overwrite: false,
+            dryRun: false,
+            ..._config,
+            config: _config.config ?? (!_config.git ? process.cwd() : undefined),
+          }
+          try {
+            const file = await getConfigFile(config, tmpPath)
+            console.log(chalk.underline`Available templates:\n`)
+            console.log(Object.keys(file).join("\n"))
+          } catch (e) {
+            const message = "message" in (e as any) ? (e as any).message : e?.toString()
+            log(config, LogLevel.error, message)
+          } finally {
+            log(config, LogLevel.debug, "Cleaning up temporary files...", tmpPath)
+            await fs.rm(tmpPath, { recursive: true, force: true })
+          }
+        },
+      })
+        .option({
+          name: "config",
+          aliases: ["c"],
+          description: "Filename or directory to load config from. Defaults to current working directory.",
+        })
+        .option({
+          name: "git",
+          aliases: ["g"],
+          description: "Git URL or GitHub path to load a template from.",
+        })
+        .option({
+          name: "log-level",
+          aliases: ["l"],
+          defaultValue: LogLevel.none,
+          description:
+            "Determine amount of logs to display. The values are: " +
+            `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
+            "The provided level will display messages of the same level or higher.",
+          parse: (v) => {
+            const val = v.toLowerCase()
+            if (!(val in LogLevel)) {
+              throw new Error(`Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`)
+            }
+            return val
+          },
+        })
+        .help({
+          bindOption: true,
+        }),
+    )
     .example({
       description: "Usage with config file",
       input: "simple-scaffold -c scaffold.cmd.js --key component",
