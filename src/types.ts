@@ -368,6 +368,8 @@ export type ScaffoldCmdConfig = {
   git?: string
   /** Display version */
   version: boolean
+  /** Run a script before writing the files. This can be a command or a path to a file. The file contents will be passed to the given command. */
+  beforeWrite?: string
 }
 
 /**

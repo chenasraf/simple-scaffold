@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-import os from "node:os"
+import path from "node:path"
+import fs from "node:fs/promises"
 import { massarg } from "massarg"
 import chalk from "chalk"
 import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
-import path from "node:path"
-import fs from "node:fs/promises"
 import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
+import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
@@ -30,7 +30,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         return
       }
       log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
-      const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
+      const tmpPath = generateUniqueTmpPath()
       try {
         log(config, LogLevel.debug, "Parsing config file...", config)
         const parsed = await parseConfigFile(config, tmpPath)
@@ -144,6 +144,13 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         return val
       },
     })
+    .option({
+      name: "before-write",
+      aliases: ["B"],
+      description:
+        "Run a script before writing the files. This can be a command or a path to a" +
+        " file. The file contents will be passed to the given command.",
+    })
     .flag({
       name: "dry-run",
       aliases: ["dr"],
@@ -163,7 +170,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["ls"],
         description: "List all available templates for a given config. See `list -h` for more information.",
         run: async (_config) => {
-          const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
+          const tmpPath = generateUniqueTmpPath()
           const config = {
             templates: [],
             name: "",

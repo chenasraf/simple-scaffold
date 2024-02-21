@@ -16,7 +16,8 @@ import { handlebarsParse } from "./parser"
 import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
 import { getGitConfig } from "./git"
-import { isDir, pathExists } from "./file"
+import { createDirIfNotExists, getUniqueTmpPath, isDir, pathExists } from "./file"
+import { exec, spawn } from "node:child_process"
 
 /** @internal */
 export function getOptionValueForFile<T>(
@@ -80,7 +81,7 @@ export async function getConfigFile(config: ScaffoldCmdConfig, tmpPath: string):
 
 /** @internal */
 export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfig> {
-  let output: ScaffoldConfig = config
+  let output: ScaffoldConfig = { ...config, beforeWrite: undefined }
 
   if (config.quiet) {
     config.logLevel = LogLevel.none
@@ -101,6 +102,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
     output = {
       ...config,
       ...imported,
+      beforeWrite: undefined,
       data: {
         ...(imported as any).data,
         ...config.data,
@@ -109,9 +111,12 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
   }
 
   output.data = { ...output.data, ...config.appendData }
+  output.beforeWrite = config.beforeWrite ? wrapBeforeWrite(config, config.beforeWrite) : undefined
+
   if (!output.name) {
     throw new Error("simple-scaffold: Missing required option: name")
   }
+
   log(output, LogLevel.debug, "Parsed config", output)
   return output
 }
@@ -181,4 +186,56 @@ export async function findConfigFile(root: string): Promise<string> {
     }
   }
   throw new Error(`Could not find config file in git repo`)
+}
+
+/** @internal **/
+function wrapBeforeWrite(
+  config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
+  beforeWrite: string,
+): ScaffoldConfig["beforeWrite"] {
+  return async (content, rawContent, outputFile) => {
+    const tmpPath = path.join(getUniqueTmpPath(), path.basename(outputFile))
+    await createDirIfNotExists(path.dirname(tmpPath), config)
+    const ext = path.extname(outputFile)
+    const rawTmpPath = tmpPath.replace(ext, ".raw" + ext)
+    try {
+      let cmd: string = ""
+      const pathReg = /\{\{\s*path\s*\}\}/gi
+      const rawPathReg = /\{\{\s*rawpath\s*\}\}/gi
+      if (pathReg.test(beforeWrite)) {
+        await fs.writeFile(tmpPath, content)
+        cmd = beforeWrite.replaceAll(pathReg, tmpPath)
+      }
+      if (rawPathReg.test(beforeWrite)) {
+        await fs.writeFile(rawTmpPath, rawContent)
+        cmd = beforeWrite.replaceAll(rawPathReg, rawTmpPath)
+      }
+      if (!cmd) {
+        await fs.writeFile(tmpPath, content)
+        cmd = [beforeWrite, tmpPath].join(" ")
+      }
+      log(config, LogLevel.debug, "Running beforeWrite command:", cmd)
+      const result = await new Promise<string | undefined>((resolve, reject) => {
+        const proc = exec(cmd)
+        proc.stdout!.on("data", (data) => {
+          if (data.trim()) {
+            resolve(data.toString())
+          } else {
+            resolve(undefined)
+          }
+        })
+        proc.stderr!.on("data", (data) => {
+          reject(data.toString())
+        })
+      })
+      return result
+    } catch (e) {
+      log(config, LogLevel.debug, e)
+      log(config, LogLevel.warning, "Error running beforeWrite command, returning original content")
+      return undefined
+    } finally {
+      await fs.rm(tmpPath, { force: true })
+      await fs.rm(rawTmpPath, { force: true })
+    }
+  }
 }
