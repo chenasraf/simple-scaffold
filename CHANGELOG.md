@@ -1,5 +1,13 @@
 # Change Log
 
+# [2.2.0](https://github.com/chenasraf/simple-scaffold/compare/v2.1.0...v2.2.0) (2024-02-23)
+
+
+### Features
+
+* `list` command ([d579c09](https://github.com/chenasraf/simple-scaffold/commit/d579c09c11f2149fe7bb4515297c1287fa67083e))
+* add `--before-write` cli option ([#89](https://github.com/chenasraf/simple-scaffold/issues/89)) ([5f810e2](https://github.com/chenasraf/simple-scaffold/commit/5f810e21160816bc683cc0f375de318ff874871c))
+
 # [2.1.0](https://github.com/chenasraf/simple-scaffold/compare/v2.0.2...v2.1.0) (2024-02-12)
 
 
