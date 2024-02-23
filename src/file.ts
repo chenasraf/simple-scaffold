@@ -1,7 +1,8 @@
+import os from "node:os"
 import path from "node:path"
-import { F_OK } from "node:constants"
-import { LogLevel, ScaffoldConfig } from "./types"
 import fs from "node:fs/promises"
+import { F_OK } from "node:constants"
+import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import { glob, hasMagic } from "glob"
 import { log } from "./logger"
 import { getOptionValueForFile } from "./config"
@@ -10,7 +11,10 @@ import { handleErr } from "./utils"
 
 const { stat, access, mkdir, readFile, writeFile } = fs
 
-export async function createDirIfNotExists(dir: string, config: ScaffoldConfig): Promise<void> {
+export async function createDirIfNotExists(
+  dir: string,
+  config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
+): Promise<void> {
   if (config.dryRun) {
     log(config, LogLevel.info, `Dry Run. Not creating dir ${dir}`)
     return
@@ -142,6 +146,7 @@ export async function copyFileTransformed(
     if (exists && overwrite) {
       log(config, LogLevel.info, `File ${outputPath} exists, overwriting`)
     }
+    log(config, LogLevel.debug, `Processing file ${inputPath}`)
     const templateBuffer = await readFile(inputPath)
     const unprocessedOutputContents = handlebarsParse(config, templateBuffer)
     const finalOutputContents =
@@ -149,7 +154,6 @@ export async function copyFileTransformed(
 
     if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
-      log(config, LogLevel.info, "Done.")
     } else {
       log(config, LogLevel.info, "Dry Run. Output should be:")
       log(config, LogLevel.info, finalOutputContents.toString())
@@ -157,6 +161,7 @@ export async function copyFileTransformed(
   } else if (exists) {
     log(config, LogLevel.info, `File ${outputPath} already exists, skipping`)
   }
+  log(config, LogLevel.info, "Done.")
 }
 
 export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
@@ -208,4 +213,9 @@ export async function handleTemplateFile(
       reject(e)
     }
   })
+}
+
+/** @internal */
+export function getUniqueTmpPath(): string {
+  return path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 }
