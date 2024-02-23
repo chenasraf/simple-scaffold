@@ -188,7 +188,6 @@ export async function findConfigFile(root: string): Promise<string> {
   throw new Error(`Could not find config file in git repo`)
 }
 
-/** @internal **/
 function wrapBeforeWrite(
   config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
   beforeWrite: string,

@@ -2,6 +2,8 @@
 title: Node.js Usage
 ---
 
+## Overview
+
 You can build the scaffold yourself, if you want to create more complex arguments, scaffold groups,
 etc - simply pass a config object to the Scaffold function when you are ready to start.
 
@@ -33,6 +35,19 @@ interface ScaffoldConfig {
 }
 ```
 
+### Before Write option
+
+This option allows you to preprocess a file before it is being written, such as running a formatter,
+linter or other commands.
+
+To use this option, you can run any async/blocking command, and return a string as the final output
+to be used as the file contents.
+
+Returning `undefined` will keep the file contents as-is, after normal Handlebars.js procesing by
+Simple Scaffold.
+
+## Example
+
 This is an example of loading a complete scaffold via Node.js:
 
 ```typescript
@@ -50,6 +65,8 @@ const config = {
   helpers: {
     twice: (text) => [text, text].join(" ")
   },
+  // return a string to replace the final file contents after pre-processing, or `undefined`
+  // to keep it as-is
   beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
 }
 

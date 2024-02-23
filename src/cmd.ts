@@ -149,7 +149,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       aliases: ["B"],
       description:
         "Run a script before writing the files. This can be a command or a path to a" +
-        " file. The file contents will be passed to the given command.",
+        " file. A temporary file path will be passed to the given command and the command should " +
+        "return a string for the final output.",
     })
     .flag({
       name: "dry-run",
