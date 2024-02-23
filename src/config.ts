@@ -199,23 +199,10 @@ function wrapBeforeWrite(
     const ext = path.extname(outputFile)
     const rawTmpPath = tmpPath.replace(ext, ".raw" + ext)
     try {
-      let cmd: string = ""
-      const pathReg = /\{\{\s*path\s*\}\}/gi
-      const rawPathReg = /\{\{\s*rawpath\s*\}\}/gi
-      if (pathReg.test(beforeWrite)) {
-        await fs.writeFile(tmpPath, content)
-        cmd = beforeWrite.replaceAll(pathReg, tmpPath)
-      }
-      if (rawPathReg.test(beforeWrite)) {
-        await fs.writeFile(rawTmpPath, rawContent)
-        cmd = beforeWrite.replaceAll(rawPathReg, rawTmpPath)
-      }
-      if (!cmd) {
-        await fs.writeFile(tmpPath, content)
-        cmd = [beforeWrite, tmpPath].join(" ")
-      }
-      log(config, LogLevel.debug, "Running beforeWrite command:", cmd)
+      log(config, LogLevel.debug, "Parsing beforeWrite command", beforeWrite)
+      let cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpPath, content, rawTmpPath, rawContent })
       const result = await new Promise<string | undefined>((resolve, reject) => {
+        log(config, LogLevel.debug, "Running parsed beforeWrite command:", cmd)
         const proc = exec(cmd)
         proc.stdout!.on("data", (data) => {
           if (data.trim()) {
@@ -238,4 +225,35 @@ function wrapBeforeWrite(
       await fs.rm(rawTmpPath, { force: true })
     }
   }
+}
+
+async function prepareBeforeWriteCmd({
+  beforeWrite,
+  tmpPath,
+  content,
+  rawTmpPath,
+  rawContent,
+}: {
+  beforeWrite: string
+  tmpPath: string
+  content: Buffer
+  rawTmpPath: string
+  rawContent: Buffer
+}): Promise<string> {
+  let cmd: string = ""
+  const pathReg = /\{\{\s*path\s*\}\}/gi
+  const rawPathReg = /\{\{\s*rawpath\s*\}\}/gi
+  if (pathReg.test(beforeWrite)) {
+    await fs.writeFile(tmpPath, content)
+    cmd = beforeWrite.replaceAll(pathReg, tmpPath)
+  }
+  if (rawPathReg.test(beforeWrite)) {
+    await fs.writeFile(rawTmpPath, rawContent)
+    cmd = beforeWrite.replaceAll(rawPathReg, rawTmpPath)
+  }
+  if (!cmd) {
+    await fs.writeFile(tmpPath, content)
+    cmd = [beforeWrite, tmpPath].join(" ")
+  }
+  return cmd
 }
