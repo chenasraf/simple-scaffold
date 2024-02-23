@@ -1,3 +1,4 @@
+import util from "util"
 import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import chalk from "chalk"
 
@@ -30,7 +31,7 @@ export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
       i instanceof Error
         ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
         : typeof i === "object"
-          ? chalkFn(JSON.stringify(i, undefined, 1))
+          ? util.inspect(i, { depth: null, colors: true })
           : chalkFn(i),
     ),
   )
