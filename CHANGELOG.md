@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.2.1](https://github.com/chenasraf/simple-scaffold/compare/v2.2.0...v2.2.1) (2024-04-21)
+
+
+### Bug Fixes
+
+* beforeWrite from config files ([98b326c](https://github.com/chenasraf/simple-scaffold/commit/98b326c84346162f379af46bc5aefb69df8be515))
+* use console.info for handlebars parse warning ([19e7b0f](https://github.com/chenasraf/simple-scaffold/commit/19e7b0f0c35c1b79a98781bdec9f54354123d8e0))
+
 # [2.2.0](https://github.com/chenasraf/simple-scaffold/compare/v2.1.0...v2.2.0) (2024-02-23)
 
 
