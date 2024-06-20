@@ -27,7 +27,7 @@ export interface ScaffoldConfig {
   templates: string[]
 
   /**
-   * Path to output to. If `subdir` is `true`, the subfolder will be created inside this path.
+   * Path to output to. If `subdir` is `true`, the subdir will be created inside this path.
    *
    * May also be a {@link FileResponseHandler} which returns a new output path to override the default one.
    *
@@ -37,7 +37,7 @@ export interface ScaffoldConfig {
   output: FileResponse<string>
 
   /**
-   * Whether to create subfolder with the input name.
+   * Whether to create subdir with the input name.
    *
    * When `true`, you may also use {@link subdirHelper} to determine a pre-process helper on
    * the directory name.
@@ -131,7 +131,7 @@ export interface ScaffoldConfig {
   helpers?: Record<string, Helper>
 
   /**
-   * Default transformer to apply to subfolder name when using `subdir: true`. Can be one of the default
+   * Default transformer to apply to subdir name when using `subdir: true`. Can be one of the default
    * capitalization helpers, or a custom one you provide to `helpers`. Defaults to `undefined`, which means no
    * transformation is done.
    *
@@ -165,7 +165,7 @@ export interface ScaffoldConfig {
 /**
  * The names of the available helper functions that relate to text capitalization.
  *
- * These are available for `subfolderNameHelper`.
+ * These are available for `subdirHelper`.
  *
  * | Helper name  | Example code            | Example output |
  * | ------------ | ----------------------- | -------------- |
@@ -340,9 +340,9 @@ export type ScaffoldCmdConfig = {
   templates: string[]
   /** The output path to write to */
   output: string
-  /** Whether to create subfolder with the input name */
+  /** Whether to create subdir with the input name */
   subdir: boolean
-  /** Default transformer to apply to subfolder name when using `subdir: true` */
+  /** Default transformer to apply to subdir name when using `subdir: true` */
   subdirHelper?: string
   /** Add custom data to the templates */
   data?: Record<string, string>

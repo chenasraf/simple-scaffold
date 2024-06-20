@@ -92,7 +92,7 @@ function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunct
 
 describe("Scaffold", () => {
   describe(
-    "create subfolder",
+    "create subdir",
     withMock(fileStructNormal, () => {
       test("should not create by default", async () => {
         await Scaffold({
@@ -395,7 +395,7 @@ describe("Scaffold", () => {
     }),
   )
   describe(
-    "transform subfolder",
+    "transform subdir",
     withMock(fileStructSubdirTransformer, () => {
       test("should work with no helper", async () => {
         await Scaffold({
