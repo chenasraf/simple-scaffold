@@ -19,14 +19,14 @@ interface ScaffoldConfig {
   name: string
   templates: string[]
   output: FileResponse<string>
-  createSubFolder?: boolean
+  subdir?: boolean
   data?: Record<string, any>
   overwrite?: FileResponse<boolean>
   quiet?: boolean
   verbose?: LogLevel
   dryRun?: boolean
   helpers?: Record<string, Helper>
-  subFolderNameHelper?: DefaultHelpers | string
+  subdirHelper?: DefaultHelpers | string
   beforeWrite?(
     content: Buffer,
     rawContent: Buffer,
@@ -57,17 +57,17 @@ const config = {
   name: "component",
   templates: [path.join(__dirname, "scaffolds", "component")],
   output: path.join(__dirname, "src", "components"),
-  createSubFolder: true,
-  subFolderNameHelper: "upperCase"
+  subdir: true,
+  subdirHelper: "upperCase",
   data: {
     property: "value",
   },
   helpers: {
-    twice: (text) => [text, text].join(" ")
+    twice: (text) => [text, text].join(" "),
   },
   // return a string to replace the final file contents after pre-processing, or `undefined`
   // to keep it as-is
-  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase()
+  beforeWrite: (content, rawContent, outputPath) => content.toString().toUpperCase(),
 }
 
 const scaffold = Scaffold(config)

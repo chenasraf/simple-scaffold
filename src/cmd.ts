@@ -74,7 +74,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       name: "output",
       aliases: ["o"],
       description:
-        "Path to output to. If `--subdir` is enabled, the subfolder will be created inside " +
+        "Path to output to. If `--subdir` is enabled, the subdir will be created inside " +
         "this path. Default is current working directory.",
       required: !isConfigProvided,
     })
@@ -120,7 +120,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
     .option({
       name: "subdir-helper",
       aliases: ["H"],
-      description: "Default helper to apply to subfolder name when using `--subdir`.",
+      description: "Default helper to apply to subdir name when using `--subdir`.",
     })
     .flag({
       name: "quiet",
