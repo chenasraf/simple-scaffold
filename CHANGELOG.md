@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.2.2](https://github.com/chenasraf/simple-scaffold/compare/v2.2.1...v2.2.2) (2024-08-27)
+
+
+### Bug Fixes
+
+* homepage url ([daaefaf](https://github.com/chenasraf/simple-scaffold/commit/daaefaf54e8c8887e6f210d02fd5f96c6ff4aa21))
+
 ## [2.2.1](https://github.com/chenasraf/simple-scaffold/compare/v2.2.0...v2.2.1) (2024-04-21)
 
 
