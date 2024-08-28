@@ -88,7 +88,6 @@ export default {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   // moduleNameMapper: {},
   // moduleNameMapper: {
-  //   chalk: "<rootDir>/node_modules/chalk/source/index.js",
   //   "#ansi-styles": "<rootDir>/node_modules/chalk/source/vendor/ansi-styles/index.js",
   //   "#supports-color": "<rootDir>/node_modules/chalk/source/vendor/supports-color/index.js",
   // },

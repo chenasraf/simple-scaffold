@@ -1,6 +1,6 @@
 import util from "util"
 import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
-import chalk from "chalk"
+import { colorize, TermColor } from "./utils"
 
 export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
   const priority: Record<LogLevel, number> = {
@@ -15,7 +15,7 @@ export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
     return
   }
 
-  const levelColor: Record<keyof typeof LogLevel, keyof typeof chalk> = {
+  const levelColor: Record<keyof typeof LogLevel, TermColor> = {
     [LogLevel.none]: "reset",
     [LogLevel.debug]: "blue",
     [LogLevel.info]: "dim",
@@ -23,16 +23,16 @@ export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
     [LogLevel.error]: "red",
   }
 
-  const chalkFn: any = chalk[levelColor[level]]
+  const colorFn = colorize[levelColor[level]]
   const key: "log" | "warn" | "error" = level === LogLevel.error ? "error" : level === LogLevel.warning ? "warn" : "log"
   const logFn: any = console[key]
   logFn(
     ...obj.map((i) =>
       i instanceof Error
-        ? chalkFn(i, JSON.stringify(i, undefined, 1), i.stack)
+        ? colorFn(i, JSON.stringify(i, undefined, 1), i.stack)
         : typeof i === "object"
           ? util.inspect(i, { depth: null, colors: true })
-          : chalkFn(i),
+          : colorFn(i),
     ),
   )
 }

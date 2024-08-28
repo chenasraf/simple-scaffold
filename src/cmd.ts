@@ -3,13 +3,13 @@
 import path from "node:path"
 import fs from "node:fs/promises"
 import { massarg } from "massarg"
-import chalk from "chalk"
 import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig } from "./types"
 import { Scaffold } from "./scaffold"
 import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
+import { colorize } from "./utils"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
@@ -134,7 +134,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       defaultValue: LogLevel.info,
       description:
         "Determine amount of logs to display. The values are: " +
-        `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
+        `${colorize.bold`\`none | debug | info | warn | error\``}. ` +
         "The provided level will display messages of the same level or higher.",
       parse: (v) => {
         const val = v.toLowerCase()
@@ -185,7 +185,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           }
           try {
             const file = await getConfigFile(config, tmpPath)
-            console.log(chalk.underline`Available templates:\n`)
+            console.log(colorize.underline`Available templates:\n`)
             console.log(Object.keys(file).join("\n"))
           } catch (e) {
             const message = "message" in (e as any) ? (e as any).message : e?.toString()
@@ -212,7 +212,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           defaultValue: LogLevel.none,
           description:
             "Determine amount of logs to display. The values are: " +
-            `${chalk.bold`\`none | debug | info | warn | error\``}. ` +
+            `${colorize.bold`\`none | debug | info | warn | error\``}. ` +
             "The provided level will display messages of the same level or higher.",
           parse: (v) => {
             const val = v.toLowerCase()
@@ -251,7 +251,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       bindOption: true,
       lineLength: 100,
       useGlobalTableColumns: true,
-      usageText: [chalk.yellow`simple-scaffold`, chalk.gray`[options]`, chalk.cyan`<name>`].join(" "),
+      usageText: [colorize.yellow`simple-scaffold`, colorize.gray`[options]`, colorize.cyan`<name>`].join(" "),
       optionOptions: {
         displayNegations: true,
       },
@@ -259,9 +259,9 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         `Version:  ${pkg.version}`,
         `Copyright © Chen Asraf 2017-${new Date().getFullYear()}`,
         ``,
-        `Documentation:  ${chalk.underline`https://chenasraf.github.io/simple-scaffold`}`,
-        `NPM:  ${chalk.underline`https://npmjs.com/package/simple-scaffold`}`,
-        `GitHub:  ${chalk.underline`https://github.com/chenasraf/simple-scaffold`}`,
+        `Documentation:  ${colorize.underline`https://chenasraf.github.io/simple-scaffold`}`,
+        `NPM:  ${colorize.underline`https://npmjs.com/package/simple-scaffold`}`,
+        `GitHub:  ${colorize.underline`https://github.com/chenasraf/simple-scaffold`}`,
       ].join("\n"),
     })
     .parse(args)
