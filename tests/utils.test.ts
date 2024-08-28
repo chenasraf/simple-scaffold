@@ -1,5 +1,4 @@
-import { handleErr, resolve } from "../src/utils"
-
+import { handleErr, resolve, colorize, TermColor } from "../src/utils"
 describe("utils", () => {
   describe("resolve", () => {
     test("should resolve function", () => {
@@ -17,5 +16,53 @@ describe("utils", () => {
       expect(() => handleErr({ name: "test", message: "test" })).toThrow()
       expect(() => handleErr(null as never)).not.toThrow()
     })
+  })
+})
+
+describe("colorize", () => {
+  it("should colorize text with red color", () => {
+    const result = colorize("Hello", "red")
+    expect(result).toBe("\x1b[31mHello\x1b[0m")
+  })
+
+  it("should colorize text with bold", () => {
+    const result = colorize("Hello", "bold")
+    expect(result).toBe("\x1b[1mHello\x1b[23m")
+  })
+
+  it("should reset color", () => {
+    const result = colorize("Hello", "reset")
+    expect(result).toBe("\x1b[0mHello\x1b[0m")
+  })
+
+  it("should have all color functions", () => {
+    const colors: TermColor[] = [
+      "reset",
+      "dim",
+      "bold",
+      "italic",
+      "underline",
+      "red",
+      "green",
+      "yellow",
+      "blue",
+      "magenta",
+      "cyan",
+      "white",
+      "gray",
+    ]
+    colors.forEach((color) => {
+      expect(typeof colorize[color]).toBe("function")
+    })
+  })
+
+  it("should colorize text using colorize.red", () => {
+    const result = colorize.red("Hello")
+    expect(result).toBe("\x1b[31mHello\x1b[0m")
+  })
+
+  it("should colorize text using template strings with colorize.blue", () => {
+    const result = colorize.blue`Hello ${"World"}`
+    expect(result).toBe("\x1b[34mHello World\x1b[0m")
   })
 })

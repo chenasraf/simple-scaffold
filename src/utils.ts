@@ -36,7 +36,17 @@ export type TermColor = keyof typeof colorMap
 
 function _colorize(text: string, color: TermColor): string {
   const c = colorMap[color]!
-  return `\x1b[${c}m${text}\x1b[0m`
+  let r = 0
+
+  if (c > 1 && c < 30) {
+    r = c + 20
+  } else if (c === 1) {
+    r = 23
+  } else {
+    r = 0
+  }
+
+  return `\x1b[${c}m${text}\x1b[${r}m`
 }
 
 function isTemplateStringArray(template: TemplateStringsArray | unknown): template is TemplateStringsArray {
