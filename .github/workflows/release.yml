@@ -2,37 +2,62 @@ name: Release
 
 on:
   push:
-    branches: [master, pre, develop]
+    branches:
+      - master
+
 permissions:
-  contents: read # for checkout
+  contents: write
+  pull-requests: write
+
 jobs:
-  release:
-    name: Release
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+          node-version: 20
+      - run: npm i -g pnpm
+      - run: pnpm run ci
+      - run: pnpm test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
-      - name: Install PNPM
-        run: npm i -g pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Run Tests
-        run: pnpm test
-      - name: Build Package
-        run: pnpm build
-      - name: Semantic Release
-        run: npx semantic-release
+          node-version: 20
+      - run: npm i -g pnpm
+      - run: pnpm run ci
+      - run: pnpm build
+
+  release:
+    needs:
+      - build
+      - test
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          release-type: node
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+      - run: npm i -g pnpm
+      - run: pnpm run ci
+      - run: pnpm build
+      - run: cd build && npm publish
         env:
-          NPM_TOKEN: "${{ secrets.NPM_TOKEN }}"
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
