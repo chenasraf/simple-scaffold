@@ -16,6 +16,7 @@ import {
   getFileList,
   getBasePath,
   handleTemplateFile,
+  GlobInfo,
 } from "./file"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { registerHelpers } from "./parser"
@@ -61,37 +62,43 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   try {
     config.data = { name: config.name, ...config.data }
     logInitStep(config)
-    for (let _template of config.templates) {
+    const excludes = config.templates.filter((t) => t.startsWith("!"))
+    const includes = config.templates.filter((t) => !t.startsWith("!"))
+    const templates: GlobInfo[] = []
+    for (let _template of includes) {
       try {
         const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
           config,
           _template,
         )
-        const files = await getFileList(config, template)
-        log(config, LogLevel.debug, "Iterating files", { files, template })
-        for (const inputFilePath of files) {
-          if (await isDir(inputFilePath)) {
-            continue
-          }
-          const relPath = makeRelativePath(path.dirname(removeGlob(inputFilePath).replace(nonGlobTemplate, "")))
-          const basePath = getBasePath(relPath)
-          logInputFile(config, {
-            originalTemplate: origTemplate,
-            relativePath: relPath,
-            parsedTemplate: template,
-            inputFilePath,
-            nonGlobTemplate,
-            basePath,
-            isDirOrGlob,
-            isGlob,
-          })
-          await handleTemplateFile(config, {
-            templatePath: inputFilePath,
-            basePath,
-          })
-        }
+        templates.push({ nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template })
       } catch (e: any) {
         handleErr(e)
+      }
+    }
+    for (const tpl of templates) {
+      const files = await getFileList(config, [tpl.template, ...excludes])
+      for (const file of files) {
+        if (await isDir(file)) {
+          continue
+        }
+        log(config, LogLevel.debug, "Iterating files", { files, file })
+        const relPath = makeRelativePath(path.dirname(removeGlob(file).replace(tpl.nonGlobTemplate, "")))
+        const basePath = getBasePath(relPath)
+        logInputFile(config, {
+          originalTemplate: tpl.origTemplate,
+          relativePath: relPath,
+          parsedTemplate: tpl.template,
+          inputFilePath: file,
+          nonGlobTemplate: tpl.nonGlobTemplate,
+          basePath,
+          isDirOrGlob: tpl.isDirOrGlob,
+          isGlob: tpl.isGlob,
+        })
+        await handleTemplateFile(config, {
+          templatePath: file,
+          basePath,
+        })
       }
     }
   } catch (e: any) {
@@ -111,7 +118,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function (
+Scaffold.fromConfig = async function(
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */

@@ -22,6 +22,11 @@ export interface ScaffoldConfig {
    * Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path,
    * or a glob pattern for multiple file matching easily.
    *
+   * You may omit files from output by prepending a `!` to their glob pattern.
+   *
+   * For example, `["components/**", "!components/README.md"]` will include everything in the directory `components`
+   * except the `README.md` file inside.
+   *
    * @default Current working directory
    */
   templates: string[]
@@ -331,7 +336,9 @@ export type FileResponse<T> = T | FileResponseHandler<T>
 
 /**
  * The Scaffold config for CLI
- * Contains less and more specific options than {@link ScaffoldConfig}
+ * Contains less and more specific options than {@link ScaffoldConfig}.
+ *
+ * For more information about each option, see {@link ScaffoldConfig}.
  */
 export type ScaffoldCmdConfig = {
   /** The name of the scaffold template to use. */

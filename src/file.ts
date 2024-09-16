@@ -71,11 +71,10 @@ export function getBasePath(relPath: string): string {
     .replace(process.cwd(), "")
 }
 
-export async function getFileList(_config: ScaffoldConfig, template: string): Promise<string[]> {
-  template = template.replaceAll(/[\\]+/g, "/")
-  log(_config, LogLevel.debug, `Getting file list for ${template}`)
+export async function getFileList(config: ScaffoldConfig, templates: string[]): Promise<string[]> {
+  log(config, LogLevel.debug, `Getting file list for glob list: ${templates}`)
   return (
-    await glob(template, {
+    await glob(templates, {
       dot: true,
       nodir: true,
     })
