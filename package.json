@@ -31,6 +31,7 @@
     "dev": "tsc --watch",
     "start": "ts-node src/scaffold.ts",
     "test": "jest",
+    "coverage": "open coverage/lcov-report/index.html",
     "cmd": "ts-node src/cmd.ts",
     "docs:build": "cd docs && pnpm build",
     "docs:watch": "cd docs && pnpm start",
