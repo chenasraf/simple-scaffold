@@ -1,20 +1,29 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": ["ES2022"],
+    "lib": [
+      "ESNext"
+    ],
     "declaration": true,
     "outDir": "dist",
     "strict": true,
     "sourceMap": true,
     "removeComments": false,
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ],
     },
   },
-  "include": ["src/index.ts", "src/cmd.ts"],
-  "exclude": ["tests/*"],
+  "include": [
+    "src/index.ts",
+    "src/cmd.ts"
+  ],
+  "exclude": [
+    "tests/*"
+  ],
 }
