@@ -71,6 +71,14 @@ const fileStructDates = {
   output: {},
 }
 
+const fileStructExcludes = {
+  input: {
+    "include.txt": "This file should be included",
+    "exclude.txt": "This file should be excluded",
+  },
+  output: {},
+}
+
 function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
   return () => {
     beforeEach(() => {
@@ -268,8 +276,7 @@ describe("Scaffold", () => {
     }),
   )
 
-  describe(
-    "output structure",
+  describe("output structure", () => {
     withMock(fileStructNested, () => {
       test("should maintain input structure on output", async () => {
         await Scaffold({
@@ -294,8 +301,23 @@ describe("Scaffold", () => {
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
       })
-    }),
-  )
+    })
+
+    withMock(fileStructExcludes, () => {
+      test("should exclude files", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input", "!exclude.txt"],
+          data: { value: "1" },
+          logLevel: "none",
+        })
+        const includeFile = readFileSync(join(process.cwd(), "output", "app_name.txt"))
+        expect(includeFile.toString()).toEqual("This file should be included")
+        expect(() => readFileSync(join(process.cwd(), "output", "exclude.txt"))).toThrow()
+      })
+    })
+  })
 
   describe(
     "capitalization helpers",
