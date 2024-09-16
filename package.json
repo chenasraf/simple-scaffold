@@ -13,7 +13,7 @@
   "bin": {
     "simple-scaffold": "cmd.js"
   },
-  "packageManager": "pnpm@9.8.0",
+  "packageManager": "pnpm@9.9.0",
   "keywords": [
     "javascript",
     "cli",
@@ -35,7 +35,7 @@
     "docs:build": "cd docs && pnpm build",
     "docs:watch": "cd docs && pnpm start",
     "audit-fix": "pnpm audit --fix",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0; echo \"# Change Log\n\n$(cat CHANGELOG.md)\" > CHANGELOG.md"
+    "ci": "pnpm install --frozen-lockfile"
   },
   "dependencies": {
     "date-fns": "^3.6.0",
@@ -44,20 +44,11 @@
     "massarg": "2.0.1"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/exec": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/jest": "^29.5.12",
     "@types/mock-fs": "^4.13.4",
     "@types/node": "^22.5.0",
-    "@types/semantic-release": "^20.0.6",
-    "conventional-changelog": "^6.0.0",
-    "conventional-changelog-cli": "^5.0.0",
     "jest": "^29.7.0",
     "mock-fs": "^5.2.0",
-    "semantic-release": "^24.1.0",
-    "semantic-release-conventional-commits": "^3.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
