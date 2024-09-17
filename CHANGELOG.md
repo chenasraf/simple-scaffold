@@ -5,12 +5,12 @@
 
 ### Features
 
-* remove chalk dependency ([ba96ca6](https://github.com/chenasraf/simple-scaffold/commit/ba96ca64d1e02beb16bd127fc889da3ef016b7d5))
+* remove chalk dependency ([ab9322e](https://github.com/chenasraf/simple-scaffold/commit/ab9322e1ab9c0a07cdab7275f3398286dee67a64))
 
 
 ### Bug Fixes
 
-* exclude globs ([a2788e7](https://github.com/chenasraf/simple-scaffold/commit/a2788e7c7d27f46d55cf4810e1a8193b5d403568))
+* exclude globs ([89dc43c](https://github.com/chenasraf/simple-scaffold/commit/89dc43c73d9a8640f45ae77e5c89e4f08f7f99ad))
 
 ## [2.2.2](https://github.com/chenasraf/simple-scaffold/compare/v2.2.1...v2.2.2) (2024-08-27)
 
