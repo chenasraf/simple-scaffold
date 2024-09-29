@@ -23,7 +23,7 @@ describe("parser", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for windows paths", async () => {
-        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { isPath: true }).toString()).toEqual(
+        expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { asPath: true }).toString()).toEqual(
           "C:\\exports\\test.txt",
         )
       })
@@ -37,7 +37,7 @@ describe("parser", () => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
       test("should work for non-windows paths", async () => {
-        expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { isPath: true })).toEqual(
+        expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { asPath: true })).toEqual(
           Buffer.from("/home/test/test.txt"),
         )
       })
@@ -48,7 +48,7 @@ describe("parser", () => {
           { ...blankConf, data: { ...blankConf.data, escaped: "value" } },
           "/home/test/{{name}} \\{{escaped}}.txt",
           {
-            isPath: false,
+            asPath: false,
           },
         ),
       ).toEqual(Buffer.from("/home/test/test {{escaped}}.txt"))

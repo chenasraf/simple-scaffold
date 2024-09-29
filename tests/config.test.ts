@@ -68,38 +68,34 @@ describe("config", () => {
 
   describe("parseConfigFile", () => {
     test("normal config does not change", async () => {
+      const tmpDir = `/tmp/scaffold-config-${Date.now()}`
+      const { quiet, tmpDir: _tmpDir, version, ...conf } = blankCliConf
       expect(
-        await parseConfigFile(
-          {
-            ...blankCliConf,
-            name: "-",
-          },
-          `/tmp/scaffold-config-${Date.now()}`,
-        ),
-      ).toEqual({ ...blankCliConf, name: "-" })
+        await parseConfigFile({
+          ...blankCliConf,
+          name: "-",
+          tmpDir,
+        }),
+      ).toEqual({ ...conf, name: "-", tmpDir, subdirHelper: undefined, beforeWrite: undefined })
     })
     describe("appendData", () => {
       test("appends", async () => {
-        const result = await parseConfigFile(
-          {
-            ...blankCliConf,
-            name: "-",
-            appendData: { key: "value" },
-          },
-          `/tmp/scaffold-config-${Date.now()}`,
-        )
+        const result = await parseConfigFile({
+          ...blankCliConf,
+          name: "-",
+          appendData: { key: "value" },
+          tmpDir: `/tmp/scaffold-config-${Date.now()}`,
+        })
         expect(result?.data?.key).toEqual("value")
       })
       test("overwrites existing value", async () => {
-        const result = await parseConfigFile(
-          {
-            ...blankCliConf,
-            name: "-",
-            data: { num: "123" },
-            appendData: { num: "1234" },
-          },
-          `/tmp/scaffold-config-${Date.now()}`,
-        )
+        const result = await parseConfigFile({
+          ...blankCliConf,
+          name: "-",
+          data: { num: "123" },
+          appendData: { num: "1234" },
+          tmpDir: `/tmp/scaffold-config-${Date.now()}`,
+        })
         expect(result?.data?.num).toEqual("1234")
       })
     })
@@ -110,7 +106,7 @@ describe("config", () => {
       const resultFn = await config.getRemoteConfig({
         git: "https://github.com/chenasraf/simple-scaffold.git",
         logLevel: LogLevel.none,
-        tmpPath: `/tmp/scaffold-config-${Date.now()}`,
+        tmpDir: `/tmp/scaffold-config-${Date.now()}`,
       })
       const result = await resolve(resultFn, blankCliConf)
       expect(result).toEqual(blankCliConf)
