@@ -120,7 +120,7 @@ export async function getTemplateFileInfo(
   // TODO - .replace(config.tmpDir!, "")
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(config, inputPath, config.output)
-  const outputDir = getOutputDir(config, outputPathOpt, basePath.replace(config.tmpDir!, ""))
+  const outputDir = getOutputDir(config, outputPathOpt, basePath.replace(config.tmpDir!, "./"))
   const rawOutputPath = path.join(outputDir, path.basename(inputPath))
   const outputPath = handlebarsParse(config, rawOutputPath, { asPath: true }).toString()
   const exists = await pathExists(outputPath)
