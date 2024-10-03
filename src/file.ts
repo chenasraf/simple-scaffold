@@ -117,7 +117,6 @@ export async function getTemplateFileInfo(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<OutputFileInfo> {
-  // TODO - .replace(config.tmpDir!, "")
   const inputPath = path.resolve(process.cwd(), templatePath)
   const outputPathOpt = getOptionValueForFile(config, inputPath, config.output)
   const outputDir = getOutputDir(config, outputPathOpt, basePath.replace(config.tmpDir!, "./"))
