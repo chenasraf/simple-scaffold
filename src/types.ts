@@ -165,6 +165,9 @@ export interface ScaffoldConfig {
     rawContent: Buffer,
     outputPath: string,
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
+
+  /** @internal */
+  tmpDir?: string
 }
 
 /**
@@ -377,6 +380,8 @@ export type ScaffoldCmdConfig = {
   version: boolean
   /** Run a script before writing the files. This can be a command or a path to a file. The file contents will be passed to the given command. */
   beforeWrite?: string
+  /** @internal */
+  tmpDir?: string
 }
 
 /**
@@ -418,7 +423,7 @@ export type LogConfig = Pick<ScaffoldConfig, "logLevel">
 export type ConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config">
 
 /** @internal */
-export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config" | "git"> & { tmpPath: string }
+export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config" | "git" | "tmpDir">
 
 /** @internal */
 export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">

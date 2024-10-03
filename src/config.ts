@@ -17,7 +17,7 @@ import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
 import { getGitConfig } from "./git"
 import { createDirIfNotExists, getUniqueTmpPath, isDir, pathExists } from "./file"
-import { exec, spawn } from "node:child_process"
+import { exec } from "node:child_process"
 
 /** @internal */
 export function getOptionValueForFile<T>(
@@ -31,8 +31,8 @@ export function getOptionValueForFile<T>(
   }
   return (fn as FileResponseHandler<T>)(
     filePath,
-    path.dirname(handlebarsParse(config, filePath, { isPath: true }).toString()),
-    path.basename(handlebarsParse(config, filePath, { isPath: true }).toString()),
+    path.dirname(handlebarsParse(config, filePath, { asPath: true }).toString()),
+    path.basename(handlebarsParse(config, filePath, { asPath: true }).toString()),
   )
 }
 
@@ -52,7 +52,7 @@ function isWrappedWithQuotes(string: string): boolean {
 }
 
 /** @internal */
-export async function getConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfigMap> {
+export async function getConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfigMap> {
   if (config.git && !config.git.includes("://")) {
     log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
     config.git = githubPartToUrl(config.git)
@@ -65,7 +65,7 @@ export async function getConfigFile(config: ScaffoldCmdConfig, tmpPath: string):
   log(config, LogLevel.info, `Loading config from file ${configFilename}`)
 
   const configPromise = await (isGit
-    ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpPath })
+    ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpDir: config.tmpDir! })
     : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
   // resolve the config
@@ -80,8 +80,20 @@ export async function getConfigFile(config: ScaffoldCmdConfig, tmpPath: string):
 }
 
 /** @internal */
-export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string): Promise<ScaffoldConfig> {
-  let output: ScaffoldConfig = { ...config, beforeWrite: undefined }
+export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
+  let output: ScaffoldConfig = {
+    name: config.name,
+    templates: [],
+    output: config.output,
+    logLevel: config.logLevel,
+    dryRun: config.dryRun,
+    data: config.data,
+    subdir: config.subdir,
+    overwrite: config.overwrite,
+    subdirHelper: config.subdirHelper,
+    beforeWrite: undefined,
+    tmpDir: config.tmpDir!,
+  }
 
   if (config.quiet) {
     config.logLevel = LogLevel.none
@@ -91,7 +103,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
 
   if (shouldLoadConfig) {
     const key = config.key ?? "default"
-    const configImport = await getConfigFile(config, tmpPath)
+    const configImport = await getConfigFile(config)
 
     if (!configImport[key]) {
       throw new Error(`Template "${key}" not found in ${config.config}`)
@@ -100,11 +112,11 @@ export async function parseConfigFile(config: ScaffoldCmdConfig, tmpPath: string
     const imported = configImport[key]
     log(config, LogLevel.debug, "Imported result", imported)
     output = {
-      ...config,
+      ...output,
       ...imported,
       beforeWrite: undefined,
       data: {
-        ...(imported as any).data,
+        ...imported.data,
         ...config.data,
       },
     }
@@ -158,7 +170,7 @@ export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfi
 export async function getRemoteConfig(
   config: RemoteConfigLoadConfig & Partial<LogConfig>,
 ): Promise<ScaffoldConfigFile> {
-  const { config: configFile, git, tmpPath, ...logConfig } = config as Required<typeof config>
+  const { config: configFile, git, tmpDir, ...logConfig } = config as Required<typeof config>
 
   log(logConfig, LogLevel.info, `Loading config from remote ${git}, file ${configFile}`)
 
@@ -170,7 +182,7 @@ export async function getRemoteConfig(
     throw new Error(`Unsupported protocol ${url.protocol}`)
   }
 
-  return getGitConfig(url, configFile, tmpPath, logConfig)
+  return getGitConfig(url, configFile, tmpDir, logConfig)
 }
 
 /** @internal */
@@ -194,13 +206,13 @@ function wrapBeforeWrite(
   beforeWrite: string,
 ): ScaffoldConfig["beforeWrite"] {
   return async (content, rawContent, outputFile) => {
-    const tmpPath = path.join(getUniqueTmpPath(), path.basename(outputFile))
-    await createDirIfNotExists(path.dirname(tmpPath), config)
+    const tmpDir = path.join(getUniqueTmpPath(), path.basename(outputFile))
+    await createDirIfNotExists(path.dirname(tmpDir), config)
     const ext = path.extname(outputFile)
-    const rawTmpPath = tmpPath.replace(ext, ".raw" + ext)
+    const rawTmpPath = tmpDir.replace(ext, ".raw" + ext)
     try {
       log(config, LogLevel.debug, "Parsing beforeWrite command", beforeWrite)
-      let cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpPath, content, rawTmpPath, rawContent })
+      let cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpDir, content, rawTmpPath, rawContent })
       const result = await new Promise<string | undefined>((resolve, reject) => {
         log(config, LogLevel.debug, "Running parsed beforeWrite command:", cmd)
         const proc = exec(cmd)
@@ -221,7 +233,7 @@ function wrapBeforeWrite(
       log(config, LogLevel.warning, "Error running beforeWrite command, returning original content")
       return undefined
     } finally {
-      await fs.rm(tmpPath, { force: true })
+      await fs.rm(tmpDir, { force: true })
       await fs.rm(rawTmpPath, { force: true })
     }
   }
@@ -229,13 +241,13 @@ function wrapBeforeWrite(
 
 async function prepareBeforeWriteCmd({
   beforeWrite,
-  tmpPath,
+  tmpDir,
   content,
   rawTmpPath,
   rawContent,
 }: {
   beforeWrite: string
-  tmpPath: string
+  tmpDir: string
   content: Buffer
   rawTmpPath: string
   rawContent: Buffer
@@ -244,16 +256,16 @@ async function prepareBeforeWriteCmd({
   const pathReg = /\{\{\s*path\s*\}\}/gi
   const rawPathReg = /\{\{\s*rawpath\s*\}\}/gi
   if (pathReg.test(beforeWrite)) {
-    await fs.writeFile(tmpPath, content)
-    cmd = beforeWrite.replaceAll(pathReg, tmpPath)
+    await fs.writeFile(tmpDir, content)
+    cmd = beforeWrite.replaceAll(pathReg, tmpDir)
   }
   if (rawPathReg.test(beforeWrite)) {
     await fs.writeFile(rawTmpPath, rawContent)
     cmd = beforeWrite.replaceAll(rawPathReg, rawTmpPath)
   }
   if (!cmd) {
-    await fs.writeFile(tmpPath, content)
-    cmd = [beforeWrite, tmpPath].join(" ")
+    await fs.writeFile(tmpDir, content)
+    cmd = [beforeWrite, tmpDir].join(" ")
   }
   return cmd
 }

@@ -118,7 +118,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @category Main
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
-Scaffold.fromConfig = async function(
+Scaffold.fromConfig = async function (
   /** The path or URL to the config file */
   pathOrUrl: string,
   /** Information needed before loading the config */
@@ -126,6 +126,7 @@ Scaffold.fromConfig = async function(
   /** Any overrides to the loaded config */
   overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
+  const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
   const _cmdConfig: ScaffoldCmdConfig = {
     dryRun: false,
     output: process.cwd(),
@@ -136,11 +137,11 @@ Scaffold.fromConfig = async function(
     quiet: false,
     config: pathOrUrl,
     version: false,
+    tmpDir: tmpPath,
     ...config,
   }
-  const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)
   const _overrides = resolve(overrides, _cmdConfig)
-  const _config = await parseConfigFile(_cmdConfig, tmpPath)
+  const _config = await parseConfigFile(_cmdConfig)
   return Scaffold({ ..._config, ..._overrides })
 }
 

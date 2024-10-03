@@ -30,17 +30,17 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         return
       }
       log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
-      const tmpPath = generateUniqueTmpPath()
+      config.tmpDir = generateUniqueTmpPath()
       try {
         log(config, LogLevel.debug, "Parsing config file...", config)
-        const parsed = await parseConfigFile(config, tmpPath)
+        const parsed = await parseConfigFile(config)
         await Scaffold(parsed)
       } catch (e) {
         const message = "message" in (e as any) ? (e as any).message : e?.toString()
         log(config, LogLevel.error, message)
       } finally {
-        log(config, LogLevel.debug, "Cleaning up temporary files...", tmpPath)
-        await fs.rm(tmpPath, { recursive: true, force: true })
+        log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)
+        await fs.rm(config.tmpDir, { recursive: true, force: true })
       }
     })
     .option({
@@ -171,7 +171,6 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         aliases: ["ls"],
         description: "List all available templates for a given config. See `list -h` for more information.",
         run: async (_config) => {
-          const tmpPath = generateUniqueTmpPath()
           const config = {
             templates: [],
             name: "",
@@ -180,19 +179,20 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
             subdir: false,
             overwrite: false,
             dryRun: false,
+            tmpDir: generateUniqueTmpPath(),
             ..._config,
             config: _config.config ?? (!_config.git ? process.cwd() : undefined),
           }
           try {
-            const file = await getConfigFile(config, tmpPath)
+            const file = await getConfigFile(config)
             console.log(colorize.underline`Available templates:\n`)
             console.log(Object.keys(file).join("\n"))
           } catch (e) {
             const message = "message" in (e as any) ? (e as any).message : e?.toString()
             log(config, LogLevel.error, message)
           } finally {
-            log(config, LogLevel.debug, "Cleaning up temporary files...", tmpPath)
-            await fs.rm(tmpPath, { recursive: true, force: true })
+            log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)
+            await fs.rm(config.tmpDir, { recursive: true, force: true })
           }
         },
       })

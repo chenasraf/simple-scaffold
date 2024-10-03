@@ -105,17 +105,17 @@ export function registerHelpers(config: ScaffoldConfig): void {
 export function handlebarsParse(
   config: ScaffoldConfig,
   templateBuffer: Buffer | string,
-  { isPath = false }: { isPath?: boolean } = {},
+  { asPath = false }: { asPath?: boolean } = {},
 ): Buffer {
   const { data } = config
   try {
     let str = templateBuffer.toString()
-    if (isPath) {
+    if (asPath) {
       str = str.replace(/\\/g, "/")
     }
     const parser = Handlebars.compile(str, { noEscape: true })
     let outputContents = parser(data)
-    if (isPath && path.sep !== "/") {
+    if (asPath && path.sep !== "/") {
       outputContents = outputContents.replace(/\//g, "\\")
     }
     return Buffer.from(outputContents)

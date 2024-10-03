@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
@@ -11,6 +14,7 @@ permissions:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +24,9 @@ jobs:
       - run: npm i -g pnpm
       - run: pnpm run ci
       - run: pnpm test
+
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +38,8 @@ jobs:
       - run: pnpm build
 
   release:
+    name: Release Please
+    if: github.event_name == 'push'
     needs:
       - build
       - test
@@ -47,6 +55,7 @@ jobs:
           target-branch: master
 
   publish:
+    name: NPM Publish
     needs: release
     runs-on: ubuntu-latest
     if: ${{ needs.release.outputs.release_created }}
