@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.3.1](https://github.com/chenasraf/simple-scaffold/compare/v2.3.0...v2.3.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* strip tmpDir from output dir ([#108](https://github.com/chenasraf/simple-scaffold/issues/108)) ([80c92bf](https://github.com/chenasraf/simple-scaffold/commit/80c92bfe84dc896412ef98bce222e1d26cdb4e91))
+
 ## [2.3.0](https://github.com/chenasraf/simple-scaffold/compare/v2.2.2...v2.3.0) (2024-09-17)
 
 
