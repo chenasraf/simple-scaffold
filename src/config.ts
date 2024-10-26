@@ -39,7 +39,7 @@ export function getOptionValueForFile<T>(
 /** @internal */
 export function parseAppendData(value: string, options: ScaffoldCmdConfig): unknown {
   const data = options.data ?? {}
-  const [key, val] = value.split(/\:?=/)
+  const [key, val] = value.split(/:?=/)
   // raw
   if (value.includes(":=") && !val.includes(":=")) {
     return { ...data, [key]: JSON.parse(val) }
@@ -83,7 +83,7 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
 export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
   let output: ScaffoldConfig = {
     name: config.name,
-    templates: [],
+    templates: config.templates ?? [],
     output: config.output,
     logLevel: config.logLevel,
     dryRun: config.dryRun,
@@ -212,7 +212,7 @@ function wrapBeforeWrite(
     const rawTmpPath = tmpDir.replace(ext, ".raw" + ext)
     try {
       log(config, LogLevel.debug, "Parsing beforeWrite command", beforeWrite)
-      let cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpDir, content, rawTmpPath, rawContent })
+      const cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpDir, content, rawTmpPath, rawContent })
       const result = await new Promise<string | undefined>((resolve, reject) => {
         log(config, LogLevel.debug, "Running parsed beforeWrite command:", cmd)
         const proc = exec(cmd)
