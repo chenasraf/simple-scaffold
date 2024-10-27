@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.3.2](https://github.com/chenasraf/simple-scaffold/compare/v2.3.1...v2.3.2) (2024-10-27)
+
+
+### Bug Fixes
+
+* template config from CLI ([41f4ca5](https://github.com/chenasraf/simple-scaffold/commit/41f4ca52f12d3477e1a9a15757dc816fb99b6743))
+
 ## [2.3.1](https://github.com/chenasraf/simple-scaffold/compare/v2.3.0...v2.3.1) (2024-10-03)
 
 
