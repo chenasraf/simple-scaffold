@@ -78,6 +78,7 @@ describe("config", () => {
         }),
       ).toEqual({ ...conf, name: "-", tmpDir, subdirHelper: undefined, beforeWrite: undefined })
     })
+
     describe("appendData", () => {
       test("appends", async () => {
         const result = await parseConfigFile({
@@ -88,6 +89,7 @@ describe("config", () => {
         })
         expect(result?.data?.key).toEqual("value")
       })
+
       test("overwrites existing value", async () => {
         const result = await parseConfigFile({
           ...blankCliConf,
@@ -98,6 +100,7 @@ describe("config", () => {
         })
         expect(result?.data?.num).toEqual("1234")
       })
+
       test("CLI output overrides config file output", async () => {
         const tmpDir = `/tmp/scaffold-config-${Date.now()}`
 
@@ -171,6 +174,7 @@ describe("config", () => {
 
     for (const struct of [struct1, struct2, struct3, struct4]) {
       const [k] = Object.keys(struct)
+
       describe(`finds config file ${k}`, () => {
         withMock(struct, async () => {
           const result = await findConfigFile(process.cwd())

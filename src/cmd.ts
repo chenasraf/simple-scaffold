@@ -188,7 +188,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
             console.log(colorize.underline`Available templates:\n`)
             console.log(Object.keys(file).join("\n"))
           } catch (e) {
-            const message = "message" in (e as any) ? (e as any).message : e?.toString()
+            const message = "message" in (e as object) ? (e as Error).message : e?.toString()
             log(config, LogLevel.error, message)
           } finally {
             log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)

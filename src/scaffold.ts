@@ -65,15 +65,15 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     const excludes = config.templates.filter((t) => t.startsWith("!"))
     const includes = config.templates.filter((t) => !t.startsWith("!"))
     const templates: GlobInfo[] = []
-    for (let _template of includes) {
+    for (const includedTemplate of includes) {
       try {
         const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
           config,
-          _template,
+          includedTemplate,
         )
         templates.push({ nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template })
-      } catch (e: any) {
-        handleErr(e)
+      } catch (e: unknown) {
+        handleErr(e as NodeJS.ErrnoException)
       }
     }
     for (const tpl of templates) {
@@ -101,7 +101,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
         })
       }
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     log(config, LogLevel.error, e)
     throw e
   }

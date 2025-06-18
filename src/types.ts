@@ -56,7 +56,7 @@ export interface ScaffoldConfig {
    *
    * This can be any object that will be usable by Handlebars.
    */
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 
   /**
    * Enable to override output files, even if they already exist.
@@ -411,7 +411,7 @@ export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
 export type ScaffoldConfigFile = AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>
 
 /** @internal */
-export type Resolver<T, R = T> = R | ((value: T) => R)
+export type Resolver<T, R = T> = R | ((_value: T) => R)
 
 /** @internal */
 export type AsyncResolver<T, R = T> = Resolver<T, Promise<R> | R>

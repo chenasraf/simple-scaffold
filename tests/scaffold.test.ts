@@ -99,8 +99,10 @@ function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunct
 }
 
 describe("Scaffold", () => {
+
   describe(
     "create subdir",
+
     withMock(fileStructNormal, () => {
       test("should not create by default", async () => {
         await Scaffold({
@@ -130,6 +132,7 @@ describe("Scaffold", () => {
 
   describe(
     "binary files",
+
     withMock(fileStructWithBinary, () => {
       test("should copy as-is", async () => {
         await Scaffold({
@@ -322,7 +325,7 @@ describe("Scaffold", () => {
   describe(
     "capitalization helpers",
     withMock(fileStructHelpers, () => {
-      const _helpers: Record<string, (text: string) => string> = {
+      const _helpers: Record<string, (_text: string) => string> = {
         add1: (text) => text + " 1",
       }
 
@@ -394,7 +397,7 @@ describe("Scaffold", () => {
   describe(
     "custom helpers",
     withMock(fileStructHelpers, () => {
-      const _helpers: Record<string, (text: string) => string> = {
+      const _helpers: Record<string, (_text: string) => string> = {
         add1: (text) => text + " 1",
       }
       test("should work", async () => {

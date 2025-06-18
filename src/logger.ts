@@ -2,7 +2,7 @@ import util from "util"
 import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import { colorize, TermColor } from "./utils"
 
-export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
+export function log(config: LogConfig, level: LogLevel, ...obj: unknown[]): void {
   const priority: Record<LogLevel, number> = {
     [LogLevel.none]: 0,
     [LogLevel.debug]: 1,
@@ -25,7 +25,7 @@ export function log(config: LogConfig, level: LogLevel, ...obj: any[]): void {
 
   const colorFn = colorize[levelColor[level]]
   const key: "log" | "warn" | "error" = level === LogLevel.error ? "error" : level === LogLevel.warning ? "warn" : "log"
-  const logFn: any = console[key]
+  const logFn: (..._args: unknown[]) => void = console[key]
   logFn(
     ...obj.map((i) =>
       i instanceof Error

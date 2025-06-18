@@ -13,35 +13,43 @@ const blankConf: ScaffoldConfig = {
 
 describe("parser", () => {
   describe("handlebarsParse", () => {
-    let origSep: any
+    let origSep: string
+
     describe("windows paths", () => {
       beforeAll(() => {
         origSep = path.sep
         Object.defineProperty(path, "sep", { value: "\\" })
       })
+
       afterAll(() => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
+
       test("should work for windows paths", async () => {
         expect(handlebarsParse(blankConf, "C:\\exports\\{{name}}.txt", { asPath: true }).toString()).toEqual(
           "C:\\exports\\test.txt",
         )
       })
     })
+
     describe("non-windows paths", () => {
+
       beforeAll(() => {
         origSep = path.sep
         Object.defineProperty(path, "sep", { value: "/" })
       })
+
       afterAll(() => {
         Object.defineProperty(path, "sep", { value: origSep })
       })
+
       test("should work for non-windows paths", async () => {
         expect(handlebarsParse(blankConf, "/home/test/{{name}}.txt", { asPath: true })).toEqual(
           Buffer.from("/home/test/test.txt"),
         )
       })
     })
+
     test("should not do path escaping on non-path compiles", async () => {
       expect(
         handlebarsParse(
@@ -65,6 +73,7 @@ describe("parser", () => {
         expect(defaultHelpers.camelCase("TestString")).toEqual("testString")
         expect(defaultHelpers.camelCase("Test____String")).toEqual("testString")
       })
+
       test("pascalCase", () => {
         expect(defaultHelpers.pascalCase("test string")).toEqual("TestString")
         expect(defaultHelpers.pascalCase("test_string")).toEqual("TestString")
@@ -73,6 +82,7 @@ describe("parser", () => {
         expect(defaultHelpers.pascalCase("TestString")).toEqual("TestString")
         expect(defaultHelpers.pascalCase("Test____String")).toEqual("TestString")
       })
+
       test("snakeCase", () => {
         expect(defaultHelpers.snakeCase("test string")).toEqual("test_string")
         expect(defaultHelpers.snakeCase("test_string")).toEqual("test_string")
@@ -81,6 +91,7 @@ describe("parser", () => {
         expect(defaultHelpers.snakeCase("TestString")).toEqual("test_string")
         expect(defaultHelpers.snakeCase("Test____String")).toEqual("test_string")
       })
+
       test("kebabCase", () => {
         expect(defaultHelpers.kebabCase("test string")).toEqual("test-string")
         expect(defaultHelpers.kebabCase("test_string")).toEqual("test-string")
@@ -89,6 +100,7 @@ describe("parser", () => {
         expect(defaultHelpers.kebabCase("TestString")).toEqual("test-string")
         expect(defaultHelpers.kebabCase("Test____String")).toEqual("test-string")
       })
+
       test("startCase", () => {
         expect(defaultHelpers.startCase("test string")).toEqual("Test String")
         expect(defaultHelpers.startCase("test_string")).toEqual("Test String")
@@ -98,6 +110,7 @@ describe("parser", () => {
         expect(defaultHelpers.startCase("Test____String")).toEqual("Test String")
       })
     })
+
     describe("date helpers", () => {
       describe("now", () => {
         test("should work without extra params", () => {
