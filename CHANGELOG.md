@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.3.3](https://github.com/chenasraf/simple-scaffold/compare/v2.3.2...v2.3.3) (2025-06-18)
+
+
+### Bug Fixes
+
+* config CLI precedence over file ([4b0b4e7](https://github.com/chenasraf/simple-scaffold/commit/4b0b4e73803ff741120b18767ded88db324a8844))
+
 ## [2.3.2](https://github.com/chenasraf/simple-scaffold/compare/v2.3.1...v2.3.2) (2024-10-27)
 
 
