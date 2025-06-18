@@ -36,7 +36,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         const parsed = await parseConfigFile(config)
         await Scaffold(parsed)
       } catch (e) {
-        const message = "message" in (e as any) ? (e as any).message : e?.toString()
+        const message = "message" in (e as object) ? (e as Error).message : e?.toString()
         log(config, LogLevel.error, message)
       } finally {
         log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)

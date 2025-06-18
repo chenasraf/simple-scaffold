@@ -115,6 +115,8 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
       ...output,
       ...imported,
       beforeWrite: undefined,
+      templates: config.templates || imported.templates,
+      output: config.output || imported.output,
       data: {
         ...imported.data,
         ...config.data,
@@ -172,7 +174,7 @@ export async function getRemoteConfig(
 ): Promise<ScaffoldConfigFile> {
   const { config: configFile, git, tmpDir, ...logConfig } = config as Required<typeof config>
 
-  log(logConfig, LogLevel.info, `Loading config from remote ${git}, file ${configFile}`)
+  log(logConfig, LogLevel.info, `Loading config from remote ${git}, config file ${configFile || "<auto-detect>"}`)
 
   const url = new URL(git!)
   const isHttp = url.protocol === "http:" || url.protocol === "https:"
