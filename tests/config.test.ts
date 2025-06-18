@@ -4,9 +4,9 @@ import { Console } from "console"
 import { LogLevel, ScaffoldCmdConfig } from "../src/types"
 import * as config from "../src/config"
 import { resolve } from "../src/utils"
-// @ts-ignore
-import * as configFile from "../scaffold.config"
+import configFile from "./test-config"
 import { findConfigFile } from "../src/config"
+import path from "path"
 
 jest.mock("../src/git", () => {
   return {
@@ -69,7 +69,7 @@ describe("config", () => {
   describe("parseConfigFile", () => {
     test("normal config does not change", async () => {
       const tmpDir = `/tmp/scaffold-config-${Date.now()}`
-      const { quiet, tmpDir: _tmpDir, version, ...conf } = blankCliConf
+      const { quiet: _, tmpDir: _tmpDir, version: __, ...conf } = blankCliConf
       expect(
         await parseConfigFile({
           ...blankCliConf,
@@ -98,6 +98,20 @@ describe("config", () => {
         })
         expect(result?.data?.num).toEqual("1234")
       })
+      test("CLI output overrides config file output", async () => {
+        const tmpDir = `/tmp/scaffold-config-${Date.now()}`
+
+        const result = await parseConfigFile({
+          ...blankCliConf,
+          config: path.resolve(__dirname, "test-config.js"),
+          key: "component",
+          output: "examples/test-output/override",
+          name: "Component",
+          tmpDir,
+        })
+
+        expect(result.output).toEqual("examples/test-output/override")
+      })
     })
   })
 
@@ -114,10 +128,10 @@ describe("config", () => {
 
     test("gets local file config", async () => {
       const resultFn = await config.getLocalConfig({
-        config: "scaffold.config.js",
+        config: path.join(__dirname, "test-config.js"),
         logLevel: LogLevel.none,
       })
-      const result = await resolve(resultFn, {} as any)
+      const result = (await resolve(resultFn, {} as ScaffoldCmdConfig)).default
       expect(result).toEqual(configFile)
     })
   })
