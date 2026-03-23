@@ -1,5 +1,20 @@
 # Change Log
 
+## [3.0.0](https://github.com/chenasraf/simple-scaffold/compare/v2.3.3...v3.0.0) (2026-03-23)
+
+
+### Features
+
+* add .scaffold.{ext} as auto-detected file ([04e7e89](https://github.com/chenasraf/simple-scaffold/commit/04e7e895d7d97e29cf1ded2f2d0ac8e6a237b997))
+* auto-detect config file ([68e6d17](https://github.com/chenasraf/simple-scaffold/commit/68e6d17fa9898dffbc620eba0140748a90bc007f))
+* interactive inputs ([519ef27](https://github.com/chenasraf/simple-scaffold/commit/519ef273ac3db4b7a1e71c8e1c456aa1334d6fbd))
+* predefined data inputs ([d64dd4f](https://github.com/chenasraf/simple-scaffold/commit/d64dd4f0e775d3bff3efb074d0af23d54edcbaab))
+
+
+### Bug Fixes
+
+* string helpers to words parts conversion ([af33c05](https://github.com/chenasraf/simple-scaffold/commit/af33c059b91d3f463a5d174ab3a0119c577880c5))
+
 ## [2.3.3](https://github.com/chenasraf/simple-scaffold/compare/v2.3.2...v2.3.3) (2025-06-18)
 
 
