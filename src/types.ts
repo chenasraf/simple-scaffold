@@ -166,8 +166,45 @@ export interface ScaffoldConfig {
     outputPath: string,
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
 
+  /**
+   * Defines interactive inputs for the template. Each input becomes a template data variable.
+   *
+   * When running interactively, required inputs that are not already provided via `data` or CLI args
+   * will be prompted for. Optional inputs without a value will use their `default` if defined.
+   *
+   * @example
+   * ```typescript
+   * Scaffold({
+   *   // ...
+   *   inputs: {
+   *     author: { message: "Author name", required: true },
+   *     license: { message: "License", default: "MIT" },
+   *   },
+   * })
+   * ```
+   *
+   * In templates: `{{ author }}`, `{{ license }}`
+   *
+   * @see {@link ScaffoldInput}
+   */
+  inputs?: Record<string, ScaffoldInput>
+
   /** @internal */
   tmpDir?: string
+}
+
+/**
+ * Defines a single interactive input for a scaffold template.
+ *
+ * @category Config
+ */
+export interface ScaffoldInput {
+  /** The prompt message shown to the user. Defaults to the input key name if omitted. */
+  message?: string
+  /** Whether this input must be provided. If true and missing, the user will be prompted interactively. */
+  required?: boolean
+  /** Default value used when the user doesn't provide one. */
+  default?: string
 }
 
 /**

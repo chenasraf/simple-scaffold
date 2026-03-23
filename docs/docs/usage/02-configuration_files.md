@@ -23,7 +23,8 @@ module.exports = {
 }
 ```
 
-For the full configuration options, see [ScaffoldConfigFile](../api/type-aliases/ScaffoldConfigFile).
+For the full configuration options, see
+[ScaffoldConfigFile](../api/type-aliases/ScaffoldConfigFile).
 
 If you want to supply functions inside the configurations, you must use a `.js`/`.cjs`/`.mjs` file
 as JSON does not support non-primitives.
@@ -44,6 +45,31 @@ module.exports = (config) => {
   }
 }
 ```
+
+### Template Inputs
+
+You can define **inputs** in your config to prompt users for custom values when scaffolding. Each
+input becomes a template data variable:
+
+```js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    inputs: {
+      author: { message: "Author name", required: true },
+      license: { message: "License type", default: "MIT" },
+      description: { message: "Component description" },
+    },
+  },
+}
+```
+
+In your templates, use these as `{{ author }}`, `{{ license }}`, `{{ description }}`.
+
+- **Required** inputs are prompted interactively if not provided via `--data` or `-D`
+- **Optional** inputs with a `default` use that value silently if not provided
+- In non-interactive environments, only defaults are applied
 
 If you want to provide templates that need no name (such as common config files which are easily
 portable between projects), you may provide the `name` property in the config object.
@@ -86,7 +112,6 @@ simple-scaffold -c scaffold.json MyComponentName
 ```
 
 - When the a directory is given, the following files in the given directory will be tried in order:
-
   - `scaffold.config.*`
   - `scaffold.*`
 

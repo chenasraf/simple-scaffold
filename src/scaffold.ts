@@ -14,6 +14,7 @@ import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } 
 import { registerHelpers } from "./parser"
 import { log, logInitStep } from "./logger"
 import { parseConfigFile } from "./config"
+import { resolveInputs } from "./prompts"
 
 /**
  * Create a scaffold using given `options`.
@@ -50,6 +51,7 @@ import { parseConfigFile } from "./config"
 export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   config.output ??= process.cwd()
 
+  config = await resolveInputs(config)
   registerHelpers(config)
   try {
     config.data = { name: config.name, ...config.data }

@@ -13,9 +13,12 @@
 
 </h2>
 
-Simple Scaffold is a file scaffolding tool. You define templates once, then generate files from them whenever you need — whether it's a single component or an entire app boilerplate.
+Simple Scaffold is a file scaffolding tool. You define templates once, then generate files from them
+whenever you need — whether it's a single component or an entire app boilerplate.
 
-Templates use **Handlebars.js** syntax, so you can inject data, loop over lists, use conditionals, and write custom helpers. It works as a CLI or as a Node.js library, and it doesn't care what kind of files you're generating.
+Templates use **Handlebars.js** syntax, so you can inject data, loop over lists, use conditionals,
+and write custom helpers. It works as a CLI or as a Node.js library, and it doesn't care what kind
+of files you're generating.
 
 <div align="center">
 
@@ -91,6 +94,33 @@ By default, the template name is set to `default` when the `--key` option is not
 See information about each option and flag using the `--help` flag, or read the
 [CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli). For information
 about how configuration files work, [see below](#configuration-files).
+
+### Interactive Mode
+
+When running in a terminal, Simple Scaffold will interactively prompt for any missing required
+values — name, output directory, template paths, and template key (if multiple are available).
+
+Config files can also define **inputs** — custom fields that are prompted interactively and become
+template data:
+
+```js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    inputs: {
+      author: { message: "Author name", required: true },
+      license: { message: "License", default: "MIT" },
+    },
+  },
+}
+```
+
+Inputs can be pre-provided via `--data` or `-D` to skip the prompt:
+
+```sh
+npx simple-scaffold -c scaffold.config.js -k component -D author=John MyComponent
+```
 
 ### Configuration Files
 

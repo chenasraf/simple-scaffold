@@ -1,7 +1,7 @@
 import input from "@inquirer/input"
 import select from "@inquirer/select"
 import { colorize } from "./colors"
-import { ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
+import { ScaffoldCmdConfig, ScaffoldConfig, ScaffoldConfigMap, ScaffoldInput } from "./types"
 
 /** Prompts the user for a scaffold name. */
 export async function promptForName(): Promise<string> {
@@ -59,6 +59,41 @@ export async function promptForTemplates(): Promise<string[]> {
   return value.split(",").map((t) => t.trim()).filter(Boolean)
 }
 
+/**
+ * Prompts the user for any required scaffold inputs that are not already provided in data.
+ * Also applies default values for optional inputs that have one.
+ * Returns the merged data object.
+ */
+export async function promptForInputs(
+  inputs: Record<string, ScaffoldInput>,
+  existingData: Record<string, unknown> = {},
+): Promise<Record<string, unknown>> {
+  const data = { ...existingData }
+
+  for (const [key, def] of Object.entries(inputs)) {
+    // Skip if already provided via data/CLI
+    if (key in data && data[key] !== undefined && data[key] !== "") {
+      continue
+    }
+
+    if (def.required) {
+      data[key] = await input({
+        message: colorize.cyan(def.message ?? `${key}:`),
+        required: true,
+        default: def.default,
+        validate: (value) => {
+          if (!value.trim()) return `${key} is required`
+          return true
+        },
+      })
+    } else if (def.default !== undefined && !(key in data)) {
+      data[key] = def.default
+    }
+  }
+
+  return data
+}
+
 /** Returns true if the process is running in an interactive terminal. */
 export function isInteractive(): boolean {
   return Boolean(process.stdin.isTTY)
@@ -93,6 +128,33 @@ export async function promptForMissingConfig(
 
   if (!config.templates || config.templates.length === 0) {
     config.templates = await promptForTemplates()
+  }
+
+  return config
+}
+
+/**
+ * Prompts for any required inputs defined in the scaffold config and merges them into data.
+ * Only prompts in interactive mode; in non-interactive mode, only applies defaults.
+ */
+export async function resolveInputs(config: ScaffoldConfig): Promise<ScaffoldConfig> {
+  if (!config.inputs) {
+    return config
+  }
+
+  const interactive = isInteractive()
+
+  if (interactive) {
+    config.data = await promptForInputs(config.inputs, config.data)
+  } else {
+    // Non-interactive: only apply defaults
+    const data = { ...config.data }
+    for (const [key, def] of Object.entries(config.inputs)) {
+      if (def.default !== undefined && !(key in data)) {
+        data[key] = def.default
+      }
+    }
+    config.data = data
   }
 
   return config

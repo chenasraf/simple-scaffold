@@ -3,9 +3,9 @@ title: Usage
 sidebar_position: 0
 ---
 
-- [CLI Usage](cli)
+- [Template Files](templates)
 - [Configuration Files](configuration_files)
+- [CLI Usage](cli)
+- [Node.js Usage](node)
 - [Examples](examples)
 - [Migration](migration)
-- [Node.js Usage](node)
-- [Template Files](templates)

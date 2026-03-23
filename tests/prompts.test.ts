@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest"
-import { LogLevel, ScaffoldCmdConfig } from "../src/types"
+import { LogLevel, ScaffoldCmdConfig, ScaffoldConfig } from "../src/types"
 
 vi.mock("@inquirer/input", () => ({
   default: vi.fn(),
@@ -17,6 +17,8 @@ import {
   promptForOutput,
   promptForTemplates,
   promptForMissingConfig,
+  promptForInputs,
+  resolveInputs,
   isInteractive,
 } from "../src/prompts"
 
@@ -233,6 +235,165 @@ describe("prompts", () => {
       expect(result.output).toEqual("./out")
       expect(result.templates).toEqual(["src/tpl"])
       expect(inputMock).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe("promptForInputs", () => {
+    test("prompts for required inputs not in existing data", async () => {
+      vi.mocked(inputMock).mockResolvedValueOnce("John")
+      const result = await promptForInputs(
+        { author: { message: "Author name", required: true } },
+        {},
+      )
+      expect(result.author).toEqual("John")
+      expect(inputMock).toHaveBeenCalledOnce()
+    })
+
+    test("skips inputs already provided in data", async () => {
+      const result = await promptForInputs(
+        { author: { message: "Author name", required: true } },
+        { author: "Jane" },
+      )
+      expect(result.author).toEqual("Jane")
+      expect(inputMock).not.toHaveBeenCalled()
+    })
+
+    test("applies default value for optional inputs not in data", async () => {
+      const result = await promptForInputs(
+        { license: { default: "MIT" } },
+        {},
+      )
+      expect(result.license).toEqual("MIT")
+      expect(inputMock).not.toHaveBeenCalled()
+    })
+
+    test("does not apply default when value already exists", async () => {
+      const result = await promptForInputs(
+        { license: { default: "MIT" } },
+        { license: "Apache-2.0" },
+      )
+      expect(result.license).toEqual("Apache-2.0")
+    })
+
+    test("uses input key as message fallback", async () => {
+      vi.mocked(inputMock).mockResolvedValueOnce("val")
+      await promptForInputs(
+        { myField: { required: true } },
+        {},
+      )
+      const call = vi.mocked(inputMock).mock.calls[0][0] as { message: string }
+      expect(call.message).toContain("myField")
+    })
+
+    test("prompts multiple required inputs in order", async () => {
+      vi.mocked(inputMock)
+        .mockResolvedValueOnce("John")
+        .mockResolvedValueOnce("2.0")
+      const result = await promptForInputs(
+        {
+          author: { message: "Author", required: true },
+          version: { message: "Version", required: true },
+        },
+        {},
+      )
+      expect(result.author).toEqual("John")
+      expect(result.version).toEqual("2.0")
+      expect(inputMock).toHaveBeenCalledTimes(2)
+    })
+
+    test("mixes prompts, defaults, and existing data", async () => {
+      vi.mocked(inputMock).mockResolvedValueOnce("John")
+      const result = await promptForInputs(
+        {
+          author: { message: "Author", required: true },
+          license: { default: "MIT" },
+          description: { message: "Desc", required: true },
+        },
+        { description: "My project" },
+      )
+      expect(result.author).toEqual("John")
+      expect(result.license).toEqual("MIT")
+      expect(result.description).toEqual("My project")
+      expect(inputMock).toHaveBeenCalledOnce()
+    })
+
+    test("preserves existing data keys not in inputs", async () => {
+      const result = await promptForInputs(
+        { license: { default: "MIT" } },
+        { extra: "value" },
+      )
+      expect(result.extra).toEqual("value")
+      expect(result.license).toEqual("MIT")
+    })
+
+    test("required input with default pre-fills prompt", async () => {
+      vi.mocked(inputMock).mockResolvedValueOnce("custom")
+      await promptForInputs(
+        { author: { required: true, default: "Anonymous" } },
+        {},
+      )
+      const call = vi.mocked(inputMock).mock.calls[0][0] as { default?: string }
+      expect(call.default).toEqual("Anonymous")
+    })
+  })
+
+  describe("resolveInputs", () => {
+    test("returns config unchanged when no inputs defined", async () => {
+      const config: ScaffoldConfig = {
+        name: "test",
+        output: "out",
+        templates: [],
+        data: { foo: "bar" },
+      }
+      const result = await resolveInputs(config)
+      expect(result.data).toEqual({ foo: "bar" })
+    })
+
+    test("applies defaults in non-interactive mode", async () => {
+      mockTTY(false)
+      const config: ScaffoldConfig = {
+        name: "test",
+        output: "out",
+        templates: [],
+        data: {},
+        inputs: {
+          license: { default: "MIT" },
+        },
+      }
+      const result = await resolveInputs(config)
+      expect(result.data?.license).toEqual("MIT")
+      expect(inputMock).not.toHaveBeenCalled()
+    })
+
+    test("does not overwrite existing data with defaults in non-interactive mode", async () => {
+      mockTTY(false)
+      const config: ScaffoldConfig = {
+        name: "test",
+        output: "out",
+        templates: [],
+        data: { license: "Apache-2.0" },
+        inputs: {
+          license: { default: "MIT" },
+        },
+      }
+      const result = await resolveInputs(config)
+      expect(result.data?.license).toEqual("Apache-2.0")
+    })
+
+    test("prompts for required inputs in interactive mode", async () => {
+      mockTTY(true)
+      vi.mocked(inputMock).mockResolvedValueOnce("John")
+      const config: ScaffoldConfig = {
+        name: "test",
+        output: "out",
+        templates: [],
+        data: {},
+        inputs: {
+          author: { message: "Author", required: true },
+        },
+      }
+      const result = await resolveInputs(config)
+      expect(result.data?.author).toEqual("John")
     })
   })
 })

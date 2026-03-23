@@ -13,24 +13,68 @@ To see this and more information anytime, add the `-h` or `--help` flag to your 
 
 Options:
 
-| Option/flag \| Alias                              | Description                                                                                                                                                                                              |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--name` \| `-n`                                  | Name to be passed to the generated files. `{{name}}` and other data parameters inside contents and file names will be replaced accordingly. You may omit the `--name` or `-n` for this specific option.  |
-| `--config` \| `-c`                                | Filename or directory to load config from                                                                                                                                                                |
-| `--git` \| `-g`                                   | Git URL or GitHub path to load a template from.                                                                                                                                                          |
-| `--key` \| `-k`                                   | Key to load inside the config file. This overwrites the config key provided after the colon in `--config` (e.g. `--config scaffold.cmd.js:component)`                                                    |
-| `--output` \| `-o`                                | Path to output to. If `--subdir` is enabled, the subdir will be created inside this path. Default is current working directory.                                                                          |
-| `--templates` \| `-t`                             | Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path, or a glob pattern for multiple file matching easily.                                   |
-| `--overwrite` \| `-w` \| `--no-overwrite` \| `-W` | Enable to override output files, even if they already exist. (default: false)                                                                                                                            |
-| `--data` \| `-d`                                  | Add custom data to the templates. By default, only your app name is included.                                                                                                                            |
-| `--append-data` \| `-D`                           | Append additional custom data to the templates, which will overwrite `--data`, using an alternate syntax, which is easier to use with CLI: `-D key1=string -D key2:=raw`                                 |
-| `--subdir` \| `-s` \| `--no-subdir` \| `-S`       | Create a parent directory with the input name (and possibly `--subdir-helper` (default: false)                                                                                                           |
-| `--subdir-helper` \| `-H`                         | Default helper to apply to subdir name when using `--subdir`.                                                                                                                                            |
-| `--quiet` \| `-q`                                 | Suppress output logs (Same as `--log-level none`)(default: false)                                                                                                                                        |
-| `--log-level` \| `-l`                             | Determine amount of logs to display. The values are: `none, debug, info, warn, error`. The provided level will display messages of the same level or higher. (default: info)                             |
-| `--before-write` \| `-B`                          | Run a script before writing the files. This can be a command or a path to a file. A temporary file path will be passed to the given command and the command should return a string for the final output. |
-| `--dry-run` \| `-dr`                              | Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories. (default: false)                          |
-| `--version` \| `-v`                               | Display version.                                                                                                                                                                                         |
+| Option/flag \| Alias                              | Description                                                                                                                                                                                                                                                    |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--name` \| `-n`                                  | Name to be passed to the generated files. `{{name}}` and other data parameters inside contents and file names will be replaced accordingly. If omitted in an interactive terminal, you will be prompted.                                                       |
+| `--config` \| `-c`                                | Filename or directory to load config from                                                                                                                                                                                                                      |
+| `--git` \| `-g`                                   | Git URL or GitHub path to load a template from.                                                                                                                                                                                                                |
+| `--key` \| `-k`                                   | Key to load inside the config file. If omitted and multiple templates are available, you will be prompted to select one.                                                                                                                                       |
+| `--output` \| `-o`                                | Path to output to. If `--subdir` is enabled, the subdir will be created inside this path. If omitted in an interactive terminal, you will be prompted.                                                                                                         |
+| `--templates` \| `-t`                             | Template files to use as input. You may provide multiple files, each of which can be a relative or absolute path, or a glob pattern for multiple file matching easily. If omitted in an interactive terminal, you will be prompted for a comma-separated list. |
+| `--overwrite` \| `-w` \| `--no-overwrite` \| `-W` | Enable to override output files, even if they already exist. (default: false)                                                                                                                                                                                  |
+| `--data` \| `-d`                                  | Add custom data to the templates. By default, only your app name is included.                                                                                                                                                                                  |
+| `--append-data` \| `-D`                           | Append additional custom data to the templates, which will overwrite `--data`, using an alternate syntax, which is easier to use with CLI: `-D key1=string -D key2:=raw`                                                                                       |
+| `--subdir` \| `-s` \| `--no-subdir` \| `-S`       | Create a parent directory with the input name (and possibly `--subdir-helper` (default: false)                                                                                                                                                                 |
+| `--subdir-helper` \| `-H`                         | Default helper to apply to subdir name when using `--subdir`.                                                                                                                                                                                                  |
+| `--quiet` \| `-q`                                 | Suppress output logs (Same as `--log-level none`)(default: false)                                                                                                                                                                                              |
+| `--log-level` \| `-l`                             | Determine amount of logs to display. The values are: `none, debug, info, warn, error`. The provided level will display messages of the same level or higher. (default: info)                                                                                   |
+| `--before-write` \| `-B`                          | Run a script before writing the files. This can be a command or a path to a file. A temporary file path will be passed to the given command and the command should return a string for the final output.                                                       |
+| `--dry-run` \| `-dr`                              | Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories. (default: false)                                                                                |
+| `--version` \| `-v`                               | Display version.                                                                                                                                                                                                                                               |
+
+### Interactive Mode
+
+When running in a terminal (TTY), Simple Scaffold will prompt for any missing required values:
+
+- **Name** — text input if `--name` is not provided
+- **Template key** — selectable list if `--key` is not provided and the config file has multiple
+  templates
+- **Output directory** — text input if `--output` is not provided
+- **Template paths** — comma-separated text input if `--templates` is not provided
+
+In non-interactive environments (CI, piped input), missing values will cause an error instead of
+prompting.
+
+### Template Inputs
+
+Config files can define **inputs** — custom fields that are prompted interactively and injected as
+template data. This is useful for templates that need user-specific values like author name,
+license, or description.
+
+```js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    inputs: {
+      author: { message: "Author name", required: true },
+      license: { message: "License type", default: "MIT" },
+      description: { message: "Description" },
+    },
+  },
+}
+```
+
+Each input becomes available as a Handlebars variable in your templates (e.g., `{{ author }}`,
+`{{ license }}`).
+
+- **Required inputs** without a value will be prompted interactively
+- **Optional inputs** with a `default` will use that value if not provided
+- All inputs can be pre-provided via `--data` or `-D` to skip the prompt:
+
+```shell
+simple-scaffold -c scaffold.config.js -k component -D author=John -D license=Apache-2.0 MyComponent
+```
 
 ### Before Write option
 

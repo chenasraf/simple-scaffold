@@ -31,7 +31,6 @@ title: Examples
 ### Output
 
 - Output file path:
-
   - With `subdir = false` (default):
 
     ```text

@@ -10,7 +10,7 @@ import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
 import { colorize } from "./colors"
-import { isInteractive, promptForMissingConfig } from "./prompts"
+import { promptForMissingConfig, resolveInputs } from "./prompts"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
@@ -45,7 +45,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
 
         log(config, LogLevel.debug, "Parsing config file...", config)
         const parsed = await parseConfigFile(config)
-        await Scaffold(parsed)
+        const resolved = await resolveInputs(parsed)
+        await Scaffold(resolved)
       } catch (e) {
         const message = "message" in (e as object) ? (e as Error).message : e?.toString()
         log(config, LogLevel.error, message)
