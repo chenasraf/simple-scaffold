@@ -1,4 +1,5 @@
 import util from "util"
+import path from "node:path"
 import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
 import { colorize, TermColor } from "./colors"
 
@@ -14,8 +15,8 @@ const LOG_PRIORITY: Record<LogLevel, number> = {
 /** Maps each log level to a terminal color. */
 const LOG_LEVEL_COLOR: Record<LogLevel, TermColor> = {
   [LogLevel.none]: "reset",
-  [LogLevel.debug]: "blue",
-  [LogLevel.info]: "dim",
+  [LogLevel.debug]: "dim",
+  [LogLevel.info]: "reset",
   [LogLevel.warning]: "yellow",
   [LogLevel.error]: "red",
 }
@@ -64,7 +65,7 @@ export function logInputFile(
   log(config, LogLevel.debug, data)
 }
 
-/** Logs the full scaffold configuration at debug level, with a data summary at info level. */
+/** Logs the full scaffold configuration at debug level. */
 export function logInitStep(config: ScaffoldConfig): void {
   log(config, LogLevel.debug, "Full config:", {
     name: config.name,
@@ -79,5 +80,56 @@ export function logInitStep(config: ScaffoldConfig): void {
     dryRun: config.dryRun,
     beforeWrite: config.beforeWrite,
   } as Record<keyof ScaffoldConfig, unknown>)
-  log(config, LogLevel.info, "Data:", config.data)
+}
+
+/**
+ * Logs a tree of created files, grouped by directory.
+ */
+export function logFileTree(config: LogConfig, files: string[]): void {
+  if (files.length === 0) return
+
+  // Find common prefix to make paths relative
+  const commonDir = files.reduce((prefix, file) => {
+    while (!file.startsWith(prefix)) {
+      prefix = path.dirname(prefix)
+    }
+    return prefix
+  }, path.dirname(files[0]))
+
+  log(config, LogLevel.info, "")
+  log(config, LogLevel.info, colorize.bold(`📁 ${commonDir}`))
+
+  const relPaths = files.map((f) => path.relative(commonDir, f)).sort()
+
+  for (let i = 0; i < relPaths.length; i++) {
+    const isLast = i === relPaths.length - 1
+    const prefix = isLast ? "└── " : "├── "
+    log(config, LogLevel.info, colorize.dim(prefix) + relPaths[i])
+  }
+}
+
+/**
+ * Logs a final summary line with file count and elapsed time.
+ */
+export function logSummary(
+  config: LogConfig,
+  fileCount: number,
+  elapsedMs: number,
+  dryRun?: boolean,
+): void {
+  const timeStr =
+    elapsedMs < 1000 ? `${Math.round(elapsedMs)}ms` : `${(elapsedMs / 1000).toFixed(2)}s`
+
+  log(config, LogLevel.info, "")
+  if (dryRun) {
+    log(
+      config,
+      LogLevel.info,
+      colorize.yellow(`🏜️  Dry run complete — ${fileCount} file(s) would be created (${timeStr})`),
+    )
+  } else if (fileCount === 0) {
+    log(config, LogLevel.info, colorize.yellow(`⚠️  No files created (${timeStr})`))
+  } else {
+    log(config, LogLevel.info, colorize.green(`✅ Created ${fileCount} file(s) in ${timeStr}`))
+  }
 }

@@ -13,7 +13,7 @@ export async function getGitConfig(
 ): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
   const repoUrl = `${url.protocol}//${url.host}${url.pathname}`
 
-  log(logConfig, LogLevel.info, `Cloning git repo ${repoUrl}`)
+  log(logConfig, LogLevel.debug, `Cloning git repo ${repoUrl}`)
 
   return new Promise((res, reject) => {
     log(logConfig, LogLevel.debug, `Cloning git repo to ${tmpPath}`)
@@ -43,7 +43,7 @@ export async function loadGitConfig({
   file: string
   tmpPath: string
 }): Promise<AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>> {
-  log(logConfig, LogLevel.info, `Loading config from git repo: ${repoUrl}`)
+  log(logConfig, LogLevel.debug, `Loading config from git repo: ${repoUrl}`)
   const filename = file || (await findConfigFile(tmpPath))
   const absolutePath = path.resolve(tmpPath, filename)
   log(logConfig, LogLevel.debug, `Resolving config file: ${absolutePath}`)
@@ -52,7 +52,7 @@ export async function loadGitConfig({
     logConfig,
   )
 
-  log(logConfig, LogLevel.info, `Loaded config from git`)
+  log(logConfig, LogLevel.debug, `Loaded config from git`)
   log(logConfig, LogLevel.debug, `Raw config:`, loadedConfig)
   const fixedConfig: ScaffoldConfigMap = {}
   for (const [k, v] of Object.entries(loadedConfig)) {

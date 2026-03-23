@@ -134,7 +134,7 @@ export function handlebarsParse(
     return Buffer.from(outputContents)
   } catch (e) {
     log(config, LogLevel.debug, e)
-    log(config, LogLevel.info, "Couldn't parse file with handlebars, returning original content")
+    log(config, LogLevel.debug, "Couldn't parse file with handlebars, returning original content")
     return Buffer.from(templateBuffer)
   }
 }

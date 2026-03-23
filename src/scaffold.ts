@@ -13,7 +13,7 @@ import { isDir, getTemplateGlobInfo, getFileList, handleTemplateFile, GlobInfo }
 import { removeGlob, makeRelativePath, getBasePath } from "./path-utils"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { registerHelpers } from "./parser"
-import { log, logInitStep } from "./logger"
+import { log, logInitStep, logFileTree, logSummary } from "./logger"
 import { parseConfigFile } from "./config"
 import { resolveInputs } from "./prompts"
 import { loadIgnorePatterns, filterIgnoredFiles } from "./ignore"
@@ -57,10 +57,14 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   await assertConfigValid(config)
   config = await resolveInputs(config)
   registerHelpers(config)
+
+  const startTime = performance.now()
   const writtenFiles: string[] = []
   try {
     config.data = { name: config.name, ...config.data }
     logInitStep(config)
+
+    log(config, LogLevel.info, `Scaffolding "${config.name}"...`)
 
     const excludes = config.templates.filter((t) => t.startsWith("!"))
     const includes = config.templates.filter((t) => !t.startsWith("!"))
@@ -75,6 +79,11 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     log(config, LogLevel.error, e)
     throw e
   }
+
+  const elapsed = performance.now() - startTime
+
+  logFileTree(config, writtenFiles)
+  logSummary(config, writtenFiles.length, elapsed, config.dryRun)
 
   if (config.afterScaffold) {
     await runAfterScaffoldHook(config, writtenFiles)

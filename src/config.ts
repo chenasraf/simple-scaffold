@@ -38,7 +38,7 @@ function isWrappedWithQuotes(string: string): boolean {
 /** Loads and resolves a config file (local or remote). @internal */
 export async function getConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfigMap> {
   if (config.git && !config.git.includes("://")) {
-    log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
+    log(config, LogLevel.debug, `Loading config from GitHub ${config.git}`)
     config.git = githubPartToUrl(config.git)
   }
 
@@ -46,7 +46,7 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
   const configFilename = config.config
   const configPath = isGit ? config.git : configFilename
 
-  log(config, LogLevel.info, `Loading config from file ${configFilename}`)
+  log(config, LogLevel.debug, `Loading config from file ${configFilename}`)
 
   const configPromise = await (isGit
     ? getRemoteConfig({
@@ -157,11 +157,11 @@ export async function getLocalConfig(
     if (!exists) {
       throw new Error(`Could not find config file in directory ${absolutePath}`)
     }
-    log(logConfig, LogLevel.info, `Loading config from: ${path.resolve(absolutePath, file)}`)
+    log(logConfig, LogLevel.debug, `Loading config from: ${path.resolve(absolutePath, file)}`)
     return wrapNoopResolver(import(path.resolve(absolutePath, file)))
   }
 
-  log(logConfig, LogLevel.info, `Loading config from: ${absolutePath}`)
+  log(logConfig, LogLevel.debug, `Loading config from: ${absolutePath}`)
   return wrapNoopResolver(import(absolutePath))
 }
 
@@ -173,7 +173,7 @@ export async function getRemoteConfig(
 
   log(
     logConfig,
-    LogLevel.info,
+    LogLevel.debug,
     `Loading config from remote ${git}, config file ${configFile || "<auto-detect>"}`,
   )
 

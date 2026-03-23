@@ -115,7 +115,7 @@ describe("logger", () => {
       expect(consoleSpy.log).toHaveBeenCalled()
     })
 
-    test("does not log config at info level (debug only)", () => {
+    test("does not log at info level (debug only)", () => {
       const config: ScaffoldConfig = {
         name: "test",
         output: "output",
@@ -124,8 +124,8 @@ describe("logger", () => {
         data: { name: "test" },
       }
       logInitStep(config)
-      // Should only log the "Data:" line at info, not the "Full config:" at debug
-      expect(consoleSpy.log).toHaveBeenCalledTimes(1)
+      // Full config is debug-only, nothing logged at info
+      expect(consoleSpy.log).not.toHaveBeenCalled()
     })
   })
 

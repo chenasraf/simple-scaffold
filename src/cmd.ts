@@ -30,7 +30,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         console.log(pkg.version)
         return
       }
-      log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
+      log(config, LogLevel.debug, `Simple Scaffold v${pkg.version}`)
       config.tmpDir = generateUniqueTmpPath()
       try {
         // Auto-detect config file in cwd if not explicitly provided

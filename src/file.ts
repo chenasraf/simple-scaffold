@@ -130,7 +130,7 @@ export async function copyFileTransformed(
 ): Promise<void> {
   if (!exists || overwrite) {
     if (exists && overwrite) {
-      log(config, LogLevel.info, `File ${outputPath} exists, overwriting`)
+      log(config, LogLevel.debug, `Overwriting ${outputPath}`)
     }
     log(config, LogLevel.debug, `Processing file ${inputPath}`)
     const templateBuffer = await readFile(inputPath)
@@ -142,13 +142,12 @@ export async function copyFileTransformed(
     if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
     } else {
-      log(config, LogLevel.info, "Dry Run. Output should be:")
-      log(config, LogLevel.info, finalOutputContents.toString())
+      log(config, LogLevel.debug, "Dry run — output would be:")
+      log(config, LogLevel.debug, finalOutputContents.toString())
     }
   } else if (exists) {
-    log(config, LogLevel.info, `File ${outputPath} already exists, skipping`)
+    log(config, LogLevel.debug, `Skipped ${outputPath} (already exists)`)
   }
-  log(config, LogLevel.info, "Done.")
 }
 
 /** Computes the output directory for a file, combining the output path, base path, and optional subdir. */
@@ -205,7 +204,7 @@ export async function handleTemplateFile(
     await createDirIfNotExists(path.dirname(outputPath), config)
 
     const shouldWrite = (!exists || overwrite) && !config.dryRun
-    log(config, LogLevel.info, `Writing to ${outputPath}`)
+    log(config, LogLevel.debug, `Writing to ${outputPath}`)
     await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
     return shouldWrite ? outputPath : null
   } catch (e: unknown) {

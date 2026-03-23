@@ -1,7 +1,7 @@
 // @ts-check
 /** @type {import('./dist').ScaffoldConfigFile} */
-module.exports = (conf) => {
-  console.log("Config:", conf)
+module.exports = () => {
+  // console.log("Config:", conf)
   return {
     default: {
       templates: ["examples/test-input/Component"],
