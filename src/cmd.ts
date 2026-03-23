@@ -5,7 +5,7 @@ import fs from "node:fs/promises"
 import { massarg } from "massarg"
 import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
 import { Scaffold } from "./scaffold"
-import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
+import { findConfigFile, getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
@@ -33,7 +33,17 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
       config.tmpDir = generateUniqueTmpPath()
       try {
-        // If a config file is provided, load it early so we can prompt for template key
+        // Auto-detect config file in cwd if not explicitly provided
+        if (!config.config && !config.git) {
+          try {
+            config.config = await findConfigFile(process.cwd())
+            log(config, LogLevel.debug, `Auto-detected config file: ${config.config}`)
+          } catch {
+            // No config file found — that's fine, continue without one
+          }
+        }
+
+        // Load config early so we can prompt for template key
         const hasConfigSource = Boolean(config.config || config.git)
         let configMap: ScaffoldConfigMap | undefined
         if (hasConfigSource) {
