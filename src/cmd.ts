@@ -3,13 +3,14 @@
 import path from "node:path"
 import fs from "node:fs/promises"
 import { massarg } from "massarg"
-import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig } from "./types"
+import { ListCommandCliOptions, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
 import { Scaffold } from "./scaffold"
 import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
 import { colorize } from "./colors"
+import { isInteractive, promptForMissingConfig } from "./prompts"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
@@ -32,6 +33,16 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       log(config, LogLevel.info, `Simple Scaffold v${pkg.version}`)
       config.tmpDir = generateUniqueTmpPath()
       try {
+        // If a config file is provided, load it early so we can prompt for template key
+        const hasConfigSource = Boolean(config.config || config.git)
+        let configMap: ScaffoldConfigMap | undefined
+        if (hasConfigSource) {
+          configMap = await getConfigFile(config)
+        }
+
+        // Prompt for missing values interactively
+        config = await promptForMissingConfig(config, configMap)
+
         log(config, LogLevel.debug, "Parsing config file...", config)
         const parsed = await parseConfigFile(config)
         await Scaffold(parsed)
@@ -40,7 +51,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         log(config, LogLevel.error, message)
       } finally {
         log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)
-        await fs.rm(config.tmpDir, { recursive: true, force: true })
+        if (config.tmpDir) await fs.rm(config.tmpDir, { recursive: true, force: true })
       }
     })
     .option({
@@ -49,9 +60,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       description:
         "Name to be passed to the generated files. `{{name}}` and other data parameters inside " +
         "contents and file names will be replaced accordingly. You may omit the `--name` or `-n` " +
-        "for this specific option.",
+        "for this specific option. If omitted in an interactive terminal, you will be prompted.",
       isDefault: true,
-      required: !isConfigProvided,
     })
     .option({
       name: "config",
@@ -68,15 +78,15 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       aliases: ["k"],
       description:
         "Key to load inside the config file. This overwrites the config key provided after the colon in `--config` " +
-        "(e.g. `--config scaffold.cmd.js:component)`",
+        "(e.g. `--config scaffold.cmd.js:component)`. If omitted and multiple templates are available, " +
+        "you will be prompted to select one.",
     })
     .option({
       name: "output",
       aliases: ["o"],
       description:
         "Path to output to. If `--subdir` is enabled, the subdir will be created inside " +
-        "this path. Default is current working directory.",
-      required: !isConfigProvided,
+        "this path. If omitted in an interactive terminal, you will be prompted.",
     })
     .option({
       name: "templates",
@@ -85,8 +95,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       description:
         "Template files to use as input. You may provide multiple files, each of which can be a relative or " +
         "absolute path, " +
-        "or a glob pattern for multiple file matching easily.",
-      required: !isConfigProvided,
+        "or a glob pattern for multiple file matching easily. If omitted in an interactive terminal, " +
+        "you will be prompted for a comma-separated list.",
     })
     .flag({
       name: "overwrite",
@@ -192,7 +202,7 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
             log(config, LogLevel.error, message)
           } finally {
             log(config, LogLevel.debug, "Cleaning up temporary files...", config.tmpDir)
-            await fs.rm(config.tmpDir, { recursive: true, force: true })
+            if (config.tmpDir) await fs.rm(config.tmpDir, { recursive: true, force: true })
           }
         },
       })
