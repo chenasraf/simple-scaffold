@@ -17,6 +17,7 @@ import { log, logInitStep } from "./logger"
 import { parseConfigFile } from "./config"
 import { resolveInputs } from "./prompts"
 import { loadIgnorePatterns, filterIgnoredFiles } from "./ignore"
+import { assertConfigValid } from "./validate"
 
 /**
  * Create a scaffold using given `options`.
@@ -53,6 +54,7 @@ import { loadIgnorePatterns, filterIgnoredFiles } from "./ignore"
 export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   config.output ??= process.cwd()
 
+  await assertConfigValid(config)
   config = await resolveInputs(config)
   registerHelpers(config)
   const writtenFiles: string[] = []

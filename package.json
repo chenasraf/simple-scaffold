@@ -61,7 +61,8 @@
     "glob": "^13.0.6",
     "handlebars": "^4.7.8",
     "massarg": "2.1.1",
-    "minimatch": "^10.2.4"
+    "minimatch": "^10.2.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -2,3 +2,4 @@ docs/docs/api/
 examples/
 .github/
 CHANGELOG.md
+pnpm-lock.yaml
