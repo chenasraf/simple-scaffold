@@ -1,5 +1,6 @@
 ---
 title: Usage
+sidebar_position: 0
 ---
 
 - [CLI Usage](cli)

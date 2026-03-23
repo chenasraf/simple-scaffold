@@ -428,4 +428,5 @@ export type RemoteConfigLoadConfig = LogConfig & Pick<ScaffoldCmdConfig, "config
 /** @internal */
 export type MinimalConfig = Pick<ScaffoldCmdConfig, "name" | "key">
 
+/** @internal */
 export type ListCommandCliOptions = Pick<ScaffoldCmdConfig, "config" | "git" | "logLevel" | "quiet">
