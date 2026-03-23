@@ -174,6 +174,7 @@ export async function findConfigFile(root: string): Promise<string> {
   const allowed = ["mjs", "cjs", "js", "json"].reduce((acc, ext) => {
     acc.push(`scaffold.config.${ext}`)
     acc.push(`scaffold.${ext}`)
+    acc.push(`.scaffold.${ext}`)
     return acc
   }, [] as string[])
   for (const file of allowed) {

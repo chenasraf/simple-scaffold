@@ -474,5 +474,57 @@ describe("config", () => {
         })
       }),
     )
+
+    describe(
+      "finds .scaffold.js",
+      withMock({ ".scaffold.js": "module.exports = {}" }, () => {
+        test("finds dotfile config", async () => {
+          const result = await findConfigFile(process.cwd())
+          expect(result).toEqual(".scaffold.js")
+        })
+      }),
+    )
+
+    describe(
+      "finds .scaffold.json",
+      withMock({ ".scaffold.json": "{}" }, () => {
+        test("finds dotfile json config", async () => {
+          const result = await findConfigFile(process.cwd())
+          expect(result).toEqual(".scaffold.json")
+        })
+      }),
+    )
+
+    describe(
+      "prefers scaffold.config over .scaffold",
+      withMock(
+        {
+          "scaffold.config.js": "module.exports = {}",
+          ".scaffold.js": "module.exports = {}",
+        },
+        () => {
+          test("prefers scaffold.config.js over .scaffold.js", async () => {
+            const result = await findConfigFile(process.cwd())
+            expect(result).toEqual("scaffold.config.js")
+          })
+        },
+      ),
+    )
+
+    describe(
+      "prefers scaffold over .scaffold",
+      withMock(
+        {
+          "scaffold.js": "module.exports = {}",
+          ".scaffold.js": "module.exports = {}",
+        },
+        () => {
+          test("prefers scaffold.js over .scaffold.js", async () => {
+            const result = await findConfigFile(process.cwd())
+            expect(result).toEqual("scaffold.js")
+          })
+        },
+      ),
+    )
   })
 })

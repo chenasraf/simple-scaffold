@@ -79,9 +79,38 @@ default and therefore it will no longer be required in the CLI arguments.
 
 ## Using a config file
 
-Once your config is created, you can use it by providing the file name to the `--config` (or `-c`
-for brevity), optionally alongside `--key` or `-k`, denoting the key to use as the config object, as
-you define in your config:
+### Auto-detection
+
+By default, Simple Scaffold automatically searches the current working directory for a config file.
+No `--config` flag is needed if your config file uses one of the standard names.
+
+The following files are tried in order:
+
+1. `scaffold.config.mjs`
+2. `scaffold.config.cjs`
+3. `scaffold.config.js`
+4. `scaffold.config.json`
+5. `scaffold.mjs`
+6. `scaffold.cjs`
+7. `scaffold.js`
+8. `scaffold.json`
+9. `.scaffold.mjs`
+10. `.scaffold.cjs`
+11. `.scaffold.js`
+12. `.scaffold.json`
+
+If a config file is found, it is loaded automatically. If multiple templates are defined and no
+`--key` is provided, you'll be prompted to select one interactively.
+
+```sh
+# Just run from a directory containing scaffold.config.js — no flags needed
+simple-scaffold MyComponentName
+```
+
+### Explicit config path
+
+You can also provide a specific file or directory path using `--config` (or `-c`), optionally
+alongside `--key` or `-k`:
 
 ```sh
 simple-scaffold -c <file> -k <template_key>
@@ -93,7 +122,12 @@ For example:
 simple-scaffold -c scaffold.json -k component MyComponentName
 ```
 
-If you don't want to supply a template/config name (e.g. `component`), `default` will be used:
+When a directory is given, the same auto-detection order listed above is used to find a config file
+within that directory.
+
+### Default template key
+
+If you don't supply a template key (e.g. `component`), `default` will be used:
 
 ```js
 /** @type {import('simple-scaffold').ScaffoldConfigFile} */
@@ -104,35 +138,23 @@ module.exports = {
 }
 ```
 
-And then:
-
 ```sh
 # will use 'default' template
 simple-scaffold -c scaffold.json MyComponentName
 ```
 
-- When the a directory is given, the following files in the given directory will be tried in order:
-  - `scaffold.config.*`
-  - `scaffold.*`
-
-  Where `*` denotes any supported file extension, in the priority listed in
-  [Supported file types](#supported-file-types)
-
-- When the `template_key` is ommitted, `default` will be used as default.
+If multiple keys exist and no key is specified, you'll be prompted to choose one interactively.
 
 ### Supported file types
 
 Any importable file is supported, depending on your build process.
 
-Common files include:
+Common extensions:
 
-- `*.mjs`
-- `*.cjs`
-- `*.js`
-- `*.json`
-
-When filenames are ommited when loading configs, these are the file extensions that will be
-automatically tried, by the specified order of priority.
+- `.mjs`
+- `.cjs`
+- `.js`
+- `.json`
 
 Note that you might need to find the correct extension of `.js`, `.cjs` or `.mjs` depending on your
 build process and your package type (for example, packages with `"type": "module"` in their

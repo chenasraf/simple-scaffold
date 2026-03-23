@@ -124,7 +124,11 @@ npx simple-scaffold -c scaffold.config.js -k component -D author=John MyComponen
 
 ### Configuration Files
 
-You can use a config file to more easily maintain all your scaffold definitions.
+You can use a config file to more easily maintain all your scaffold definitions. Simple Scaffold
+**auto-detects** config files in the current directory — no `--config` flag needed.
+
+It searches for these files in order: `scaffold.config.{mjs,cjs,js,json}`,
+`scaffold.{mjs,cjs,js,json}`, `.scaffold.{mjs,cjs,js,json}`.
 
 `scaffold.config.js`
 
@@ -142,10 +146,11 @@ module.exports = {
 }
 ```
 
-Then call your scaffold like this:
+Then just run from the same directory:
 
 ```sh
-$ npx simple-scaffold -c scaffold.config.js PageWrapper
+$ npx simple-scaffold PageWrapper
+# or explicitly: npx simple-scaffold -c scaffold.config.js PageWrapper
 ```
 
 This will allow you to avoid needing to remember which configs are needed or to store them in a
