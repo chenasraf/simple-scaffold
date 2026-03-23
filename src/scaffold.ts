@@ -8,19 +8,11 @@ import path from "node:path"
 import os from "node:os"
 
 import { handleErr, resolve } from "./utils"
-import {
-  isDir,
-  removeGlob,
-  makeRelativePath,
-  getTemplateGlobInfo,
-  getFileList,
-  getBasePath,
-  handleTemplateFile,
-  GlobInfo,
-} from "./file"
+import { isDir, getTemplateGlobInfo, getFileList, handleTemplateFile, GlobInfo } from "./file"
+import { removeGlob, makeRelativePath, getBasePath } from "./path-utils"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { registerHelpers } from "./parser"
-import { log, logInitStep, logInputFile } from "./logger"
+import { log, logInitStep } from "./logger"
 import { parseConfigFile } from "./config"
 
 /**
@@ -62,48 +54,57 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   try {
     config.data = { name: config.name, ...config.data }
     logInitStep(config)
+
     const excludes = config.templates.filter((t) => t.startsWith("!"))
     const includes = config.templates.filter((t) => !t.startsWith("!"))
-    const templates: GlobInfo[] = []
-    for (const includedTemplate of includes) {
-      try {
-        const { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template } = await getTemplateGlobInfo(
-          config,
-          includedTemplate,
-        )
-        templates.push({ nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template })
-      } catch (e: unknown) {
-        handleErr(e as NodeJS.ErrnoException)
-      }
-    }
+
+    const templates = await resolveTemplateGlobs(config, includes)
+
     for (const tpl of templates) {
-      const files = await getFileList(config, [tpl.template, ...excludes])
-      for (const file of files) {
-        if (await isDir(file)) {
-          continue
-        }
-        log(config, LogLevel.debug, "Iterating files", { files, file })
-        const relPath = makeRelativePath(path.dirname(removeGlob(file).replace(tpl.nonGlobTemplate, "")))
-        const basePath = getBasePath(relPath)
-        logInputFile(config, {
-          originalTemplate: tpl.origTemplate,
-          relativePath: relPath,
-          parsedTemplate: tpl.template,
-          inputFilePath: file,
-          nonGlobTemplate: tpl.nonGlobTemplate,
-          basePath,
-          isDirOrGlob: tpl.isDirOrGlob,
-          isGlob: tpl.isGlob,
-        })
-        await handleTemplateFile(config, {
-          templatePath: file,
-          basePath,
-        })
-      }
+      await processTemplateGlob(config, tpl, excludes)
     }
   } catch (e: unknown) {
     log(config, LogLevel.error, e)
     throw e
+  }
+}
+
+/** Resolves included template paths into GlobInfo objects. */
+async function resolveTemplateGlobs(config: ScaffoldConfig, includes: string[]): Promise<GlobInfo[]> {
+  const templates: GlobInfo[] = []
+  for (const includedTemplate of includes) {
+    try {
+      templates.push(await getTemplateGlobInfo(config, includedTemplate))
+    } catch (e: unknown) {
+      handleErr(e as NodeJS.ErrnoException)
+    }
+  }
+  return templates
+}
+
+/** Processes all files matching a single template glob pattern. */
+async function processTemplateGlob(config: ScaffoldConfig, tpl: GlobInfo, excludes: string[]): Promise<void> {
+  const files = await getFileList(config, [tpl.template, ...excludes])
+  for (const file of files) {
+    if (await isDir(file)) {
+      continue
+    }
+    log(config, LogLevel.debug, "Iterating files", { files, file })
+    const relPath = makeRelativePath(path.dirname(removeGlob(file).replace(tpl.baseTemplatePath, "")))
+    const basePath = getBasePath(relPath)
+
+    log(config, LogLevel.debug, {
+      originalTemplate: tpl.origTemplate,
+      relativePath: relPath,
+      parsedTemplate: tpl.template,
+      inputFilePath: file,
+      baseTemplatePath: tpl.baseTemplatePath,
+      basePath,
+      isDirOrGlob: tpl.isDirOrGlob,
+      isGlob: tpl.isGlob,
+    })
+
+    await handleTemplateFile(config, { templatePath: file, basePath })
   }
 }
 
@@ -119,11 +120,8 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
  * @return {Promise<void>} A promise that resolves when the scaffold is complete
  */
 Scaffold.fromConfig = async function (
-  /** The path or URL to the config file */
   pathOrUrl: string,
-  /** Information needed before loading the config */
   config: MinimalConfig,
-  /** Any overrides to the loaded config */
   overrides?: Resolver<ScaffoldCmdConfig, Partial<Omit<ScaffoldConfig, "name">>>,
 ): Promise<void> {
   const tmpPath = path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}`)

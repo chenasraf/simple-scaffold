@@ -1,76 +1,55 @@
-import os from "node:os"
 import path from "node:path"
 import fs from "node:fs/promises"
-import { F_OK } from "node:constants"
-import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
+import { FileResponse, FileResponseHandler, LogLevel, ScaffoldConfig } from "./types"
 import { glob, hasMagic } from "glob"
 import { log } from "./logger"
-import { getOptionValueForFile } from "./config"
 import { handlebarsParse } from "./parser"
 import { handleErr } from "./utils"
+import { createDirIfNotExists, pathExists, isDir } from "./fs-utils"
+import { removeGlob } from "./path-utils"
 
-const { stat, access, mkdir, readFile, writeFile } = fs
+const { readFile, writeFile } = fs
 
-export async function createDirIfNotExists(
-  dir: string,
-  config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
-): Promise<void> {
-  if (config.dryRun) {
-    log(config, LogLevel.info, `Dry Run. Not creating dir ${dir}`)
-    return
+// Re-export extracted utilities for backward compatibility (tests import from here)
+export { createDirIfNotExists, pathExists, isDir, getUniqueTmpPath } from "./fs-utils"
+export { removeGlob, makeRelativePath, getBasePath } from "./path-utils"
+
+/**
+ * Resolves a config option that may be either a static value or a per-file function.
+ * For function values, the file path is parsed through Handlebars before being passed.
+ * @internal
+ */
+export function getOptionValueForFile<T>(
+  config: ScaffoldConfig,
+  filePath: string,
+  fn: FileResponse<T>,
+  defaultValue?: T,
+): T {
+  if (typeof fn !== "function") {
+    return defaultValue ?? (fn as T)
   }
-  const parentDir = path.dirname(dir)
-
-  if (!(await pathExists(parentDir))) {
-    await createDirIfNotExists(parentDir, config)
-  }
-
-  if (!(await pathExists(dir))) {
-    try {
-      log(config, LogLevel.debug, `Creating dir ${dir}`)
-      await mkdir(dir)
-      return
-    } catch (e: unknown) {
-      if (e && (e as NodeJS.ErrnoException).code !== "EEXIST") {
-        throw e
-      }
-      return
-    }
-  }
+  return (fn as FileResponseHandler<T>)(
+    filePath,
+    path.dirname(handlebarsParse(config, filePath, { asPath: true }).toString()),
+    path.basename(handlebarsParse(config, filePath, { asPath: true }).toString()),
+  )
 }
 
-export async function pathExists(filePath: string): Promise<boolean> {
-  try {
-    await access(filePath, F_OK)
-    return true
-  } catch (e: unknown) {
-    if (e && (e as NodeJS.ErrnoException).code === "ENOENT") {
-      return false
-    }
-    throw e
-  }
+/** Information about a template glob pattern and how it was resolved. */
+export interface GlobInfo {
+  /** The template path with glob wildcards stripped. */
+  baseTemplatePath: string
+  /** The original template string as provided by the user. */
+  origTemplate: string
+  /** Whether the template is a directory or contains glob patterns. */
+  isDirOrGlob: boolean
+  /** Whether the template contains glob wildcard characters. */
+  isGlob: boolean
+  /** The final resolved template path (with `**\/*` appended for directories). */
+  template: string
 }
 
-export async function isDir(path: string): Promise<boolean> {
-  const tplStat = await stat(path)
-  return tplStat.isDirectory()
-}
-
-export function removeGlob(template: string): string {
-  return path.normalize(template.replace(/\*/g, ""))
-}
-
-export function makeRelativePath(str: string): string {
-  return str.startsWith(path.sep) ? str.slice(1) : str
-}
-
-export function getBasePath(relPath: string): string {
-  return path
-    .resolve(process.cwd(), relPath)
-    .replace(process.cwd() + path.sep, "")
-    .replace(process.cwd(), "")
-}
-
+/** Expands a list of glob patterns into a flat list of matching file paths. */
 export async function getFileList(config: ScaffoldConfig, templates: string[]): Promise<string[]> {
   log(config, LogLevel.debug, `Getting file list for glob list: ${templates}`)
   return (
@@ -81,30 +60,25 @@ export async function getFileList(config: ScaffoldConfig, templates: string[]): 
   ).map(path.normalize)
 }
 
-export interface GlobInfo {
-  nonGlobTemplate: string
-  origTemplate: string
-  isDirOrGlob: boolean
-  isGlob: boolean
-  template: string
-}
-
+/** Analyzes a template path to determine if it's a glob, directory, or single file. */
 export async function getTemplateGlobInfo(config: ScaffoldConfig, template: string): Promise<GlobInfo> {
-  const isGlob = hasMagic(template)
-  log(config, LogLevel.debug, "before isDir", "isGlob:", isGlob, template)
-  let _template = template
-  let nonGlobTemplate = isGlob ? removeGlob(template) : template
-  nonGlobTemplate = path.normalize(nonGlobTemplate)
-  const isDirOrGlob = isGlob ? true : await isDir(template)
-  const _shouldAddGlob = !isGlob && isDirOrGlob
-  log(config, LogLevel.debug, "after", { isDirOrGlob, _shouldAddGlob })
-  const origTemplate = template
-  if (_shouldAddGlob) {
-    _template = path.join(template, "**", "*")
+  const _isGlob = hasMagic(template)
+  log(config, LogLevel.debug, "before isDir", "isGlob:", _isGlob, template)
+
+  let resolvedTemplate = template
+  let baseTemplatePath = _isGlob ? removeGlob(template) : template
+  baseTemplatePath = path.normalize(baseTemplatePath)
+  const isDirOrGlob = _isGlob ? true : await isDir(template)
+  const shouldAddGlob = !_isGlob && isDirOrGlob
+  log(config, LogLevel.debug, "after", { isDirOrGlob, shouldAddGlob })
+
+  if (shouldAddGlob) {
+    resolvedTemplate = path.join(template, "**", "*")
   }
-  return { nonGlobTemplate, origTemplate, isDirOrGlob, isGlob, template: _template }
+  return { baseTemplatePath, origTemplate: template, isDirOrGlob, isGlob: _isGlob, template: resolvedTemplate }
 }
 
+/** Complete information about a template file's output destination. */
 export interface OutputFileInfo {
   inputPath: string
   outputPathOpt: string
@@ -113,6 +87,7 @@ export interface OutputFileInfo {
   exists: boolean
 }
 
+/** Computes the full output path and metadata for a single template file. */
 export async function getTemplateFileInfo(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
@@ -126,6 +101,10 @@ export async function getTemplateFileInfo(
   return { inputPath, outputPathOpt, outputDir, outputPath, exists }
 }
 
+/**
+ * Reads a template file, applies Handlebars parsing, runs the beforeWrite hook,
+ * and writes the result to the output path.
+ */
 export async function copyFileTransformed(
   config: ScaffoldConfig,
   {
@@ -162,6 +141,7 @@ export async function copyFileTransformed(
   log(config, LogLevel.info, "Done.")
 }
 
+/** Computes the output directory for a file, combining the output path, base path, and optional subdir. */
 export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
   return path.resolve(
     process.cwd(),
@@ -177,6 +157,10 @@ export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, base
   )
 }
 
+/**
+ * Processes a single template file: resolves output paths, creates directories,
+ * and writes the transformed output.
+ */
 export async function handleTemplateFile(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
@@ -208,9 +192,4 @@ export async function handleTemplateFile(
     handleErr(e as NodeJS.ErrnoException)
     throw e
   }
-}
-
-/** @internal */
-export function getUniqueTmpPath(): string {
-  return path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 }

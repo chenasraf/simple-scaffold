@@ -1,29 +1,32 @@
 import util from "util"
 import { LogConfig, LogLevel, ScaffoldConfig } from "./types"
-import { colorize, TermColor } from "./utils"
+import { colorize, TermColor } from "./colors"
 
+/** Priority ordering for log levels (higher = more severe). */
+const LOG_PRIORITY: Record<LogLevel, number> = {
+  [LogLevel.none]: 0,
+  [LogLevel.debug]: 1,
+  [LogLevel.info]: 2,
+  [LogLevel.warning]: 3,
+  [LogLevel.error]: 4,
+}
+
+/** Maps each log level to a terminal color. */
+const LOG_LEVEL_COLOR: Record<LogLevel, TermColor> = {
+  [LogLevel.none]: "reset",
+  [LogLevel.debug]: "blue",
+  [LogLevel.info]: "dim",
+  [LogLevel.warning]: "yellow",
+  [LogLevel.error]: "red",
+}
+
+/** Logs a message at the given level, respecting the configured log level filter. */
 export function log(config: LogConfig, level: LogLevel, ...obj: unknown[]): void {
-  const priority: Record<LogLevel, number> = {
-    [LogLevel.none]: 0,
-    [LogLevel.debug]: 1,
-    [LogLevel.info]: 2,
-    [LogLevel.warning]: 3,
-    [LogLevel.error]: 4,
-  }
-
-  if (config.logLevel === LogLevel.none || priority[level] < priority[config.logLevel ?? LogLevel.info]) {
+  if (config.logLevel === LogLevel.none || LOG_PRIORITY[level] < LOG_PRIORITY[config.logLevel ?? LogLevel.info]) {
     return
   }
 
-  const levelColor: Record<keyof typeof LogLevel, TermColor> = {
-    [LogLevel.none]: "reset",
-    [LogLevel.debug]: "blue",
-    [LogLevel.info]: "dim",
-    [LogLevel.warning]: "yellow",
-    [LogLevel.error]: "red",
-  }
-
-  const colorFn = colorize[levelColor[level]]
+  const colorFn = colorize[LOG_LEVEL_COLOR[level]]
   const key: "log" | "warn" | "error" = level === LogLevel.error ? "error" : level === LogLevel.warning ? "warn" : "log"
   const logFn: (..._args: unknown[]) => void = console[key]
   logFn(
@@ -37,6 +40,10 @@ export function log(config: LogConfig, level: LogLevel, ...obj: unknown[]): void
   )
 }
 
+/**
+ * Logs detailed file processing information at debug level.
+ * @deprecated Use `log(config, LogLevel.debug, data)` directly instead.
+ */
 export function logInputFile(
   config: ScaffoldConfig,
   data: {
@@ -53,6 +60,7 @@ export function logInputFile(
   log(config, LogLevel.debug, data)
 }
 
+/** Logs the full scaffold configuration at debug level, with a data summary at info level. */
 export function logInitStep(config: ScaffoldConfig): void {
   log(config, LogLevel.debug, "Full config:", {
     name: config.name,

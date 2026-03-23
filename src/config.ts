@@ -1,9 +1,6 @@
 import path from "node:path"
-import fs from "node:fs/promises"
 import {
   ConfigLoadConfig,
-  FileResponse,
-  FileResponseHandler,
   LogConfig,
   LogLevel,
   RemoteConfigLoadConfig,
@@ -12,35 +9,19 @@ import {
   ScaffoldConfigFile,
   ScaffoldConfigMap,
 } from "./types"
-import { handlebarsParse } from "./parser"
 import { log } from "./logger"
 import { resolve, wrapNoopResolver } from "./utils"
 import { getGitConfig } from "./git"
-import { createDirIfNotExists, getUniqueTmpPath, isDir, pathExists } from "./file"
-import { exec } from "node:child_process"
+import { isDir, pathExists } from "./fs-utils"
+import { wrapBeforeWrite } from "./before-write"
 
-/** @internal */
-export function getOptionValueForFile<T>(
-  config: ScaffoldConfig,
-  filePath: string,
-  fn: FileResponse<T>,
-  defaultValue?: T,
-): T {
-  if (typeof fn !== "function") {
-    return defaultValue ?? (fn as T)
-  }
-  return (fn as FileResponseHandler<T>)(
-    filePath,
-    path.dirname(handlebarsParse(config, filePath, { asPath: true }).toString()),
-    path.basename(handlebarsParse(config, filePath, { asPath: true }).toString()),
-  )
-}
+// Re-export for backward compatibility (tests import from here)
+export { getOptionValueForFile } from "./file"
 
-/** @internal */
+/** Parses CLI append-data syntax (`key=value` or `key:=jsonValue`) into a data object. @internal */
 export function parseAppendData(value: string, options: ScaffoldCmdConfig): unknown {
   const data = options.data ?? {}
   const [key, val] = value.split(/:?=/)
-  // raw
   if (value.includes(":=") && !val.includes(":=")) {
     return { ...data, [key]: JSON.parse(val) }
   }
@@ -51,7 +32,7 @@ function isWrappedWithQuotes(string: string): boolean {
   return (string.startsWith('"') && string.endsWith('"')) || (string.startsWith("'") && string.endsWith("'"))
 }
 
-/** @internal */
+/** Loads and resolves a config file (local or remote). @internal */
 export async function getConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfigMap> {
   if (config.git && !config.git.includes("://")) {
     log(config, LogLevel.info, `Loading config from GitHub ${config.git}`)
@@ -68,10 +49,8 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
     ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpDir: config.tmpDir! })
     : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
-  // resolve the config
   let configImport = await resolve(configPromise, config)
 
-  // If the config is a function or promise, return the output
   if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
     log(config, LogLevel.debug, "Config is a function or promise, resolving...")
     configImport = await resolve(configImport.default, config)
@@ -79,7 +58,10 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
   return configImport
 }
 
-/** @internal */
+/**
+ * Parses a CLI config into a full ScaffoldConfig by merging CLI args, config file values,
+ * and append-data overrides. @internal
+ */
 export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<ScaffoldConfig> {
   let output: ScaffoldConfig = {
     name: config.name,
@@ -136,7 +118,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
   return output
 }
 
-/** @internal */
+/** Converts a GitHub shorthand (user/repo) to a full HTTPS git URL. @internal */
 export function githubPartToUrl(part: string): string {
   const gitUrl = new URL(`https://github.com/${part}`)
   if (!gitUrl.pathname.endsWith(".git")) {
@@ -145,7 +127,7 @@ export function githubPartToUrl(part: string): string {
   return gitUrl.toString()
 }
 
-/** @internal */
+/** Loads a scaffold config from a local file or directory. @internal */
 export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfig>): Promise<ScaffoldConfigFile> {
   const { config: configFile, ...logConfig } = config as Required<typeof config>
 
@@ -168,7 +150,7 @@ export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfi
   return wrapNoopResolver(import(absolutePath))
 }
 
-/** @internal */
+/** Loads a scaffold config from a remote git repository. @internal */
 export async function getRemoteConfig(
   config: RemoteConfigLoadConfig & Partial<LogConfig>,
 ): Promise<ScaffoldConfigFile> {
@@ -187,7 +169,7 @@ export async function getRemoteConfig(
   return getGitConfig(url, configFile, tmpDir, logConfig)
 }
 
-/** @internal */
+/** Searches for a scaffold config file in the given directory, trying known filenames in order. @internal */
 export async function findConfigFile(root: string): Promise<string> {
   const allowed = ["mjs", "cjs", "js", "json"].reduce((acc, ext) => {
     acc.push(`scaffold.config.${ext}`)
@@ -201,73 +183,4 @@ export async function findConfigFile(root: string): Promise<string> {
     }
   }
   throw new Error(`Could not find config file in git repo`)
-}
-
-function wrapBeforeWrite(
-  config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
-  beforeWrite: string,
-): ScaffoldConfig["beforeWrite"] {
-  return async (content, rawContent, outputFile) => {
-    const tmpDir = path.join(getUniqueTmpPath(), path.basename(outputFile))
-    await createDirIfNotExists(path.dirname(tmpDir), config)
-    const ext = path.extname(outputFile)
-    const rawTmpPath = tmpDir.replace(ext, ".raw" + ext)
-    try {
-      log(config, LogLevel.debug, "Parsing beforeWrite command", beforeWrite)
-      const cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpDir, content, rawTmpPath, rawContent })
-      const result = await new Promise<string | undefined>((resolve, reject) => {
-        log(config, LogLevel.debug, "Running parsed beforeWrite command:", cmd)
-        const proc = exec(cmd)
-        proc.stdout!.on("data", (data) => {
-          if (data.trim()) {
-            resolve(data.toString())
-          } else {
-            resolve(undefined)
-          }
-        })
-        proc.stderr!.on("data", (data) => {
-          reject(data.toString())
-        })
-      })
-      return result
-    } catch (e) {
-      log(config, LogLevel.debug, e)
-      log(config, LogLevel.warning, "Error running beforeWrite command, returning original content")
-      return undefined
-    } finally {
-      await fs.rm(tmpDir, { force: true })
-      await fs.rm(rawTmpPath, { force: true })
-    }
-  }
-}
-
-async function prepareBeforeWriteCmd({
-  beforeWrite,
-  tmpDir,
-  content,
-  rawTmpPath,
-  rawContent,
-}: {
-  beforeWrite: string
-  tmpDir: string
-  content: Buffer
-  rawTmpPath: string
-  rawContent: Buffer
-}): Promise<string> {
-  let cmd: string = ""
-  const pathReg = /\{\{\s*path\s*\}\}/gi
-  const rawPathReg = /\{\{\s*rawpath\s*\}\}/gi
-  if (pathReg.test(beforeWrite)) {
-    await fs.writeFile(tmpDir, content)
-    cmd = beforeWrite.replaceAll(pathReg, tmpDir)
-  }
-  if (rawPathReg.test(beforeWrite)) {
-    await fs.writeFile(rawTmpPath, rawContent)
-    cmd = beforeWrite.replaceAll(rawPathReg, rawTmpPath)
-  }
-  if (!cmd) {
-    await fs.writeFile(tmpDir, content)
-    cmd = [beforeWrite, tmpDir].join(" ")
-  }
-  return cmd
 }

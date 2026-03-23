@@ -9,7 +9,7 @@ import { getConfigFile, parseAppendData, parseConfigFile } from "./config"
 import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
-import { colorize } from "./utils"
+import { colorize } from "./colors"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
   const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
