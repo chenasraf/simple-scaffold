@@ -22,7 +22,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
@@ -35,7 +35,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
@@ -73,10 +73,12 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
-      - run: npm --version
+      - run: |
+          echo "node: $(node --version)"
+          echo "npm: $(npm --version)"
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: cd dist && npm publish --provenance --access public
+      - run: npm publish ./dist --provenance
 
   docs:
     name: Deploy Documentation
@@ -88,7 +90,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cd docs && pnpm install --frozen-lockfile
