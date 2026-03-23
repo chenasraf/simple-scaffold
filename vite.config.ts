@@ -11,25 +11,16 @@ export default defineConfig({
       formats: ["cjs"],
     },
     outDir: "dist",
+    target: "node20",
     rollupOptions: {
+      // Externalize all node builtins and all dependencies
       external: [
-        "node:os",
-        "node:path",
-        "node:fs",
-        "node:fs/promises",
-        "node:constants",
-        "node:child_process",
-        "node:util",
-        "date-fns",
-        "date-fns/add",
-        "date-fns/format",
-        "date-fns/parseISO",
-        "glob",
-        "handlebars",
-        "handlebars/runtime",
-        "massarg",
-        "massarg/command",
+        /^node:/, // Node builtins
+        /^[^./]/, // All bare imports (dependencies)
       ],
+      output: {
+        exports: "named",
+      },
     },
     sourcemap: true,
     minify: false,
