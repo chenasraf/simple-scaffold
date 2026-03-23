@@ -23,7 +23,7 @@ module.exports = {
 }
 ```
 
-For the full configuration options, see [ScaffoldConfigFile](../api/modules#scaffoldconfigfile).
+For the full configuration options, see [ScaffoldConfigFile](../api/type-aliases/ScaffoldConfigFile).
 
 If you want to supply functions inside the configurations, you must use a `.js`/`.cjs`/`.mjs` file
 as JSON does not support non-primitives.

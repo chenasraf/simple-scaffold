@@ -19,7 +19,12 @@ const config: Config = {
   projectName: "simple-scaffold", // Usually your repo name.
 
   onBrokenLinks: "warn",
-  onBrokenMarkdownLinks: "warn",
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -47,8 +52,12 @@ const config: Config = {
         categorizeByGroup: false,
         sort: ["visibility"],
         categoryOrder: ["Main", "*"],
-        media: "media",
         entryPointStrategy: "expand",
+        pageTitleTemplates: {
+          index: "{projectName}",
+          member: "`{rawName}`",
+          module: "{name}",
+        },
         validation: {
           invalidLink: true,
         },
@@ -134,8 +143,12 @@ const config: Config = {
           title: "Docs",
           items: [
             {
-              label: "Tutorial",
-              to: "/docs/intro",
+              label: "Usage",
+              to: "/docs/usage",
+            },
+            {
+              label: "API",
+              to: "/docs/api",
             },
           ],
         },
