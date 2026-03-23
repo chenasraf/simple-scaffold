@@ -524,4 +524,559 @@ describe("Scaffold", () => {
       })
     }),
   )
+
+  describe(
+    "name is available in data",
+    withMock(
+      {
+        input: { "file.txt": "Name: {{name}}" },
+        output: {},
+      },
+      () => {
+        test("name is automatically injected into data", async () => {
+          await Scaffold({
+            name: "my_project",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("Name: my_project")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "data overrides name in data",
+    withMock(
+      {
+        input: { "file.txt": "Name: {{name}}" },
+        output: {},
+      },
+      () => {
+        test("explicit data.name takes precedence", async () => {
+          await Scaffold({
+            name: "original_name",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            data: { name: "custom_name" },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("Name: custom_name")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "multiple templates",
+    withMock(
+      {
+        template1: { "file1.txt": "From template 1: {{name}}" },
+        template2: { "file2.txt": "From template 2: {{name}}" },
+        output: {},
+      },
+      () => {
+        test("processes multiple template directories", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["template1", "template2"],
+            logLevel: "none",
+          })
+          const file1 = readFileSync(join(process.cwd(), "output", "file1.txt")).toString()
+          const file2 = readFileSync(join(process.cwd(), "output", "file2.txt")).toString()
+          expect(file1).toEqual("From template 1: app")
+          expect(file2).toEqual("From template 2: app")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "template with custom data",
+    withMock(
+      {
+        input: { "{{name}}.txt": "Author: {{author}}, Version: {{version}}" },
+        output: {},
+      },
+      () => {
+        test("uses custom data in content and filename", async () => {
+          await Scaffold({
+            name: "my_app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            data: { author: "John", version: "2.0" },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "my_app.txt")).toString()
+          expect(content).toEqual("Author: John, Version: 2.0")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "template with helpers in filenames",
+    withMock(
+      {
+        input: { "{{pascalCase name}}.tsx": "component {{pascalCase name}}" },
+        output: {},
+      },
+      () => {
+        test("applies helpers to filenames", async () => {
+          await Scaffold({
+            name: "my_component",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "MyComponent.tsx")).toString()
+          expect(content).toEqual("component MyComponent")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "template with helpers in directory names",
+    withMock(
+      {
+        input: {
+          "{{kebabCase name}}": {
+            "index.ts": "export from {{name}}",
+          },
+        },
+        output: {},
+      },
+      () => {
+        test("applies helpers to directory names", async () => {
+          await Scaffold({
+            name: "MyComponent",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "my-component", "index.ts")).toString()
+          expect(content).toEqual("export from MyComponent")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "deeply nested template structure",
+    withMock(
+      {
+        input: {
+          "root.txt": "root",
+          level1: {
+            "l1.txt": "level 1",
+            level2: {
+              "l2.txt": "level 2",
+              level3: {
+                "l3.txt": "level 3 {{name}}",
+              },
+            },
+          },
+        },
+        output: {},
+      },
+      () => {
+        test("preserves deep nesting", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          expect(readFileSync(join(process.cwd(), "output", "root.txt")).toString()).toEqual("root")
+          expect(readFileSync(join(process.cwd(), "output", "level1", "l1.txt")).toString()).toEqual("level 1")
+          expect(
+            readFileSync(join(process.cwd(), "output", "level1", "level2", "l2.txt")).toString(),
+          ).toEqual("level 2")
+          expect(
+            readFileSync(
+              join(process.cwd(), "output", "level1", "level2", "level3", "l3.txt"),
+            ).toString(),
+          ).toEqual("level 3 app")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "overwrite as function",
+    withMock(
+      {
+        input: {
+          "keep.txt": "new keep",
+          "replace.txt": "new replace",
+        },
+        output: {
+          "keep.txt": "old keep",
+          "replace.txt": "old replace",
+        },
+      },
+      () => {
+        test("per-file overwrite control", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            overwrite: (_fullPath, _basedir, basename) => basename === "replace.txt",
+          })
+          expect(readFileSync(join(process.cwd(), "output", "keep.txt")).toString()).toEqual("old keep")
+          expect(readFileSync(join(process.cwd(), "output", "replace.txt")).toString()).toEqual("new replace")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "multiple custom helpers",
+    withMock(
+      {
+        input: {
+          "file.txt": "{{reverse name}} - {{repeat name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("multiple custom helpers work together", async () => {
+          await Scaffold({
+            name: "abc",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            helpers: {
+              reverse: (text: string) => text.split("").reverse().join(""),
+              repeat: (text: string) => text + text,
+            },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("cba - abcabc")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "subdirHelper with different helpers",
+    withMock(
+      {
+        input: { "file.txt": "content" },
+        output: {},
+      },
+      () => {
+        test("subdirHelper camelCase", async () => {
+          await Scaffold({
+            name: "my_component",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            subdir: true,
+            subdirHelper: "camelCase",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "myComponent", "file.txt")).toString()
+          expect(content).toEqual("content")
+        })
+
+        test("subdirHelper kebabCase", async () => {
+          await Scaffold({
+            name: "MyComponent",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            subdir: true,
+            subdirHelper: "kebabCase",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "my-component", "file.txt")).toString()
+          expect(content).toEqual("content")
+        })
+
+        test("subdirHelper snakeCase", async () => {
+          await Scaffold({
+            name: "MyComponent",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            subdir: true,
+            subdirHelper: "snakeCase",
+          })
+          const content = readFileSync(join(process.cwd(), "output", "my_component", "file.txt")).toString()
+          expect(content).toEqual("content")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "empty template directory",
+    withMock(
+      {
+        input: {},
+        output: {},
+      },
+      () => {
+        test("handles empty template dir gracefully", async () => {
+          await expect(
+            Scaffold({
+              name: "app",
+              output: "output",
+              templates: ["input"],
+              logLevel: "none",
+            }),
+          ).resolves.toBeUndefined()
+        })
+      },
+    ),
+  )
+
+  describe(
+    "template with special characters in data",
+    withMock(
+      {
+        input: { "file.txt": "Value: {{value}}" },
+        output: {},
+      },
+      () => {
+        test("handles special characters in data values", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            data: { value: "hello & <world> \"test\"" },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("Value: hello & <world> \"test\"")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "beforeWrite with async callback",
+    withMock(
+      {
+        input: { "file.txt": "Hello {{name}}" },
+        output: {},
+      },
+      () => {
+        test("supports async beforeWrite", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            beforeWrite: async (content) => {
+              return content.toString().replace("Hello", "Hi")
+            },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("Hi app")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "beforeWrite receives all arguments",
+    withMock(
+      {
+        input: { "{{name}}.txt": "Template: {{name}}" },
+        output: {},
+      },
+      () => {
+        test("beforeWrite gets content, rawContent, and outputPath", async () => {
+          const beforeWriteSpy = jest.fn().mockReturnValue(undefined)
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            beforeWrite: beforeWriteSpy,
+          })
+          expect(beforeWriteSpy).toHaveBeenCalledTimes(1)
+          const [content, rawContent, outputPath] = beforeWriteSpy.mock.calls[0]
+          expect(content.toString()).toEqual("Template: app")
+          expect(rawContent.toString()).toEqual("Template: {{name}}")
+          expect(outputPath).toContain("app.txt")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "multiple binary files",
+    withMock(
+      {
+        input: {
+          "img1.bin": crypto.randomBytes(5000),
+          "img2.bin": crypto.randomBytes(8000),
+          "text.txt": "regular text {{name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("handles mix of binary and text files", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const text = readFileSync(join(process.cwd(), "output", "text.txt")).toString()
+          expect(text).toEqual("regular text app")
+          const bin1 = readFileSync(join(process.cwd(), "output", "img1.bin"))
+          const bin2 = readFileSync(join(process.cwd(), "output", "img2.bin"))
+          expect(bin1.length).toBeGreaterThan(0)
+          expect(bin2.length).toBeGreaterThan(0)
+        })
+      },
+    ),
+  )
+
+  describe(
+    "output with function returning dynamic path",
+    withMock(
+      {
+        input: {
+          "component.tsx": "component {{name}}",
+          "style.css": "style for {{name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("output function can route files to different directories", async () => {
+          await Scaffold({
+            name: "Button",
+            output: (_fullPath, _basedir, basename) => {
+              if (basename.endsWith(".css")) return join("output", "styles")
+              return join("output", "components")
+            },
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const component = readFileSync(
+            join(process.cwd(), "output", "components", "component.tsx"),
+          ).toString()
+          const style = readFileSync(
+            join(process.cwd(), "output", "styles", "style.css"),
+          ).toString()
+          expect(component).toEqual("component Button")
+          expect(style).toEqual("style for Button")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "handlebars block helpers",
+    withMock(
+      {
+        input: {
+          "file.txt": "{{#if showHeader}}Header\n{{/if}}Body for {{name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("supports handlebars block helpers in templates", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            data: { showHeader: true },
+          })
+          const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
+          expect(content).toEqual("Header\nBody for app")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "glob pattern as template",
+    withMock(
+      {
+        src: {
+          "file1.txt": "text 1 {{name}}",
+          "file2.txt": "text 2 {{name}}",
+          "file3.js": "js {{name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("glob pattern selects matching files only", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["src/*.txt"],
+            logLevel: "none",
+          })
+          // glob templates maintain structure relative to the non-glob part
+          const outputFiles = readdirSync(join(process.cwd(), "output", "src"))
+          expect(outputFiles).toContain("file1.txt")
+          expect(outputFiles).toContain("file2.txt")
+          expect(outputFiles).not.toContain("file3.js")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "dotfiles in template",
+    withMock(
+      {
+        input: {
+          ".gitignore": "node_modules",
+          ".env.example": "KEY={{name}}",
+        },
+        output: {},
+      },
+      () => {
+        test("includes dotfiles in output", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          expect(readFileSync(join(process.cwd(), "output", ".gitignore")).toString()).toEqual("node_modules")
+          expect(readFileSync(join(process.cwd(), "output", ".env.example")).toString()).toEqual("KEY=app")
+        })
+      },
+    ),
+  )
+
+  describe(
+    "large number of files",
+    withMock(
+      {
+        input: Object.fromEntries(
+          Array.from({ length: 50 }, (_, i) => [`file${i}.txt`, `Content ${i} for {{name}}`]),
+        ),
+        output: {},
+      },
+      () => {
+        test("handles many files", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const files = readdirSync(join(process.cwd(), "output"))
+          expect(files.length).toBe(50)
+          expect(readFileSync(join(process.cwd(), "output", "file0.txt")).toString()).toEqual("Content 0 for app")
+          expect(readFileSync(join(process.cwd(), "output", "file49.txt")).toString()).toEqual("Content 49 for app")
+        })
+      },
+    ),
+  )
 })
