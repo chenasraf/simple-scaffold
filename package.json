@@ -40,21 +40,21 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
-    "glob": "^11.0.3",
+    "glob": "^13.0.6",
     "handlebars": "^4.7.8",
-    "massarg": "2.0.1"
+    "massarg": "2.1.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
+    "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^24.0.3",
-    "jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "jest": "^30.3.0",
     "mock-fs": "^5.5.0",
-    "rimraf": "^6.0.1",
-    "ts-jest": "^29.4.0",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.34.1"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1"
   }
 }
