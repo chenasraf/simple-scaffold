@@ -1120,6 +1120,64 @@ describe("Scaffold", () => {
   )
 
   describe(
+    ".scaffoldignore",
+    withMock(
+      {
+        input: {
+          ".scaffoldignore": "*.log\nREADME.md\n",
+          "file.txt": "included",
+          "debug.log": "excluded log",
+          "README.md": "excluded readme",
+          "other.js": "included js",
+        },
+        output: {},
+      },
+      () => {
+        test("excludes files matching .scaffoldignore patterns", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const files = readdirSync(join(process.cwd(), "output"))
+          expect(files).toContain("file.txt")
+          expect(files).toContain("other.js")
+          expect(files).not.toContain("debug.log")
+          expect(files).not.toContain("README.md")
+          expect(files).not.toContain(".scaffoldignore")
+        })
+      },
+    ),
+  )
+
+  describe(
+    ".scaffoldignore not copied to output",
+    withMock(
+      {
+        input: {
+          ".scaffoldignore": "*.log",
+          "file.txt": "content",
+        },
+        output: {},
+      },
+      () => {
+        test(".scaffoldignore is never in output", async () => {
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+          })
+          const files = readdirSync(join(process.cwd(), "output"))
+          expect(files).not.toContain(".scaffoldignore")
+          expect(files).toContain("file.txt")
+        })
+      },
+    ),
+  )
+
+  describe(
     "afterScaffold hook",
     withMock(
       {

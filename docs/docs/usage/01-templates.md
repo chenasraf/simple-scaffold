@@ -22,6 +22,25 @@ Examples:
 | `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name}}.txt` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
 | `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name}}.txt` | `src/outer2/inner/AppName.txt`                               |
 
+## Ignoring files
+
+You can create a `.scaffoldignore` file in your template directory to exclude files from being
+copied to the output. It works like `.gitignore` — one pattern per line, comments with `#`.
+
+```text
+# .scaffoldignore
+*.log
+node_modules
+README.md
+dist/**
+```
+
+The `.scaffoldignore` file itself is never copied to the output.
+
+Patterns are matched against both the file's basename and its path relative to the template
+directory, so `README.md` will match at any depth, while `dist/**` only matches a `dist` directory
+at the template root.
+
 ## Variable/token replacement
 
 Scaffolding will replace `{{ varName }}` in both the file name and its contents and put the

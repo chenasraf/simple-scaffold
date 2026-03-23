@@ -448,6 +448,8 @@ export type FileResponse<T> = T | FileResponseHandler<T>
  * Contains less and more specific options than {@link ScaffoldConfig}.
  *
  * For more information about each option, see {@link ScaffoldConfig}.
+ *
+ * @internal
  */
 export type ScaffoldCmdConfig = {
   /** The name of the scaffold template to use. */
@@ -503,6 +505,7 @@ export type ScaffoldCmdConfig = {
  *
  * @see {@link ScaffoldConfig}
  *
+ * @internal
  * @category Config
  */
 export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
@@ -514,6 +517,7 @@ export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
  * - A promise that resolves to a {@link ScaffoldConfigMap} object
  * - A function that returns a promise that resolves to a {@link ScaffoldConfigMap} object
  *
+ * @internal
  * @category Config
  */
 export type ScaffoldConfigFile = AsyncResolver<ScaffoldCmdConfig, ScaffoldConfigMap>

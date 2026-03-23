@@ -16,6 +16,7 @@ import { registerHelpers } from "./parser"
 import { log, logInitStep } from "./logger"
 import { parseConfigFile } from "./config"
 import { resolveInputs } from "./prompts"
+import { loadIgnorePatterns, filterIgnoredFiles } from "./ignore"
 
 /**
  * Create a scaffold using given `options`.
@@ -101,7 +102,15 @@ async function processTemplateGlob(
   excludes: string[],
 ): Promise<string[]> {
   const written: string[] = []
-  const files = await getFileList(config, [tpl.template, ...excludes])
+
+  // Load .scaffoldignore from the template base directory
+  const ignorePatterns = await loadIgnorePatterns(tpl.baseTemplatePath)
+  if (ignorePatterns.length > 0) {
+    log(config, LogLevel.debug, `Loaded .scaffoldignore patterns:`, ignorePatterns)
+  }
+
+  const allFiles = await getFileList(config, [tpl.template, ...excludes])
+  const files = filterIgnoredFiles(allFiles, ignorePatterns, tpl.baseTemplatePath)
   for (const file of files) {
     if (await isDir(file)) {
       continue

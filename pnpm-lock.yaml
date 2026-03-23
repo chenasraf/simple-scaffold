@@ -31,6 +31,9 @@ importers:
       massarg:
         specifier: 2.1.1
         version: 2.1.1
+      minimatch:
+        specifier: ^10.2.4
+        version: 10.2.4
     devDependencies:
       "@eslint/js":
         specifier: ^10.0.1
