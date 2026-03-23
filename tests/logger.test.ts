@@ -87,7 +87,7 @@ describe("logger", () => {
     })
 
     test("defaults to info when logLevel is undefined", () => {
-      log({ logLevel: undefined as any }, LogLevel.info, "test")
+      log({ logLevel: undefined as unknown as LogLevel }, LogLevel.info, "test")
       expect(consoleSpy.log).toHaveBeenCalled()
     })
 

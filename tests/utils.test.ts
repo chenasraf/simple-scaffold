@@ -68,7 +68,7 @@ describe("utils", () => {
     test("should wrap static value in function", () => {
       const wrapped = wrapNoopResolver("hello")
       expect(typeof wrapped).toBe("function")
-      expect((wrapped as Function)("anything")).toBe("hello")
+      expect((wrapped as (_: unknown) => unknown)("anything")).toBe("hello")
     })
 
     test("should return function as-is", () => {
@@ -81,19 +81,19 @@ describe("utils", () => {
       const obj = { key: "value" }
       const wrapped = wrapNoopResolver(obj)
       expect(typeof wrapped).toBe("function")
-      expect((wrapped as Function)("anything")).toBe(obj)
+      expect((wrapped as (_: unknown) => unknown)("anything")).toBe(obj)
     })
 
     test("should wrap boolean value", () => {
       const wrapped = wrapNoopResolver(true)
       expect(typeof wrapped).toBe("function")
-      expect((wrapped as Function)(null)).toBe(true)
+      expect((wrapped as (_: unknown) => unknown)(null)).toBe(true)
     })
 
     test("should wrap number value", () => {
       const wrapped = wrapNoopResolver(42)
       expect(typeof wrapped).toBe("function")
-      expect((wrapped as Function)(null)).toBe(42)
+      expect((wrapped as (_: unknown) => unknown)(null)).toBe(42)
     })
   })
 })

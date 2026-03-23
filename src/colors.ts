@@ -20,7 +20,7 @@ export type TermColor = keyof typeof colorMap
 
 function _colorize(text: string, color: TermColor): string {
   const c = colorMap[color]!
-  let r = 0
+  let r: number
 
   if (c > 1 && c < 30) {
     r = c + 20
@@ -33,20 +33,25 @@ function _colorize(text: string, color: TermColor): string {
   return `\x1b[${c}m${text}\x1b[${r}m`
 }
 
-function isTemplateStringArray(template: TemplateStringsArray | unknown): template is TemplateStringsArray {
+function isTemplateStringArray(
+  template: TemplateStringsArray | unknown,
+): template is TemplateStringsArray {
   return Array.isArray(template) && typeof template[0] === "string"
 }
 
 const createColorize =
   (color: TermColor) =>
-    (template: TemplateStringsArray | unknown, ...params: unknown[]): string => {
-      return isTemplateStringArray(template)
-        ? _colorize(
-          (template as TemplateStringsArray).reduce((acc, str, i) => acc + str + (params[i] ?? ""), ""),
+  (template: TemplateStringsArray | unknown, ...params: unknown[]): string => {
+    return isTemplateStringArray(template)
+      ? _colorize(
+          (template as TemplateStringsArray).reduce(
+            (acc, str, i) => acc + str + (params[i] ?? ""),
+            "",
+          ),
           color,
         )
-        : _colorize(String(template), color)
-    }
+      : _colorize(String(template), color)
+  }
 
 type TemplateStringsFn = ReturnType<typeof createColorize> & ((text: string) => string)
 type TemplateStringsFns = { [key in TermColor]: TemplateStringsFn }

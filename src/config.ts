@@ -29,7 +29,10 @@ export function parseAppendData(value: string, options: ScaffoldCmdConfig): unkn
 }
 
 function isWrappedWithQuotes(string: string): boolean {
-  return (string.startsWith('"') && string.endsWith('"')) || (string.startsWith("'") && string.endsWith("'"))
+  return (
+    (string.startsWith('"') && string.endsWith('"')) ||
+    (string.startsWith("'") && string.endsWith("'"))
+  )
 }
 
 /** Loads and resolves a config file (local or remote). @internal */
@@ -46,7 +49,12 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
   log(config, LogLevel.info, `Loading config from file ${configFilename}`)
 
   const configPromise = await (isGit
-    ? getRemoteConfig({ git: configPath, config: configFilename, logLevel: config.logLevel, tmpDir: config.tmpDir! })
+    ? getRemoteConfig({
+        git: configPath,
+        config: configFilename,
+        logLevel: config.logLevel,
+        tmpDir: config.tmpDir!,
+      })
     : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
   let configImport = await resolve(configPromise, config)
@@ -107,7 +115,9 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
   }
 
   output.data = { ...output.data, ...config.appendData }
-  const cmdBeforeWrite = config.beforeWrite ? wrapBeforeWrite(config, config.beforeWrite) : undefined
+  const cmdBeforeWrite = config.beforeWrite
+    ? wrapBeforeWrite(config, config.beforeWrite)
+    : undefined
   output.beforeWrite = cmdBeforeWrite ?? output.beforeWrite
 
   if (!output.name) {
@@ -128,7 +138,9 @@ export function githubPartToUrl(part: string): string {
 }
 
 /** Loads a scaffold config from a local file or directory. @internal */
-export async function getLocalConfig(config: ConfigLoadConfig & Partial<LogConfig>): Promise<ScaffoldConfigFile> {
+export async function getLocalConfig(
+  config: ConfigLoadConfig & Partial<LogConfig>,
+): Promise<ScaffoldConfigFile> {
   const { config: configFile, ...logConfig } = config as Required<typeof config>
 
   const absolutePath = path.resolve(process.cwd(), configFile)
@@ -156,7 +168,11 @@ export async function getRemoteConfig(
 ): Promise<ScaffoldConfigFile> {
   const { config: configFile, git, tmpDir, ...logConfig } = config as Required<typeof config>
 
-  log(logConfig, LogLevel.info, `Loading config from remote ${git}, config file ${configFile || "<auto-detect>"}`)
+  log(
+    logConfig,
+    LogLevel.info,
+    `Loading config from remote ${git}, config file ${configFile || "<auto-detect>"}`,
+  )
 
   const url = new URL(git!)
   const isHttp = url.protocol === "http:" || url.protocol === "https:"

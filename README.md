@@ -40,6 +40,21 @@ See full documentation [here](https://chenasraf.github.io/simple-scaffold).
 
 ## Getting Started
 
+### Quick Start
+
+The fastest way to get started is to run `init` in your project directory:
+
+```sh
+npx simple-scaffold init
+```
+
+This creates a `scaffold.config.js` and an example template in `templates/default/`. Then generate
+files with:
+
+```sh
+npx simple-scaffold MyProject
+```
+
 ### Cheat Sheet
 
 A quick rundown of common usage scenarios:

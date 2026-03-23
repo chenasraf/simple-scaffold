@@ -11,16 +11,16 @@ import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
 import { colorize } from "./colors"
 import { promptForMissingConfig, resolveInputs } from "./prompts"
+import { initScaffold } from "./init"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
-  const isProjectRoot = Boolean(await fs.stat(path.join(__dirname, "package.json")).catch(() => false))
-  const pkgFile = await fs.readFile(path.resolve(__dirname, isProjectRoot ? "." : "..", "package.json"))
+  const isProjectRoot = Boolean(
+    await fs.stat(path.join(__dirname, "package.json")).catch(() => false),
+  )
+  const pkgFile = await fs.readFile(
+    path.resolve(__dirname, isProjectRoot ? "." : "..", "package.json"),
+  )
   const pkg = JSON.parse(pkgFile.toString())
-  const isVersionFlag = args.includes("--version") || args.includes("-v")
-  const isConfigFileProvided = args.includes("--config") || args.includes("-c")
-  const isGitProvided = args.includes("--git") || args.includes("-g")
-  const isConfigProvided = isConfigFileProvided || isGitProvided || isVersionFlag
-
   return massarg<ScaffoldCmdConfig>({
     name: pkg.name,
     description: pkg.description,
@@ -160,7 +160,9 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       parse: (v) => {
         const val = v.toLowerCase()
         if (!(val in LogLevel)) {
-          throw new Error(`Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`)
+          throw new Error(
+            `Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`,
+          )
         }
         return val
       },
@@ -190,7 +192,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       new MassargCommand<ListCommandCliOptions>({
         name: "list",
         aliases: ["ls"],
-        description: "List all available templates for a given config. See `list -h` for more information.",
+        description:
+          "List all available templates for a given config. See `list -h` for more information.",
         run: async (_config) => {
           const config = {
             templates: [],
@@ -220,7 +223,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         .option({
           name: "config",
           aliases: ["c"],
-          description: "Filename or directory to load config from. Defaults to current working directory.",
+          description:
+            "Filename or directory to load config from. Defaults to current working directory.",
         })
         .option({
           name: "git",
@@ -238,10 +242,44 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           parse: (v) => {
             const val = v.toLowerCase()
             if (!(val in LogLevel)) {
-              throw new Error(`Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`)
+              throw new Error(
+                `Invalid log level: ${val}, must be one of: ${Object.keys(LogLevel).join(", ")}`,
+              )
             }
             return val
           },
+        })
+        .help({
+          bindOption: true,
+        }),
+    )
+    .command(
+      new MassargCommand<{ dir?: string; format?: string }>({
+        name: "init",
+        aliases: [],
+        description:
+          "Initialize a new scaffold config file and example template in the current directory.",
+        run: async (config) => {
+          try {
+            await initScaffold({
+              dir: config.dir,
+              format: config.format as "js" | "mjs" | "json" | undefined,
+            })
+          } catch (e) {
+            const message = "message" in (e as object) ? (e as Error).message : e?.toString()
+            console.error(colorize.red(message ?? "Unknown error"))
+          }
+        },
+      })
+        .option({
+          name: "dir",
+          aliases: ["d"],
+          description: "Directory to create the config in. Defaults to current working directory.",
+        })
+        .option({
+          name: "format",
+          aliases: ["f"],
+          description: "Config file format: js, mjs, or json. If omitted, you will be prompted.",
         })
         .help({
           bindOption: true,
@@ -257,7 +295,8 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
     })
     .example({
       description: "Usage with https git URL (for non-GitHub)",
-      input: "simple-scaffold -g https://example.com/user/template.git -c scaffold.cmd.js --key component",
+      input:
+        "simple-scaffold -g https://example.com/user/template.git -c scaffold.cmd.js --key component",
     })
     .example({
       description: "Excluded template key, assumes 'default' key",
@@ -272,7 +311,11 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       bindOption: true,
       lineLength: 100,
       useGlobalTableColumns: true,
-      usageText: [colorize.yellow`simple-scaffold`, colorize.gray`[options]`, colorize.cyan`<name>`].join(" "),
+      usageText: [
+        colorize.yellow`simple-scaffold`,
+        colorize.gray`[options]`,
+        colorize.cyan`<name>`,
+      ].join(" "),
       optionOptions: {
         displayNegations: true,
       },

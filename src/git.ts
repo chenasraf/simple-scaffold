@@ -47,7 +47,10 @@ export async function loadGitConfig({
   const filename = file || (await findConfigFile(tmpPath))
   const absolutePath = path.resolve(tmpPath, filename)
   log(logConfig, LogLevel.debug, `Resolving config file: ${absolutePath}`)
-  const loadedConfig = await resolve(async () => (await import(absolutePath)).default as ScaffoldConfigMap, logConfig)
+  const loadedConfig = await resolve(
+    async () => (await import(absolutePath)).default as ScaffoldConfigMap,
+    logConfig,
+  )
 
   log(logConfig, LogLevel.info, `Loaded config from git`)
   log(logConfig, LogLevel.debug, `Raw config:`, loadedConfig)

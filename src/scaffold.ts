@@ -72,7 +72,10 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 }
 
 /** Resolves included template paths into GlobInfo objects. */
-async function resolveTemplateGlobs(config: ScaffoldConfig, includes: string[]): Promise<GlobInfo[]> {
+async function resolveTemplateGlobs(
+  config: ScaffoldConfig,
+  includes: string[],
+): Promise<GlobInfo[]> {
   const templates: GlobInfo[] = []
   for (const includedTemplate of includes) {
     try {
@@ -85,14 +88,20 @@ async function resolveTemplateGlobs(config: ScaffoldConfig, includes: string[]):
 }
 
 /** Processes all files matching a single template glob pattern. */
-async function processTemplateGlob(config: ScaffoldConfig, tpl: GlobInfo, excludes: string[]): Promise<void> {
+async function processTemplateGlob(
+  config: ScaffoldConfig,
+  tpl: GlobInfo,
+  excludes: string[],
+): Promise<void> {
   const files = await getFileList(config, [tpl.template, ...excludes])
   for (const file of files) {
     if (await isDir(file)) {
       continue
     }
     log(config, LogLevel.debug, "Iterating files", { files, file })
-    const relPath = makeRelativePath(path.dirname(removeGlob(file).replace(tpl.baseTemplatePath, "")))
+    const relPath = makeRelativePath(
+      path.dirname(removeGlob(file).replace(tpl.baseTemplatePath, "")),
+    )
     const basePath = getBasePath(relPath)
 
     log(config, LogLevel.debug, {

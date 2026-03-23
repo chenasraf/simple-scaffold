@@ -3,6 +3,7 @@ import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import { Console } from "console"
 import path from "node:path"
+import os from "node:os"
 import {
   removeGlob,
   makeRelativePath,
@@ -145,7 +146,6 @@ describe("file utilities", () => {
   describe("getUniqueTmpPath", () => {
     test("returns a path in os temp directory", () => {
       const result = getUniqueTmpPath()
-      const os = require("os")
       expect(result.startsWith(os.tmpdir())).toBe(true)
     })
 

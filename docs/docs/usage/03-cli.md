@@ -112,7 +112,30 @@ output `''` for the same effect.
 
 | Command \| Alias | Description                                                                          |
 | ---------------- | ------------------------------------------------------------------------------------ |
+| `init`           | Initialize a new scaffold config file and example template in the current directory. |
 | `list` \| `ls`   | List all available templates for a given config. See `list -h` for more information. |
+
+### `init`
+
+Creates a scaffold config file and an example template directory to get you started quickly.
+
+```shell
+simple-scaffold init
+```
+
+Options:
+
+| Option             | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| `--dir` \| `-d`    | Directory to create the config in. Defaults to current directory.    |
+| `--format` \| `-f` | Config format: `js`, `mjs`, or `json`. If omitted, you are prompted. |
+
+The command creates:
+
+- A config file (`scaffold.config.js` by default) with a `default` template key
+- A `templates/default/` directory with an example `{{name}}.md` template
+
+Existing files are never overwritten.
 
 ## Examples:
 

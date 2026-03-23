@@ -21,7 +21,13 @@ export function wrapBeforeWrite(
     const rawTmpPath = tmpDir.replace(ext, ".raw" + ext)
     try {
       log(config, LogLevel.debug, "Parsing beforeWrite command", beforeWrite)
-      const cmd = await prepareBeforeWriteCmd({ beforeWrite, tmpDir, content, rawTmpPath, rawContent })
+      const cmd = await prepareBeforeWriteCmd({
+        beforeWrite,
+        tmpDir,
+        content,
+        rawTmpPath,
+        rawContent,
+      })
       const result = await new Promise<string | undefined>((resolve, reject) => {
         log(config, LogLevel.debug, "Running parsed beforeWrite command:", cmd)
         const proc = exec(cmd)

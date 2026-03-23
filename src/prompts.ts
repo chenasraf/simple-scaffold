@@ -56,7 +56,10 @@ export async function promptForTemplates(): Promise<string[]> {
       return true
     },
   })
-  return value.split(",").map((t) => t.trim()).filter(Boolean)
+  return value
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean)
 }
 
 /**

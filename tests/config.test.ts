@@ -55,11 +55,17 @@ describe("config", () => {
     })
 
     test("works with quotes", () => {
-      expect(parseAppendData('key="value test"', blankCliConf)).toEqual({ key: "value test", name: "test" })
+      expect(parseAppendData('key="value test"', blankCliConf)).toEqual({
+        key: "value test",
+        name: "test",
+      })
     })
 
     test("handles JSON array values with :=", () => {
-      expect(parseAppendData('items:=["a","b"]', blankCliConf)).toEqual({ items: ["a", "b"], name: "test" })
+      expect(parseAppendData('items:=["a","b"]', blankCliConf)).toEqual({
+        items: ["a", "b"],
+        name: "test",
+      })
     })
 
     test("handles JSON boolean with :=", () => {
@@ -76,7 +82,10 @@ describe("config", () => {
     })
 
     test("handles single quoted values", () => {
-      expect(parseAppendData("key='value test'", blankCliConf)).toEqual({ key: "value test", name: "test" })
+      expect(parseAppendData("key='value test'", blankCliConf)).toEqual({
+        key: "value test",
+        name: "test",
+      })
     })
 
     test("handles empty string value", () => {
@@ -94,7 +103,9 @@ describe("config", () => {
 
   describe("githubPartToUrl", () => {
     test("works", () => {
-      expect(githubPartToUrl("chenasraf/simple-scaffold")).toEqual("https://github.com/chenasraf/simple-scaffold.git")
+      expect(githubPartToUrl("chenasraf/simple-scaffold")).toEqual(
+        "https://github.com/chenasraf/simple-scaffold.git",
+      )
       expect(githubPartToUrl("chenasraf/simple-scaffold.git")).toEqual(
         "https://github.com/chenasraf/simple-scaffold.git",
       )
@@ -258,7 +269,7 @@ describe("config", () => {
       const result = await parseConfigFile({
         ...blankCliConf,
         name: "MyComponent",
-        templates: undefined as any,
+        templates: undefined as unknown as string[],
         config: path.resolve(__dirname, "test-config.js"),
         tmpDir: `/tmp/scaffold-config-${Date.now()}`,
       })
@@ -325,15 +336,13 @@ describe("config", () => {
       const fn = vi.fn().mockReturnValue("custom-output")
       const result = getOptionValueForFile(conf, "/home/user/file.txt", fn)
       expect(result).toEqual("custom-output")
-      expect(fn).toHaveBeenCalledWith(
-        "/home/user/file.txt",
-        expect.any(String),
-        expect.any(String),
-      )
+      expect(fn).toHaveBeenCalledWith("/home/user/file.txt", expect.any(String), expect.any(String))
     })
 
     test("returns default value when fn is not a function and no value", () => {
-      expect(getOptionValueForFile(conf, "/some/path", undefined as any, "default")).toEqual("default")
+      expect(
+        getOptionValueForFile(conf, "/some/path", undefined as unknown as string, "default"),
+      ).toEqual("default")
     })
 
     test("function receives parsed basename", () => {

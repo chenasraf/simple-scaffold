@@ -20,7 +20,12 @@ export const defaultHelpers: Record<DefaultHelpers, Helper> = {
 }
 
 function _dateHelper(date: Date, formatString: string): string
-function _dateHelper(date: Date, formatString: string, durationDifference: number, durationType: keyof Duration): string
+function _dateHelper(
+  date: Date,
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration,
+): string
 function _dateHelper(
   date: Date,
   formatString: string,
@@ -34,8 +39,16 @@ function _dateHelper(
 }
 
 export function nowHelper(formatString: string): string
-export function nowHelper(formatString: string, durationDifference: number, durationType: keyof Duration): string
-export function nowHelper(formatString: string, durationDifference?: number, durationType?: keyof Duration): string {
+export function nowHelper(
+  formatString: string,
+  durationDifference: number,
+  durationType: keyof Duration,
+): string
+export function nowHelper(
+  formatString: string,
+  durationDifference?: number,
+  durationType?: keyof Duration,
+): string {
   return _dateHelper(new Date(), formatString, durationDifference!, durationType!)
 }
 
@@ -62,7 +75,7 @@ function toWordParts(string: string): string[] {
     .split(/[^a-zA-Z0-9]/)
     .flatMap((segment) =>
       // Then split camelCase/PascalCase boundaries, handling consecutive uppercase (e.g. "HTMLParser" -> "HTML", "Parser")
-      segment.split(/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/)
+      segment.split(/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/),
     )
     .filter((s) => s.length > 0)
 }

@@ -57,5 +57,8 @@ export async function isDir(dirPath: string): Promise<boolean> {
 
 /** Generates a unique temporary directory path for scaffold operations. @internal */
 export function getUniqueTmpPath(): string {
-  return path.resolve(os.tmpdir(), `scaffold-config-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+  return path.resolve(
+    os.tmpdir(),
+    `scaffold-config-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  )
 }

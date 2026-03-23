@@ -22,12 +22,16 @@ const LOG_LEVEL_COLOR: Record<LogLevel, TermColor> = {
 
 /** Logs a message at the given level, respecting the configured log level filter. */
 export function log(config: LogConfig, level: LogLevel, ...obj: unknown[]): void {
-  if (config.logLevel === LogLevel.none || LOG_PRIORITY[level] < LOG_PRIORITY[config.logLevel ?? LogLevel.info]) {
+  if (
+    config.logLevel === LogLevel.none ||
+    LOG_PRIORITY[level] < LOG_PRIORITY[config.logLevel ?? LogLevel.info]
+  ) {
     return
   }
 
   const colorFn = colorize[LOG_LEVEL_COLOR[level]]
-  const key: "log" | "warn" | "error" = level === LogLevel.error ? "error" : level === LogLevel.warning ? "warn" : "log"
+  const key: "log" | "warn" | "error" =
+    level === LogLevel.error ? "error" : level === LogLevel.warning ? "warn" : "log"
   const logFn: (..._args: unknown[]) => void = console[key]
   logFn(
     ...obj.map((i) =>

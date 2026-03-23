@@ -61,7 +61,10 @@ export async function getFileList(config: ScaffoldConfig, templates: string[]): 
 }
 
 /** Analyzes a template path to determine if it's a glob, directory, or single file. */
-export async function getTemplateGlobInfo(config: ScaffoldConfig, template: string): Promise<GlobInfo> {
+export async function getTemplateGlobInfo(
+  config: ScaffoldConfig,
+  template: string,
+): Promise<GlobInfo> {
   const _isGlob = hasMagic(template)
   log(config, LogLevel.debug, "before isDir", "isGlob:", _isGlob, template)
 
@@ -75,7 +78,13 @@ export async function getTemplateGlobInfo(config: ScaffoldConfig, template: stri
   if (shouldAddGlob) {
     resolvedTemplate = path.join(template, "**", "*")
   }
-  return { baseTemplatePath, origTemplate: template, isDirOrGlob, isGlob: _isGlob, template: resolvedTemplate }
+  return {
+    baseTemplatePath,
+    origTemplate: template,
+    isDirOrGlob,
+    isGlob: _isGlob,
+    template: resolvedTemplate,
+  }
 }
 
 /** Complete information about a template file's output destination. */
@@ -127,7 +136,8 @@ export async function copyFileTransformed(
     const templateBuffer = await readFile(inputPath)
     const unprocessedOutputContents = handlebarsParse(config, templateBuffer)
     const finalOutputContents =
-      (await config.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ?? unprocessedOutputContents
+      (await config.beforeWrite?.(unprocessedOutputContents, templateBuffer, outputPath)) ??
+      unprocessedOutputContents
 
     if (!config.dryRun) {
       await writeFile(outputPath, finalOutputContents)
@@ -142,7 +152,11 @@ export async function copyFileTransformed(
 }
 
 /** Computes the output directory for a file, combining the output path, base path, and optional subdir. */
-export function getOutputDir(config: ScaffoldConfig, outputPathOpt: string, basePath: string): string {
+export function getOutputDir(
+  config: ScaffoldConfig,
+  outputPathOpt: string,
+  basePath: string,
+): string {
   return path.resolve(
     process.cwd(),
     ...([
@@ -166,10 +180,13 @@ export async function handleTemplateFile(
   { templatePath, basePath }: { templatePath: string; basePath: string },
 ): Promise<void> {
   try {
-    const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(config, {
-      templatePath,
-      basePath,
-    })
+    const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(
+      config,
+      {
+        templatePath,
+        basePath,
+      },
+    )
     const overwrite = getOptionValueForFile(config, inputPath, config.overwrite ?? false)
 
     log(
