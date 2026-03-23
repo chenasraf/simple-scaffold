@@ -62,9 +62,16 @@ export function dateHelper(
   return _dateHelper(dateFns.parseISO(date), formatString, durationDifference!, durationType!)
 }
 
-// splits by either non-alpha character or capital letter
+// splits by either non-alphanumeric character or capital letter boundaries
 function toWordParts(string: string): string[] {
-  return string.split(/(?=[A-Z])|[^a-zA-Z]/).filter((s) => s.length > 0)
+  // First split on non-alphanumeric characters
+  return string
+    .split(/[^a-zA-Z0-9]/)
+    .flatMap((segment) =>
+      // Then split camelCase/PascalCase boundaries, handling consecutive uppercase (e.g. "HTMLParser" -> "HTML", "Parser")
+      segment.split(/(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/)
+    )
+    .filter((s) => s.length > 0)
 }
 
 function camelCase(s: string): string {
