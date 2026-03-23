@@ -9,8 +9,18 @@ vi.mock("@inquirer/select", () => ({
   default: vi.fn(),
 }))
 
+vi.mock("@inquirer/confirm", () => ({
+  default: vi.fn(),
+}))
+
+vi.mock("@inquirer/number", () => ({
+  default: vi.fn(),
+}))
+
 import inputMock from "@inquirer/input"
 import selectMock from "@inquirer/select"
+import confirmMock from "@inquirer/confirm"
+import numberMock from "@inquirer/number"
 import {
   promptForName,
   promptForTemplateKey,
@@ -83,7 +93,9 @@ describe("prompts", () => {
         b: { name: "b", templates: [], output: "" },
         c: { name: "c", templates: [], output: "" },
       })
-      const call = vi.mocked(selectMock).mock.calls[0][0] as { choices: { name: string; value: string }[] }
+      const call = vi.mocked(selectMock).mock.calls[0][0] as {
+        choices: { name: string; value: string }[]
+      }
       expect(call.choices).toEqual([
         { name: "a", value: "a" },
         { name: "b", value: "b" },
@@ -131,9 +143,9 @@ describe("prompts", () => {
     test("prompts for all missing values when interactive", async () => {
       mockTTY(true)
       vi.mocked(inputMock)
-        .mockResolvedValueOnce("my-app")      // name
-        .mockResolvedValueOnce("./output")     // output
-        .mockResolvedValueOnce("src/tpl")      // templates
+        .mockResolvedValueOnce("my-app") // name
+        .mockResolvedValueOnce("./output") // output
+        .mockResolvedValueOnce("src/tpl") // templates
 
       const config = { ...blankConfig }
       const result = await promptForMissingConfig(config)
@@ -162,9 +174,9 @@ describe("prompts", () => {
     test("prompts for template key when multiple templates and no key", async () => {
       mockTTY(true)
       vi.mocked(inputMock)
-        .mockResolvedValueOnce("name")         // name
-        .mockResolvedValueOnce("./output")     // output
-        .mockResolvedValueOnce("src/tpl")      // templates
+        .mockResolvedValueOnce("name") // name
+        .mockResolvedValueOnce("./output") // output
+        .mockResolvedValueOnce("src/tpl") // templates
       vi.mocked(selectMock).mockResolvedValue("component")
 
       const configMap = {
@@ -183,7 +195,13 @@ describe("prompts", () => {
         default: { name: "d", templates: [], output: "" },
         component: { name: "c", templates: [], output: "" },
       }
-      const config = { ...blankConfig, name: "test", output: "./out", templates: ["tpl"], key: "default" }
+      const config = {
+        ...blankConfig,
+        name: "test",
+        output: "./out",
+        templates: ["tpl"],
+        key: "default",
+      }
       const result = await promptForMissingConfig(config, configMap)
       expect(result.key).toEqual("default")
       expect(selectMock).not.toHaveBeenCalled()
@@ -227,7 +245,7 @@ describe("prompts", () => {
 
     test("only prompts for missing values, not provided ones", async () => {
       mockTTY(true)
-      vi.mocked(inputMock).mockResolvedValueOnce("src/tpl")  // only templates missing
+      vi.mocked(inputMock).mockResolvedValueOnce("src/tpl") // only templates missing
 
       const config = { ...blankConfig, name: "app", output: "./out" }
       const result = await promptForMissingConfig(config)
@@ -259,10 +277,7 @@ describe("prompts", () => {
     })
 
     test("applies default value for optional inputs not in data", async () => {
-      const result = await promptForInputs(
-        { license: { default: "MIT" } },
-        {},
-      )
+      const result = await promptForInputs({ license: { default: "MIT" } }, {})
       expect(result.license).toEqual("MIT")
       expect(inputMock).not.toHaveBeenCalled()
     })
@@ -277,18 +292,13 @@ describe("prompts", () => {
 
     test("uses input key as message fallback", async () => {
       vi.mocked(inputMock).mockResolvedValueOnce("val")
-      await promptForInputs(
-        { myField: { required: true } },
-        {},
-      )
+      await promptForInputs({ myField: { required: true } }, {})
       const call = vi.mocked(inputMock).mock.calls[0][0] as { message: string }
       expect(call.message).toContain("myField")
     })
 
     test("prompts multiple required inputs in order", async () => {
-      vi.mocked(inputMock)
-        .mockResolvedValueOnce("John")
-        .mockResolvedValueOnce("2.0")
+      vi.mocked(inputMock).mockResolvedValueOnce("John").mockResolvedValueOnce("2.0")
       const result = await promptForInputs(
         {
           author: { message: "Author", required: true },
@@ -318,22 +328,142 @@ describe("prompts", () => {
     })
 
     test("preserves existing data keys not in inputs", async () => {
-      const result = await promptForInputs(
-        { license: { default: "MIT" } },
-        { extra: "value" },
-      )
+      const result = await promptForInputs({ license: { default: "MIT" } }, { extra: "value" })
       expect(result.extra).toEqual("value")
       expect(result.license).toEqual("MIT")
     })
 
     test("required input with default pre-fills prompt", async () => {
       vi.mocked(inputMock).mockResolvedValueOnce("custom")
-      await promptForInputs(
-        { author: { required: true, default: "Anonymous" } },
-        {},
-      )
+      await promptForInputs({ author: { required: true, default: "Anonymous" } }, {})
       const call = vi.mocked(inputMock).mock.calls[0][0] as { default?: string }
       expect(call.default).toEqual("Anonymous")
+    })
+
+    test("select input prompts with options", async () => {
+      vi.mocked(selectMock).mockResolvedValueOnce("MIT")
+      const result = await promptForInputs(
+        {
+          license: {
+            type: "select",
+            message: "License",
+            options: ["MIT", "Apache-2.0", "GPL-3.0"],
+          },
+        },
+        {},
+      )
+      expect(result.license).toEqual("MIT")
+      expect(selectMock).toHaveBeenCalledOnce()
+      const call = vi.mocked(selectMock).mock.calls[0][0] as {
+        choices: { name: string; value: string }[]
+      }
+      expect(call.choices).toEqual([
+        { name: "MIT", value: "MIT" },
+        { name: "Apache-2.0", value: "Apache-2.0" },
+        { name: "GPL-3.0", value: "GPL-3.0" },
+      ])
+    })
+
+    test("select input with object options", async () => {
+      vi.mocked(selectMock).mockResolvedValueOnce("mit")
+      const result = await promptForInputs(
+        {
+          license: {
+            type: "select",
+            options: [
+              { name: "MIT License", value: "mit" },
+              { name: "Apache 2.0", value: "apache" },
+            ],
+          },
+        },
+        {},
+      )
+      expect(result.license).toEqual("mit")
+    })
+
+    test("select input throws when no options", async () => {
+      await expect(promptForInputs({ license: { type: "select" } }, {})).rejects.toThrow(
+        "no options defined",
+      )
+    })
+
+    test("select input skipped when value already provided", async () => {
+      const result = await promptForInputs(
+        { license: { type: "select", options: ["MIT", "Apache"] } },
+        { license: "MIT" },
+      )
+      expect(result.license).toEqual("MIT")
+      expect(selectMock).not.toHaveBeenCalled()
+    })
+
+    test("confirm input prompts and returns boolean", async () => {
+      vi.mocked(confirmMock).mockResolvedValueOnce(true)
+      const result = await promptForInputs(
+        { private: { type: "confirm", message: "Private?" } },
+        {},
+      )
+      expect(result.private).toBe(true)
+      expect(confirmMock).toHaveBeenCalledOnce()
+    })
+
+    test("confirm input with default false", async () => {
+      vi.mocked(confirmMock).mockResolvedValueOnce(false)
+      await promptForInputs({ private: { type: "confirm", default: false } }, {})
+      const call = vi.mocked(confirmMock).mock.calls[0][0] as { default?: boolean }
+      expect(call.default).toBe(false)
+    })
+
+    test("confirm input skipped when value already provided", async () => {
+      const result = await promptForInputs({ private: { type: "confirm" } }, { private: true })
+      expect(result.private).toBe(true)
+      expect(confirmMock).not.toHaveBeenCalled()
+    })
+
+    test("number input prompts and returns number", async () => {
+      vi.mocked(numberMock).mockResolvedValueOnce(8080)
+      const result = await promptForInputs(
+        { port: { type: "number", message: "Port", required: true } },
+        {},
+      )
+      expect(result.port).toBe(8080)
+      expect(numberMock).toHaveBeenCalledOnce()
+    })
+
+    test("number input with default", async () => {
+      vi.mocked(numberMock).mockResolvedValueOnce(3000)
+      await promptForInputs({ port: { type: "number", default: 3000, required: true } }, {})
+      const call = vi.mocked(numberMock).mock.calls[0][0] as { default?: number }
+      expect(call.default).toBe(3000)
+    })
+
+    test("number input skipped when value already provided", async () => {
+      const result = await promptForInputs(
+        { port: { type: "number", required: true } },
+        { port: 9090 },
+      )
+      expect(result.port).toBe(9090)
+      expect(numberMock).not.toHaveBeenCalled()
+    })
+
+    test("mixed input types in one config", async () => {
+      vi.mocked(inputMock).mockResolvedValueOnce("John")
+      vi.mocked(selectMock).mockResolvedValueOnce("MIT")
+      vi.mocked(confirmMock).mockResolvedValueOnce(true)
+      vi.mocked(numberMock).mockResolvedValueOnce(3000)
+
+      const result = await promptForInputs(
+        {
+          author: { type: "text", message: "Author", required: true },
+          license: { type: "select", message: "License", options: ["MIT", "Apache"] },
+          private: { type: "confirm", message: "Private?" },
+          port: { type: "number", message: "Port", required: true },
+        },
+        {},
+      )
+      expect(result.author).toEqual("John")
+      expect(result.license).toEqual("MIT")
+      expect(result.private).toBe(true)
+      expect(result.port).toBe(3000)
     })
   })
 

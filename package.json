@@ -53,7 +53,9 @@
     ]
   },
   "dependencies": {
+    "@inquirer/confirm": "^6.0.10",
     "@inquirer/input": "^5.0.10",
+    "@inquirer/number": "^4.0.10",
     "@inquirer/select": "^5.1.2",
     "date-fns": "^4.1.0",
     "glob": "^13.0.6",

@@ -237,17 +237,43 @@ export interface AfterScaffoldContext {
 export type AfterScaffoldHook = ((context: AfterScaffoldContext) => void | Promise<void>) | string
 
 /**
+ * The type of an interactive input prompt.
+ *
+ * - `"text"` — free-form text input (default)
+ * - `"select"` — choose from a list of options
+ * - `"confirm"` — yes/no boolean prompt
+ * - `"number"` — numeric input
+ *
+ * @category Config
+ */
+export type ScaffoldInputType = "text" | "select" | "confirm" | "number"
+
+/**
  * Defines a single interactive input for a scaffold template.
+ *
+ * @example
+ * ```typescript
+ * inputs: {
+ *   author: { message: "Author name", required: true },
+ *   license: { type: "select", message: "License", options: ["MIT", "Apache-2.0", "GPL-3.0"] },
+ *   private: { type: "confirm", message: "Private package?", default: false },
+ *   port: { type: "number", message: "Dev server port", default: 3000 },
+ * }
+ * ```
  *
  * @category Config
  */
 export interface ScaffoldInput {
+  /** The type of prompt. Defaults to `"text"`. */
+  type?: ScaffoldInputType
   /** The prompt message shown to the user. Defaults to the input key name if omitted. */
   message?: string
   /** Whether this input must be provided. If true and missing, the user will be prompted interactively. */
   required?: boolean
-  /** Default value used when the user doesn't provide one. */
-  default?: string
+  /** Default value. Type depends on the input type: string for text/select, boolean for confirm, number for number. */
+  default?: string | boolean | number
+  /** List of options for `type: "select"`. Each can be a string or `{ name, value }`. */
+  options?: (string | { name: string; value: string })[]
 }
 
 /**

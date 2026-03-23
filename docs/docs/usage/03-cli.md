@@ -59,7 +59,13 @@ module.exports = {
     output: "src/components",
     inputs: {
       author: { message: "Author name", required: true },
-      license: { message: "License type", default: "MIT" },
+      license: {
+        type: "select",
+        message: "License",
+        options: ["MIT", "Apache-2.0", "GPL-3.0"],
+      },
+      private: { type: "confirm", message: "Private package?", default: false },
+      port: { type: "number", message: "Dev server port", default: 3000 },
       description: { message: "Description" },
     },
   },
@@ -69,8 +75,18 @@ module.exports = {
 Each input becomes available as a Handlebars variable in your templates (e.g., `{{ author }}`,
 `{{ license }}`).
 
+**Input types:**
+
+| Type      | Description                    | Value type |
+| --------- | ------------------------------ | ---------- |
+| `text`    | Free-form text input (default) | `string`   |
+| `select`  | Choose from a list of options  | `string`   |
+| `confirm` | Yes/no prompt                  | `boolean`  |
+| `number`  | Numeric input                  | `number`   |
+
 - **Required inputs** without a value will be prompted interactively
-- **Optional inputs** with a `default` will use that value if not provided
+- **Select and confirm** inputs are always prompted (unless pre-provided)
+- **Optional text/number inputs** with a `default` will use that value silently
 - All inputs can be pre-provided via `--data` or `-D` to skip the prompt:
 
 ```shell

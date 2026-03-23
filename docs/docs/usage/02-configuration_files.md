@@ -58,16 +58,25 @@ module.exports = {
     output: "src/components",
     inputs: {
       author: { message: "Author name", required: true },
-      license: { message: "License type", default: "MIT" },
-      description: { message: "Component description" },
+      license: {
+        type: "select",
+        message: "License",
+        options: ["MIT", "Apache-2.0", "GPL-3.0"],
+      },
+      private: { type: "confirm", message: "Private?", default: false },
+      port: { type: "number", message: "Port", default: 3000 },
     },
   },
 }
 ```
 
-In your templates, use these as `{{ author }}`, `{{ license }}`, `{{ description }}`.
+In your templates, use these as `{{ author }}`, `{{ license }}`, `{{ private }}`, `{{ port }}`.
+
+Supported input types: `text` (default), `select`, `confirm`, `number`. See
+[Template Inputs](cli#template-inputs) for the full reference.
 
 - **Required** inputs are prompted interactively if not provided via `--data` or `-D`
+- **Select and confirm** inputs are always prompted unless pre-provided
 - **Optional** inputs with a `default` use that value silently if not provided
 - In non-interactive environments, only defaults are applied
 

@@ -1,7 +1,15 @@
 import input from "@inquirer/input"
 import select from "@inquirer/select"
+import confirm from "@inquirer/confirm"
+import number from "@inquirer/number"
 import { colorize } from "./colors"
-import { ScaffoldCmdConfig, ScaffoldConfig, ScaffoldConfigMap, ScaffoldInput } from "./types"
+import {
+  ScaffoldCmdConfig,
+  ScaffoldConfig,
+  ScaffoldConfigMap,
+  ScaffoldInput,
+  ScaffoldInputType,
+} from "./types"
 
 /** Prompts the user for a scaffold name. */
 export async function promptForName(): Promise<string> {
@@ -62,6 +70,59 @@ export async function promptForTemplates(): Promise<string[]> {
     .filter(Boolean)
 }
 
+/** Prompts for a single input based on its type. */
+async function promptSingleInput(
+  key: string,
+  def: ScaffoldInput,
+): Promise<string | boolean | number | undefined> {
+  const type: ScaffoldInputType = def.type ?? "text"
+  const message = colorize.cyan(def.message ?? `${key}:`)
+
+  switch (type) {
+    case "text":
+      return input({
+        message,
+        required: def.required,
+        default: def.default as string | undefined,
+        validate: def.required
+          ? (value) => {
+              if (!value.trim()) return `${key} is required`
+              return true
+            }
+          : undefined,
+      })
+
+    case "select": {
+      const choices = (def.options ?? []).map((opt) =>
+        typeof opt === "string" ? { name: opt, value: opt } : opt,
+      )
+      if (choices.length === 0) {
+        throw new Error(`Input "${key}" has type "select" but no options defined`)
+      }
+      return select({
+        message,
+        choices,
+        default: def.default as string | undefined,
+      })
+    }
+
+    case "confirm":
+      return confirm({
+        message,
+        default: (def.default as boolean | undefined) ?? false,
+      })
+
+    case "number":
+      return (
+        (await number({
+          message,
+          required: def.required,
+          default: def.default as number | undefined,
+        })) ?? def.default
+      )
+  }
+}
+
 /**
  * Prompts the user for any required scaffold inputs that are not already provided in data.
  * Also applies default values for optional inputs that have one.
@@ -79,16 +140,8 @@ export async function promptForInputs(
       continue
     }
 
-    if (def.required) {
-      data[key] = await input({
-        message: colorize.cyan(def.message ?? `${key}:`),
-        required: true,
-        default: def.default,
-        validate: (value) => {
-          if (!value.trim()) return `${key} is required`
-          return true
-        },
-      })
+    if (def.required || def.type === "select" || def.type === "confirm") {
+      data[key] = await promptSingleInput(key, def)
     } else if (def.default !== undefined && !(key in data)) {
       data[key] = def.default
     }

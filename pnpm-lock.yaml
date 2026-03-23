@@ -7,9 +7,15 @@ settings:
 importers:
   .:
     dependencies:
+      "@inquirer/confirm":
+        specifier: ^6.0.10
+        version: 6.0.10(@types/node@25.5.0)
       "@inquirer/input":
         specifier: ^5.0.10
         version: 5.0.10(@types/node@25.5.0)
+      "@inquirer/number":
+        specifier: ^4.0.10
+        version: 4.0.10(@types/node@25.5.0)
       "@inquirer/select":
         specifier: ^5.1.2
         version: 5.1.2(@types/node@25.5.0)
@@ -219,6 +225,18 @@ packages:
       }
     engines: { node: ">=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0" }
 
+  "@inquirer/confirm@6.0.10":
+    resolution:
+      {
+        integrity: sha512-tiNyA73pgpQ0FQ7axqtoLUe4GDYjNCDcVsbgcA5anvwg2z6i+suEngLKKJrWKJolT//GFPZHwN30binDIHgSgQ==,
+      }
+    engines: { node: ">=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0" }
+    peerDependencies:
+      "@types/node": ">=18"
+    peerDependenciesMeta:
+      "@types/node":
+        optional: true
+
   "@inquirer/core@11.1.7":
     resolution:
       {
@@ -242,6 +260,18 @@ packages:
     resolution:
       {
         integrity: sha512-nvZ6qEVeX/zVtZ1dY2hTGDQpVGD3R7MYPLODPgKO8Y+RAqxkrP3i/3NwF3fZpLdaMiNuK0z2NaYIx9tPwiSegQ==,
+      }
+    engines: { node: ">=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0" }
+    peerDependencies:
+      "@types/node": ">=18"
+    peerDependenciesMeta:
+      "@types/node":
+        optional: true
+
+  "@inquirer/number@4.0.10":
+    resolution:
+      {
+        integrity: sha512-Ht8OQstxiS3APMGjHV0aYAjRAysidWdwurWEo2i8yI5xbhOBWqizT0+MU1S2GCcuhIBg+3SgWVjEoXgfhY+XaA==,
       }
     engines: { node: ">=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0" }
     peerDependencies:
@@ -1956,6 +1986,13 @@ snapshots:
 
   "@inquirer/ansi@2.0.4": {}
 
+  "@inquirer/confirm@6.0.10(@types/node@25.5.0)":
+    dependencies:
+      "@inquirer/core": 11.1.7(@types/node@25.5.0)
+      "@inquirer/type": 4.0.4(@types/node@25.5.0)
+    optionalDependencies:
+      "@types/node": 25.5.0
+
   "@inquirer/core@11.1.7(@types/node@25.5.0)":
     dependencies:
       "@inquirer/ansi": 2.0.4
@@ -1971,6 +2008,13 @@ snapshots:
   "@inquirer/figures@2.0.4": {}
 
   "@inquirer/input@5.0.10(@types/node@25.5.0)":
+    dependencies:
+      "@inquirer/core": 11.1.7(@types/node@25.5.0)
+      "@inquirer/type": 4.0.4(@types/node@25.5.0)
+    optionalDependencies:
+      "@types/node": 25.5.0
+
+  "@inquirer/number@4.0.10(@types/node@25.5.0)":
     dependencies:
       "@inquirer/core": 11.1.7(@types/node@25.5.0)
       "@inquirer/type": 4.0.4(@types/node@25.5.0)

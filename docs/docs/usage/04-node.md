@@ -33,9 +33,11 @@ interface ScaffoldConfig {
 }
 
 interface ScaffoldInput {
+  type?: "text" | "select" | "confirm" | "number"
   message?: string
   required?: boolean
-  default?: string
+  default?: string | boolean | number
+  options?: (string | { name: string; value: string })[] // for type: "select"
 }
 
 interface AfterScaffoldContext {
@@ -104,7 +106,13 @@ await Scaffold({
   output: "src/components",
   inputs: {
     author: { message: "Author name", required: true },
-    license: { message: "License", default: "MIT" },
+    license: {
+      type: "select",
+      message: "License",
+      options: ["MIT", "Apache-2.0", "GPL-3.0"],
+    },
+    private: { type: "confirm", message: "Private package?", default: false },
+    port: { type: "number", message: "Dev server port", default: 3000 },
   },
 })
 // In templates: {{ author }}, {{ license }}
