@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   test:
@@ -18,11 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm i -g pnpm
-      - run: pnpm run ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - run: pnpm test
 
   build:
@@ -30,11 +32,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm i -g pnpm
-      - run: pnpm run ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
   release:
@@ -59,15 +62,38 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     if: ${{ needs.release.outputs.release_created }}
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
           registry-url: "https://registry.npmjs.org"
-      - run: npm i -g pnpm
-      - run: pnpm run ci
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: cd dist && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: cd dist && npm publish --provenance --access public
+
+  docs:
+    name: Deploy Documentation
+    needs: release
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cd docs && pnpm install --frozen-lockfile
+      - run: pnpm docs:build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build
