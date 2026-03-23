@@ -189,9 +189,52 @@ export interface ScaffoldConfig {
    */
   inputs?: Record<string, ScaffoldInput>
 
+  /**
+   * A callback or shell command that runs after all files have been written.
+   *
+   * When provided as a **function** (Node.js API), it receives a context object with the scaffold
+   * config and the list of files that were written:
+   *
+   * ```typescript
+   * Scaffold({
+   *   // ...
+   *   afterScaffold: async ({ config, files }) => {
+   *     console.log(`Created ${files.length} files`)
+   *     execSync("npm install", { cwd: config.output })
+   *   },
+   * })
+   * ```
+   *
+   * When provided as a **string** (CLI `--after` flag), it is executed as a shell command
+   * in the output directory after scaffolding completes.
+   *
+   * @see {@link AfterScaffoldContext}
+   */
+  afterScaffold?: AfterScaffoldHook
+
   /** @internal */
   tmpDir?: string
 }
+
+/**
+ * Context passed to the {@link ScaffoldConfig.afterScaffold} hook.
+ *
+ * @category Config
+ */
+export interface AfterScaffoldContext {
+  /** The resolved scaffold config that was used. */
+  config: ScaffoldConfig
+  /** List of absolute paths to files that were written. */
+  files: string[]
+}
+
+/**
+ * A hook that runs after scaffolding completes.
+ * Can be a function receiving context, or a shell command string.
+ *
+ * @category Config
+ */
+export type AfterScaffoldHook = ((context: AfterScaffoldContext) => void | Promise<void>) | string
 
 /**
  * Defines a single interactive input for a scaffold template.
@@ -417,6 +460,8 @@ export type ScaffoldCmdConfig = {
   version: boolean
   /** Run a script before writing the files. This can be a command or a path to a file. The file contents will be passed to the given command. */
   beforeWrite?: string
+  /** Run a shell command after all files have been written. Executed in the output directory. */
+  afterScaffold?: string
   /** @internal */
   tmpDir?: string
 }

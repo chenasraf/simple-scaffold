@@ -1,4 +1,14 @@
-import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi, type MockInstance } from "vitest"
+import {
+  describe,
+  test,
+  expect,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+  vi,
+  type MockInstance,
+} from "vitest"
 import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import Scaffold from "../src/scaffold"
@@ -67,7 +77,8 @@ const fileStructDates = {
   input: {
     "now.txt": "Today is {{ now 'mmm' }}, time is {{ now 'HH:mm' }}",
     "offset.txt": "Yesterday was {{ now 'mmm' -1 'days' }}, time is {{ now 'HH:mm' -1 'days' }}",
-    "custom.txt": "Custom date is {{ date customDate 'mmm' }}, time is {{ date customDate 'HH:mm' }}",
+    "custom.txt":
+      "Custom date is {{ date customDate 'mmm' }}, time is {{ date customDate 'HH:mm' }}",
   },
   output: {},
 }
@@ -100,7 +111,6 @@ function withMock(fileStruct: FileSystem.DirectoryItems, testFn: () => void): ()
 }
 
 describe("Scaffold", () => {
-
   describe(
     "create subdir",
 
@@ -301,7 +311,9 @@ describe("Scaffold", () => {
 
         const rootFile = readFileSync(join(process.cwd(), "output", "app_name-1.txt"))
         const oneDeepFile = readFileSync(join(process.cwd(), "output", "AppName/app_name-2.txt"))
-        const twoDeepFile = readFileSync(join(process.cwd(), "output", "AppName/moreNesting/app_name-3.txt"))
+        const twoDeepFile = readFileSync(
+          join(process.cwd(), "output", "AppName/moreNesting/app_name-3.txt"),
+        )
         expect(rootFile.toString()).toEqual("This should be in root")
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
@@ -664,7 +676,9 @@ describe("Scaffold", () => {
             templates: ["input"],
             logLevel: "none",
           })
-          const content = readFileSync(join(process.cwd(), "output", "my-component", "index.ts")).toString()
+          const content = readFileSync(
+            join(process.cwd(), "output", "my-component", "index.ts"),
+          ).toString()
           expect(content).toEqual("export from MyComponent")
         })
       },
@@ -698,7 +712,9 @@ describe("Scaffold", () => {
             logLevel: "none",
           })
           expect(readFileSync(join(process.cwd(), "output", "root.txt")).toString()).toEqual("root")
-          expect(readFileSync(join(process.cwd(), "output", "level1", "l1.txt")).toString()).toEqual("level 1")
+          expect(
+            readFileSync(join(process.cwd(), "output", "level1", "l1.txt")).toString(),
+          ).toEqual("level 1")
           expect(
             readFileSync(join(process.cwd(), "output", "level1", "level2", "l2.txt")).toString(),
           ).toEqual("level 2")
@@ -734,8 +750,12 @@ describe("Scaffold", () => {
             logLevel: "none",
             overwrite: (_fullPath, _basedir, basename) => basename === "replace.txt",
           })
-          expect(readFileSync(join(process.cwd(), "output", "keep.txt")).toString()).toEqual("old keep")
-          expect(readFileSync(join(process.cwd(), "output", "replace.txt")).toString()).toEqual("new replace")
+          expect(readFileSync(join(process.cwd(), "output", "keep.txt")).toString()).toEqual(
+            "old keep",
+          )
+          expect(readFileSync(join(process.cwd(), "output", "replace.txt")).toString()).toEqual(
+            "new replace",
+          )
         })
       },
     ),
@@ -786,7 +806,9 @@ describe("Scaffold", () => {
             subdir: true,
             subdirHelper: "camelCase",
           })
-          const content = readFileSync(join(process.cwd(), "output", "myComponent", "file.txt")).toString()
+          const content = readFileSync(
+            join(process.cwd(), "output", "myComponent", "file.txt"),
+          ).toString()
           expect(content).toEqual("content")
         })
 
@@ -799,7 +821,9 @@ describe("Scaffold", () => {
             subdir: true,
             subdirHelper: "kebabCase",
           })
-          const content = readFileSync(join(process.cwd(), "output", "my-component", "file.txt")).toString()
+          const content = readFileSync(
+            join(process.cwd(), "output", "my-component", "file.txt"),
+          ).toString()
           expect(content).toEqual("content")
         })
 
@@ -812,7 +836,9 @@ describe("Scaffold", () => {
             subdir: true,
             subdirHelper: "snakeCase",
           })
-          const content = readFileSync(join(process.cwd(), "output", "my_component", "file.txt")).toString()
+          const content = readFileSync(
+            join(process.cwd(), "output", "my_component", "file.txt"),
+          ).toString()
           expect(content).toEqual("content")
         })
       },
@@ -855,10 +881,10 @@ describe("Scaffold", () => {
             output: "output",
             templates: ["input"],
             logLevel: "none",
-            data: { value: "hello & <world> \"test\"" },
+            data: { value: 'hello & <world> "test"' },
           })
           const content = readFileSync(join(process.cwd(), "output", "file.txt")).toString()
-          expect(content).toEqual("Value: hello & <world> \"test\"")
+          expect(content).toEqual('Value: hello & <world> "test"')
         })
       },
     ),
@@ -1052,8 +1078,12 @@ describe("Scaffold", () => {
             templates: ["input"],
             logLevel: "none",
           })
-          expect(readFileSync(join(process.cwd(), "output", ".gitignore")).toString()).toEqual("node_modules")
-          expect(readFileSync(join(process.cwd(), "output", ".env.example")).toString()).toEqual("KEY=app")
+          expect(readFileSync(join(process.cwd(), "output", ".gitignore")).toString()).toEqual(
+            "node_modules",
+          )
+          expect(readFileSync(join(process.cwd(), "output", ".env.example")).toString()).toEqual(
+            "KEY=app",
+          )
         })
       },
     ),
@@ -1078,8 +1108,78 @@ describe("Scaffold", () => {
           })
           const files = readdirSync(join(process.cwd(), "output"))
           expect(files.length).toBe(50)
-          expect(readFileSync(join(process.cwd(), "output", "file0.txt")).toString()).toEqual("Content 0 for app")
-          expect(readFileSync(join(process.cwd(), "output", "file49.txt")).toString()).toEqual("Content 49 for app")
+          expect(readFileSync(join(process.cwd(), "output", "file0.txt")).toString()).toEqual(
+            "Content 0 for app",
+          )
+          expect(readFileSync(join(process.cwd(), "output", "file49.txt")).toString()).toEqual(
+            "Content 49 for app",
+          )
+        })
+      },
+    ),
+  )
+
+  describe(
+    "afterScaffold hook",
+    withMock(
+      {
+        input: { "file.txt": "Hello {{name}}" },
+        output: {},
+      },
+      () => {
+        test("calls function hook with config and files", async () => {
+          const hookFn = vi.fn()
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            afterScaffold: hookFn,
+          })
+          expect(hookFn).toHaveBeenCalledOnce()
+          const ctx = hookFn.mock.calls[0][0]
+          expect(ctx.config.name).toEqual("app")
+          expect(ctx.files.length).toBe(1)
+          expect(ctx.files[0]).toContain("file.txt")
+        })
+
+        test("calls async function hook", async () => {
+          let called = false
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            afterScaffold: async () => {
+              called = true
+            },
+          })
+          expect(called).toBe(true)
+        })
+
+        test("does not call hook when no files written (dry run)", async () => {
+          const hookFn = vi.fn()
+          await Scaffold({
+            name: "app",
+            output: "output",
+            templates: ["input"],
+            logLevel: "none",
+            dryRun: true,
+            afterScaffold: hookFn,
+          })
+          expect(hookFn).toHaveBeenCalledOnce()
+          expect(hookFn.mock.calls[0][0].files.length).toBe(0)
+        })
+
+        test("does not call hook when not provided", async () => {
+          await expect(
+            Scaffold({
+              name: "app",
+              output: "output",
+              templates: ["input"],
+              logLevel: "none",
+            }),
+          ).resolves.toBeUndefined()
         })
       },
     ),

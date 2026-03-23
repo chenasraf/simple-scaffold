@@ -119,6 +119,9 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
     ? wrapBeforeWrite(config, config.beforeWrite)
     : undefined
   output.beforeWrite = cmdBeforeWrite ?? output.beforeWrite
+  if (config.afterScaffold) {
+    output.afterScaffold = config.afterScaffold
+  }
 
   if (!output.name) {
     throw new Error("simple-scaffold: Missing required option: name")

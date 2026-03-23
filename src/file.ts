@@ -174,11 +174,12 @@ export function getOutputDir(
 /**
  * Processes a single template file: resolves output paths, creates directories,
  * and writes the transformed output.
+ * Returns the output path if the file was written, or null if skipped.
  */
 export async function handleTemplateFile(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
-): Promise<void> {
+): Promise<string | null> {
   try {
     const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(
       config,
@@ -203,8 +204,10 @@ export async function handleTemplateFile(
 
     await createDirIfNotExists(path.dirname(outputPath), config)
 
+    const shouldWrite = (!exists || overwrite) && !config.dryRun
     log(config, LogLevel.info, `Writing to ${outputPath}`)
     await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
+    return shouldWrite ? outputPath : null
   } catch (e: unknown) {
     handleErr(e as NodeJS.ErrnoException)
     throw e

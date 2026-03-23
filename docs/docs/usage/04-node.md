@@ -29,6 +29,7 @@ interface ScaffoldConfig {
     rawContent: Buffer,
     outputPath: string,
   ): string | Buffer | undefined | Promise<string | Buffer | undefined>
+  afterScaffold?: AfterScaffoldHook
 }
 
 interface ScaffoldInput {
@@ -36,6 +37,13 @@ interface ScaffoldInput {
   required?: boolean
   default?: string
 }
+
+interface AfterScaffoldContext {
+  config: ScaffoldConfig
+  files: string[] // absolute paths of written files
+}
+
+type AfterScaffoldHook = ((context: AfterScaffoldContext) => void | Promise<void>) | string
 ```
 
 ### Before Write option
@@ -48,6 +56,38 @@ to be used as the file contents.
 
 Returning `undefined` will keep the file contents as-is, after normal Handlebars.js procesing by
 Simple Scaffold.
+
+### After Scaffold hook
+
+The `afterScaffold` option runs after all files have been written. It receives a context object with
+the resolved config and the list of files that were created.
+
+```typescript
+import Scaffold from "simple-scaffold"
+
+await Scaffold({
+  name: "my-app",
+  templates: ["templates/app"],
+  output: ".",
+  afterScaffold: async ({ config, files }) => {
+    console.log(`Created ${files.length} files`)
+    // e.g. run npm install, git init, open editor, etc.
+  },
+})
+```
+
+You can also pass a shell command string, which will be executed in the output directory:
+
+```typescript
+await Scaffold({
+  name: "my-app",
+  templates: ["templates/app"],
+  output: "my-app",
+  afterScaffold: "npm install && git init",
+})
+```
+
+In dry-run mode, the hook is still called but the `files` array will be empty.
 
 ### Inputs
 

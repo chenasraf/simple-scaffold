@@ -29,6 +29,7 @@ Options:
 | `--quiet` \| `-q`                                 | Suppress output logs (Same as `--log-level none`)(default: false)                                                                                                                                                                                              |
 | `--log-level` \| `-l`                             | Determine amount of logs to display. The values are: `none, debug, info, warn, error`. The provided level will display messages of the same level or higher. (default: info)                                                                                   |
 | `--before-write` \| `-B`                          | Run a script before writing the files. This can be a command or a path to a file. A temporary file path will be passed to the given command and the command should return a string for the final output.                                                       |
+| `--after-scaffold` \| `-A`                        | Run a shell command after all files have been written. The command is executed in the output directory (e.g. `--after-scaffold 'npm install'`).                                                                                                                |
 | `--dry-run` \| `-dr`                              | Don't emit files. This is good for testing your scaffolds and making sure they don't fail, without having to write actual file contents or create directories. (default: false)                                                                                |
 | `--version` \| `-v`                               | Display version.                                                                                                                                                                                                                                               |
 
@@ -107,6 +108,35 @@ See
 [beforeWrite](https://chenasraf.github.io/simple-scaffold/docs/api/interfaces/ScaffoldConfig#beforewrite)
 Node.js API for more details. Instead of returning `undefined` to keep the default behavior, you can
 output `''` for the same effect.
+
+### After Scaffold option
+
+This option runs a shell command after all files have been written. The command is executed in the
+output directory, making it useful for post-scaffolding tasks like installing dependencies or
+initializing a git repo.
+
+```shell
+simple-scaffold -c . --after-scaffold 'npm install'
+simple-scaffold -c . --after-scaffold 'git init && git add .'
+```
+
+In a config file, you can use a function for more control:
+
+```js
+module.exports = {
+  default: {
+    templates: ["templates/app"],
+    output: ".",
+    afterScaffold: async ({ config, files }) => {
+      console.log(`Created ${files.length} files in ${config.output}`)
+      // run any post-processing here
+    },
+  },
+}
+```
+
+The function receives a context with the resolved `config` and an array of `files` (absolute paths)
+that were written.
 
 ## Available Commands:
 

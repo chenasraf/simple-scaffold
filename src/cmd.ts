@@ -175,6 +175,14 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
         " file. A temporary file path will be passed to the given command and the command should " +
         "return a string for the final output.",
     })
+    .option({
+      name: "after-scaffold",
+      aliases: ["A"],
+      description:
+        "Run a shell command after all files have been written. " +
+        "The command is executed in the output directory. " +
+        "For example: `--after-scaffold 'npm install'`",
+    })
     .flag({
       name: "dry-run",
       aliases: ["dr"],

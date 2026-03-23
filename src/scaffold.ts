@@ -6,6 +6,7 @@
  */
 import path from "node:path"
 import os from "node:os"
+import { exec } from "node:child_process"
 
 import { handleErr, resolve } from "./utils"
 import { isDir, getTemplateGlobInfo, getFileList, handleTemplateFile, GlobInfo } from "./file"
@@ -53,6 +54,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
 
   config = await resolveInputs(config)
   registerHelpers(config)
+  const writtenFiles: string[] = []
   try {
     config.data = { name: config.name, ...config.data }
     logInitStep(config)
@@ -63,11 +65,16 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     const templates = await resolveTemplateGlobs(config, includes)
 
     for (const tpl of templates) {
-      await processTemplateGlob(config, tpl, excludes)
+      const files = await processTemplateGlob(config, tpl, excludes)
+      writtenFiles.push(...files)
     }
   } catch (e: unknown) {
     log(config, LogLevel.error, e)
     throw e
+  }
+
+  if (config.afterScaffold) {
+    await runAfterScaffoldHook(config, writtenFiles)
   }
 }
 
@@ -87,12 +94,13 @@ async function resolveTemplateGlobs(
   return templates
 }
 
-/** Processes all files matching a single template glob pattern. */
+/** Processes all files matching a single template glob pattern. Returns paths of written files. */
 async function processTemplateGlob(
   config: ScaffoldConfig,
   tpl: GlobInfo,
   excludes: string[],
-): Promise<void> {
+): Promise<string[]> {
+  const written: string[] = []
   const files = await getFileList(config, [tpl.template, ...excludes])
   for (const file of files) {
     if (await isDir(file)) {
@@ -115,8 +123,46 @@ async function processTemplateGlob(
       isGlob: tpl.isGlob,
     })
 
-    await handleTemplateFile(config, { templatePath: file, basePath })
+    const outputPath = await handleTemplateFile(config, { templatePath: file, basePath })
+    if (outputPath) {
+      written.push(outputPath)
+    }
   }
+  return written
+}
+
+/** Executes the afterScaffold hook — either a function or a shell command string. */
+async function runAfterScaffoldHook(config: ScaffoldConfig, files: string[]): Promise<void> {
+  const hook = config.afterScaffold!
+
+  if (typeof hook === "function") {
+    log(config, LogLevel.debug, "Running afterScaffold function hook")
+    await hook({ config, files })
+    return
+  }
+
+  // Shell command string
+  const outputDir = typeof config.output === "string" ? config.output : process.cwd()
+  const cwd = path.resolve(process.cwd(), outputDir)
+
+  log(config, LogLevel.info, `Running afterScaffold command: ${hook}`)
+  await new Promise<void>((resolve, reject) => {
+    const proc = exec(hook, { cwd })
+    proc.stdout?.on("data", (data: string) => {
+      log(config, LogLevel.info, data.toString().trimEnd())
+    })
+    proc.stderr?.on("data", (data: string) => {
+      log(config, LogLevel.warning, data.toString().trimEnd())
+    })
+    proc.on("close", (code) => {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject(new Error(`afterScaffold command exited with code ${code}`))
+      }
+    })
+    proc.on("error", reject)
+  })
 }
 
 /**
