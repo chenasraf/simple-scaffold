@@ -156,10 +156,10 @@ export function isInteractive(): boolean {
 }
 
 /**
- * Fills in missing config values by prompting the user interactively.
- * Only prompts when running in a TTY — in non-interactive mode, returns config as-is.
+ * Prompts for name and template key before the config file is parsed.
+ * These are needed by parseConfigFile to know which template to load.
  */
-export async function promptForMissingConfig(
+export async function promptBeforeConfig(
   config: ScaffoldCmdConfig,
   configMap?: ScaffoldConfigMap,
 ): Promise<ScaffoldCmdConfig> {
@@ -178,7 +178,19 @@ export async function promptForMissingConfig(
     }
   }
 
-  if (!config.output) {
+  return config
+}
+
+/**
+ * Prompts for any values still missing after the config file has been parsed.
+ * Only prompts in interactive mode.
+ */
+export async function promptAfterConfig(config: ScaffoldConfig): Promise<ScaffoldConfig> {
+  if (!isInteractive()) {
+    return config
+  }
+
+  if (!config.output || (typeof config.output === "string" && !config.output)) {
     config.output = await promptForOutput()
   }
 
@@ -187,6 +199,30 @@ export async function promptForMissingConfig(
   }
 
   return config
+}
+
+/**
+ * @deprecated Use {@link promptBeforeConfig} and {@link promptAfterConfig} instead.
+ */
+export async function promptForMissingConfig(
+  config: ScaffoldCmdConfig,
+  configMap?: ScaffoldConfigMap,
+): Promise<ScaffoldCmdConfig> {
+  const afterPre = await promptBeforeConfig(config, configMap)
+
+  if (!isInteractive()) {
+    return afterPre
+  }
+
+  if (!afterPre.output) {
+    afterPre.output = await promptForOutput()
+  }
+
+  if (!afterPre.templates || afterPre.templates.length === 0) {
+    afterPre.templates = await promptForTemplates()
+  }
+
+  return afterPre
 }
 
 /**

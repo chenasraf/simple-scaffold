@@ -10,7 +10,7 @@ import { log } from "./logger"
 import { MassargCommand } from "massarg/command"
 import { getUniqueTmpPath as generateUniqueTmpPath } from "./file"
 import { colorize } from "./colors"
-import { promptForMissingConfig, resolveInputs } from "./prompts"
+import { promptBeforeConfig, promptAfterConfig, resolveInputs } from "./prompts"
 import { initScaffold } from "./init"
 
 export async function parseCliArgs(args = process.argv.slice(2)) {
@@ -33,8 +33,10 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
       log(config, LogLevel.debug, `Simple Scaffold v${pkg.version}`)
       config.tmpDir = generateUniqueTmpPath()
       try {
-        // Auto-detect config file in cwd if not explicitly provided
-        if (!config.config && !config.git) {
+        // Auto-detect config file in cwd — but only if the user didn't
+        // explicitly provide templates/output (which signals a one-time run)
+        const isOneTimeRun = config.templates?.length > 0 || config.output
+        if (!config.config && !config.git && !isOneTimeRun) {
           try {
             config.config = await findConfigFile(process.cwd())
             log(config, LogLevel.debug, `Auto-detected config file: ${config.config}`)
@@ -43,19 +45,24 @@ export async function parseCliArgs(args = process.argv.slice(2)) {
           }
         }
 
-        // Load config early so we can prompt for template key
+        // Load config map early so we can prompt for name and template key
         const hasConfigSource = Boolean(config.config || config.git)
         let configMap: ScaffoldConfigMap | undefined
         if (hasConfigSource) {
           configMap = await getConfigFile(config)
         }
 
-        // Prompt for missing values interactively
-        config = await promptForMissingConfig(config, configMap)
+        // Phase 1: prompt for name + key (needed before parseConfigFile)
+        config = await promptBeforeConfig(config, configMap)
 
+        // Parse and merge the config file
         log(config, LogLevel.debug, "Parsing config file...", config)
         const parsed = await parseConfigFile(config)
-        const resolved = await resolveInputs(parsed)
+
+        // Phase 2: prompt for anything still missing after config merge
+        const prompted = await promptAfterConfig(parsed)
+
+        const resolved = await resolveInputs(prompted)
         await Scaffold(resolved)
       } catch (e) {
         const message = "message" in (e as object) ? (e as Error).message : e?.toString()
