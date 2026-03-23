@@ -1,5 +1,22 @@
 # Change Log
 
+## [3.1.0](https://github.com/chenasraf/simple-scaffold/compare/v3.0.0...v3.1.0) (2026-03-23)
+
+
+### Features
+
+* after scaffold hook ([0a4ead1](https://github.com/chenasraf/simple-scaffold/commit/0a4ead17c013b5410e8eec8000e83fa7b7186fbb))
+* config validation ([972d199](https://github.com/chenasraf/simple-scaffold/commit/972d199fbb7167506f76eba697fbea6acea9de56))
+* init command ([7926b15](https://github.com/chenasraf/simple-scaffold/commit/7926b15053726d5eb9e5772b5f04c3989e567b2c))
+* scaffoldignore ([b5fd1df](https://github.com/chenasraf/simple-scaffold/commit/b5fd1df821eba7e13e5ceedc53da550c8dd7cd8e))
+* select, confirm and number input types ([f6408f2](https://github.com/chenasraf/simple-scaffold/commit/f6408f221d84d84c5671737af63ff8079093fd27))
+* update all ouput logging ([bb0248f](https://github.com/chenasraf/simple-scaffold/commit/bb0248f91a012c297e408f15f0846c5272166543))
+
+
+### Bug Fixes
+
+* interactive inputs with existing config/cli options ([c860e46](https://github.com/chenasraf/simple-scaffold/commit/c860e4644a3f3d4bd6b7dab9974accdf8bae9463))
+
 ## [3.0.0](https://github.com/chenasraf/simple-scaffold/compare/v2.3.3...v3.0.0) (2026-03-23)
 
 
