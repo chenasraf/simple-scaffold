@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach } from "vitest"
 import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import { Console } from "console"
@@ -20,7 +21,7 @@ import { ScaffoldConfig, LogLevel } from "../src/types"
 import { registerHelpers } from "../src/parser"
 import { readFileSync } from "fs"
 
-function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
+function withMock(fileStruct: FileSystem.DirectoryItems, testFn: () => void): () => void {
   return () => {
     beforeEach(() => {
       console = new Console(process.stdout, process.stderr)

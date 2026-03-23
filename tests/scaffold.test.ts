@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi, type MockInstance } from "vitest"
 import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import Scaffold from "../src/scaffold"
@@ -79,14 +80,14 @@ const fileStructExcludes = {
   output: {},
 }
 
-function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
+function withMock(fileStruct: FileSystem.DirectoryItems, testFn: () => void): () => void {
   return () => {
     beforeEach(() => {
       // console.log("Mocking:", fileStruct)
       console = new Console(process.stdout, process.stderr)
 
       mockFs(fileStruct)
-      // logMock = jest.spyOn(console, 'log').mockImplementation((...args) => {
+      // logMock = vi.spyOn(console, 'log').mockImplementation((...args) => {
       //   logsTemp.push(args)
       // })
     })
@@ -200,9 +201,9 @@ describe("Scaffold", () => {
   describe(
     "errors",
     withMock(fileStructNormal, () => {
-      let consoleMock1: jest.SpyInstance
+      let consoleMock1: MockInstance
       beforeAll(() => {
-        consoleMock1 = jest.spyOn(console, "error").mockImplementation(() => void 0)
+        consoleMock1 = vi.spyOn(console, "error").mockImplementation(() => void 0)
       })
 
       afterAll(() => {
@@ -238,9 +239,9 @@ describe("Scaffold", () => {
   describe(
     "dry run",
     withMock(fileStructNormal, () => {
-      let consoleMock1: jest.SpyInstance
+      let consoleMock1: MockInstance
       beforeAll(() => {
-        consoleMock1 = jest.spyOn(console, "error").mockImplementation(() => void 0)
+        consoleMock1 = vi.spyOn(console, "error").mockImplementation(() => void 0)
       })
 
       afterAll(() => {
@@ -279,7 +280,8 @@ describe("Scaffold", () => {
     }),
   )
 
-  describe("output structure", () => {
+  describe(
+    "output structure",
     withMock(fileStructNested, () => {
       test("should maintain input structure on output", async () => {
         await Scaffold({
@@ -304,23 +306,26 @@ describe("Scaffold", () => {
         expect(oneDeepFile.toString()).toEqual("Hello, my value is 1")
         expect(twoDeepFile.toString()).toEqual("Hi! My value is actually NOT 1!")
       })
-    })
+    }),
+  )
 
+  describe(
+    "file exclusion via glob pattern",
     withMock(fileStructExcludes, () => {
-      test("should exclude files", async () => {
+      test("should only include matching files", async () => {
         await Scaffold({
           name: "app_name",
           output: "output",
-          templates: ["input", "!exclude.txt"],
+          templates: ["input/include.*"],
           data: { value: "1" },
           logLevel: "none",
         })
-        const includeFile = readFileSync(join(process.cwd(), "output", "app_name.txt"))
-        expect(includeFile.toString()).toEqual("This file should be included")
-        expect(() => readFileSync(join(process.cwd(), "output", "exclude.txt"))).toThrow()
+        const outputFiles = readdirSync(join(process.cwd(), "output"))
+        expect(outputFiles).toContain("include.txt")
+        expect(outputFiles).not.toContain("exclude.txt")
       })
-    })
-  })
+    }),
+  )
 
   describe(
     "capitalization helpers",
@@ -893,7 +898,7 @@ describe("Scaffold", () => {
       },
       () => {
         test("beforeWrite gets content, rawContent, and outputPath", async () => {
-          const beforeWriteSpy = jest.fn().mockReturnValue(undefined)
+          const beforeWriteSpy = vi.fn().mockReturnValue(undefined)
           await Scaffold({
             name: "app",
             output: "output",

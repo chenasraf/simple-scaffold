@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, afterAll } from "vitest"
 import { ScaffoldConfig } from "../src/types"
 import path from "node:path"
 import * as dateFns from "date-fns"

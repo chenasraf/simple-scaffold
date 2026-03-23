@@ -1,3 +1,4 @@
+import { describe, test, expect } from "vitest"
 import { handleErr, resolve, wrapNoopResolver, colorize, TermColor } from "../src/utils"
 describe("utils", () => {
   describe("resolve", () => {

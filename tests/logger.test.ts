@@ -1,18 +1,19 @@
+import { describe, test, expect, beforeEach, afterEach, vi, type MockInstance } from "vitest"
 import { log, logInitStep, logInputFile } from "../src/logger"
 import { LogLevel, ScaffoldConfig } from "../src/types"
 
 describe("logger", () => {
   let consoleSpy: {
-    log: jest.SpyInstance
-    warn: jest.SpyInstance
-    error: jest.SpyInstance
+    log: MockInstance
+    warn: MockInstance
+    error: MockInstance
   }
 
   beforeEach(() => {
     consoleSpy = {
-      log: jest.spyOn(console, "log").mockImplementation(() => void 0),
-      warn: jest.spyOn(console, "warn").mockImplementation(() => void 0),
-      error: jest.spyOn(console, "error").mockImplementation(() => void 0),
+      log: vi.spyOn(console, "log").mockImplementation(() => void 0),
+      warn: vi.spyOn(console, "warn").mockImplementation(() => void 0),
+      error: vi.spyOn(console, "error").mockImplementation(() => void 0),
     }
   })
 

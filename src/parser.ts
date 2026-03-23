@@ -1,17 +1,10 @@
 import path from "node:path"
 import { DefaultHelpers, Helper, LogLevel, ScaffoldConfig } from "./types"
 import Handlebars from "handlebars"
-import dtAdd from "date-fns/add"
-import dtFormat from "date-fns/format"
-import dtParseISO from "date-fns/parseISO"
+import { add, format, parseISO, type Duration } from "date-fns"
 import { log } from "./logger"
-import { Duration } from "date-fns"
 
-const dateFns = {
-  add: dtAdd.add,
-  format: dtFormat.format,
-  parseISO: dtParseISO.parseISO,
-}
+const dateFns = { add, format, parseISO }
 
 export const defaultHelpers: Record<DefaultHelpers, Helper> = {
   camelCase,

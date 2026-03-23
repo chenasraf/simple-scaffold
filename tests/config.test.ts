@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach, beforeAll, vi } from "vitest"
 import mockFs from "mock-fs"
 import FileSystem from "mock-fs/lib/filesystem"
 import { Console } from "console"
@@ -9,10 +10,10 @@ import { findConfigFile, getOptionValueForFile } from "../src/config"
 import { registerHelpers } from "../src/parser"
 import path from "path"
 
-jest.mock("../src/git", () => {
+vi.mock("../src/git", async () => {
+  const actual = await vi.importActual<typeof import("../src/git")>("../src/git")
   return {
-    __esModule: true,
-    ...jest.requireActual("../src/git"),
+    ...actual,
     getGitConfig: () => {
       return Promise.resolve(blankCliConf)
     },
@@ -321,7 +322,7 @@ describe("config", () => {
     })
 
     test("calls function with file path info", () => {
-      const fn = jest.fn().mockReturnValue("custom-output")
+      const fn = vi.fn().mockReturnValue("custom-output")
       const result = getOptionValueForFile(conf, "/home/user/file.txt", fn)
       expect(result).toEqual("custom-output")
       expect(fn).toHaveBeenCalledWith(
@@ -356,7 +357,7 @@ describe("config", () => {
       "scaffold.json": JSON.stringify(blankConfig),
     }
 
-    function withMock(fileStruct: FileSystem.DirectoryItems, testFn: jest.EmptyFunction): jest.EmptyFunction {
+    function withMock(fileStruct: FileSystem.DirectoryItems, testFn: () => void): () => void {
       return () => {
         beforeEach(() => {
           // console.log("Mocking:", fileStruct)
@@ -378,12 +379,15 @@ describe("config", () => {
     for (const struct of [struct1, struct2, struct3, struct4]) {
       const [k] = Object.keys(struct)
 
-      describe(`finds config file ${k}`, () => {
-        withMock(struct, async () => {
-          const result = await findConfigFile(process.cwd())
-          expect(result).toEqual(k)
-        })
-      })
+      describe(
+        `finds config file ${k}`,
+        withMock(struct, () => {
+          test(`finds ${k}`, async () => {
+            const result = await findConfigFile(process.cwd())
+            expect(result).toEqual(k)
+          })
+        }),
+      )
     }
 
     describe(

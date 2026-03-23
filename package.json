@@ -27,12 +27,13 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "pnpm clean && tsc && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
-    "dev": "tsc --watch",
-    "start": "ts-node src/scaffold.ts",
-    "test": "jest",
-    "coverage": "open coverage/lcov-report/index.html",
-    "cmd": "ts-node src/cmd.ts",
+    "build": "pnpm clean && vite build && tsc --emitDeclarationOnly && chmod -R +x ./dist && cp ./package.json ./README.md ./dist/",
+    "dev": "vite build --watch",
+    "start": "vite-node src/scaffold.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage && open coverage/lcov-report/index.html",
+    "cmd": "vite-node src/cmd.ts",
     "docs:build": "cd docs && pnpm build",
     "docs:watch": "cd docs && pnpm start",
     "audit-fix": "pnpm audit --fix",
@@ -46,15 +47,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/jest": "^30.0.0",
-    "@types/mock-fs": "^4.13.4",
     "@types/node": "^25.5.0",
-    "jest": "^30.3.0",
+    "@vitest/coverage-v8": "^4.1.0",
     "mock-fs": "^5.5.0",
     "rimraf": "^6.1.3",
-    "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "typescript-eslint": "^8.57.1",
+    "vite": "^8.0.1",
+    "vitest": "^4.1.0"
   }
 }
