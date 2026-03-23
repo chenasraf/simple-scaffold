@@ -13,17 +13,9 @@
 
 </h2>
 
-Looking to streamline your workflow and get your projects up and running quickly? Look no further
-than Simple Scaffold - the easy-to-use NPM package that simplifies the process of organizing and
-copying your commonly-created files.
+Simple Scaffold is a file scaffolding tool. You define templates once, then generate files from them whenever you need — whether it's a single component or an entire app boilerplate.
 
-With its agnostic and un-opinionated approach, Simple Scaffold can handle anything from a few simple
-files to an entire app boilerplate setup. Plus, with the power of **Handlebars.js** syntax, you can
-easily replace custom data and personalize your files to fit your exact needs. But that's not all -
-you can also use it to loop through data, use conditions, and write custom functions using helpers.
-
-Don't waste any more time manually copying and pasting files - let Simple Scaffold do the heavy
-lifting for you and start building your projects faster and more efficiently today!
+Templates use **Handlebars.js** syntax, so you can inject data, loop over lists, use conditionals, and write custom helpers. It works as a CLI or as a Node.js library, and it doesn't care what kind of files you're generating.
 
 <div align="center">
 
