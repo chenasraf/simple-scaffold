@@ -28,95 +28,144 @@ of files you're generating.
 
 ---
 
-## Documentation
+> **Full documentation is available at
+> [chenasraf.github.io/simple-scaffold](https://chenasraf.github.io/simple-scaffold)** — including
+> detailed guides on [CLI usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli),
+> [Node.js API](https://chenasraf.github.io/simple-scaffold/docs/usage/node),
+> [templates](https://chenasraf.github.io/simple-scaffold/docs/usage/templates),
+> [configuration files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files),
+> [examples](https://chenasraf.github.io/simple-scaffold/docs/usage/examples), and
+> [migration from v1/v2](https://chenasraf.github.io/simple-scaffold/docs/usage/migration).
 
-See full documentation [here](https://chenasraf.github.io/simple-scaffold).
+## Table of Contents
 
-- [Command Line Interface (CLI) usage](https://chenasraf.github.io/simple-scaffold/docs/usage/cli)
-- [Node.js usage](https://chenasraf.github.io/simple-scaffold/docs/usage/node)
-- [Templates](https://chenasraf.github.io/simple-scaffold/docs/usage/templates)
-- [Configuration Files](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files)
-- [Migration](https://chenasraf.github.io/simple-scaffold/docs/usage/migration)
+- [Getting Started](#getting-started)
+- [Configuration Files](#configuration-files)
+- [Templates](#templates)
+- [Interactive Mode & Inputs](#interactive-mode--inputs)
+- [Remote Templates](#remote-templates)
+- [CLI Reference](#cli-reference)
+- [Node.js API](#nodejs-api)
+- [Built-in Helpers](#built-in-helpers)
+- [Contributing](#contributing)
 
 ## Getting Started
 
-### Quick Start
+### Install
 
-The fastest way to get started is to run `init` in your project directory:
+```sh
+npm install -D simple-scaffold
+# or use directly with npx
+npx simple-scaffold
+```
+
+### Initialize a Project
+
+Run `init` to create a config file and an example template:
 
 ```sh
 npx simple-scaffold init
 ```
 
-This creates a `scaffold.config.js` and an example template in `templates/default/`. Then generate
-files with:
+This creates `scaffold.config.js` and `templates/default/{{name}}.md`. Now generate files:
 
 ```sh
 npx simple-scaffold MyProject
 ```
 
-### Cheat Sheet
+### One-off Usage (No Config)
 
-A quick rundown of common usage scenarios:
-
-- Remote template config file on GitHub:
-
-  ```sh
-  npx simple-scaffold -g username/repository -c scaffold.js -k component NewComponentName
-  ```
-
-- Local template config file:
-
-  ```sh
-  npx simple-scaffold -c scaffold.js -k component NewComponentName
-  ```
-
-- Local one-time usage:
-
-  ```sh
-  npx simple-scaffold -t templates/component -o src/components NewComponentName
-  ```
-
-### Remote Configurations
-
-The fastest way to get started is to is to re-use someone else's (or your own) work using a template
-repository.
-
-A remote config can be loaded in one of these ways:
-
-- For templates hosted on GitHub, the syntax is `-g user/repository_name`
-- For other Git platforms like GitLab, use `-g https://example.com/user/repository_name.git`
-
-These remote configurations support multiple scaffold groups, which can be specified using the
-`--key` or `-k` argument:
+Generate files from a template directory without a config file:
 
 ```sh
-$ npx simple-scaffold \
-  -g chenasraf/simple-scaffold \
-  -k component \
-  PageWrapper
-
-# equivalent to:
-$ npx simple-scaffold \
-  -g https://github.com/chenasraf/simple-scaffold.git \
-  -c scaffold.config.js \
-  -k component \
-  PageWrapper
+npx simple-scaffold -t templates/component -o src/components MyComponent
 ```
 
-By default, the template name is set to `default` when the `--key` option is not provided.
+## Configuration Files
 
-See information about each option and flag using the `--help` flag, or read the
-[CLI documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/cli). For information
-about how configuration files work, [see below](#configuration-files).
+Config files let you define reusable scaffold definitions. Simple Scaffold **auto-detects** config
+files in the current directory — no `--config` flag needed.
 
-### Interactive Mode
+It searches for these files in order:
 
-When running in a terminal, Simple Scaffold will interactively prompt for any missing required
-values — name, output directory, template paths, and template key (if multiple are available).
+`scaffold.config.{mjs,cjs,js,json}`, `scaffold.{mjs,cjs,js,json}`, `.scaffold.{mjs,cjs,js,json}`
 
-Config files can also define **inputs** — custom fields that are prompted interactively and become
-template data:
+### Example
+
+```js
+// scaffold.config.js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+  },
+  page: {
+    templates: ["templates/page"],
+    output: "src/pages",
+    subdir: true,
+  },
+}
+```
+
+Then run:
+
+```sh
+npx simple-scaffold -k component MyComponent
+npx simple-scaffold -k page Dashboard
+```
+
+Use the key `default` to skip the `-k` flag entirely.
+
+### Listing Available Templates
+
+```sh
+npx simple-scaffold list
+npx simple-scaffold list -c path/to/config.js
+```
+
+## Templates
+
+Templates are regular files in a directory. Both **file names** and **file contents** support
+Handlebars syntax. Simple Scaffold preserves the directory structure of your template folder.
+
+### Example Template
+
+`templates/component/{{pascalCase name}}.tsx`
+
+```tsx
+// Created: {{ now 'yyyy-MM-dd' }}
+import React from "react"
+
+export default {{ pascalCase name }}: React.FC = (props) => {
+  return (
+    <div className="{{ camelCase name }}">{{ pascalCase name }} Component</div>
+  )
+}
+```
+
+Running `npx simple-scaffold -t templates/component -o src/components PageWrapper` produces
+`src/components/PageWrapper.tsx` with all tokens replaced.
+
+### Glob Patterns & Exclusions
+
+Template paths support globs and negation:
+
+```js
+{
+  templates: ["templates/component/**", "!templates/component/README.md"]
+}
+```
+
+### .scaffoldignore
+
+Place a `.scaffoldignore` file in your template directory to exclude files. It works like
+`.gitignore` — one pattern per line, `#` for comments.
+
+## Interactive Mode & Inputs
+
+When running in a terminal, Simple Scaffold prompts for any missing required values (name, output,
+template key). Config files can also define **inputs** — custom fields that are prompted
+interactively:
 
 ```js
 module.exports = {
@@ -124,100 +173,147 @@ module.exports = {
     templates: ["templates/component"],
     output: "src/components",
     inputs: {
-      author: { message: "Author name", required: true },
-      license: { message: "License", default: "MIT" },
+      author: { type: "text", message: "Author name", required: true },
+      license: { type: "select", message: "License", options: ["MIT", "Apache-2.0", "GPL-3.0"] },
+      isPublic: { type: "confirm", message: "Public package?" },
+      priority: { type: "number", message: "Priority level", default: 1 },
     },
   },
 }
 ```
 
-Inputs can be pre-provided via `--data` or `-D` to skip the prompt:
+**Input types:** `text` (default), `select`, `confirm`, `number`
+
+Pre-fill inputs from the command line to skip prompts:
 
 ```sh
-npx simple-scaffold -c scaffold.config.js -k component -D author=John MyComponent
+npx simple-scaffold -k component -D author=John -D license=MIT MyComponent
 ```
 
-### Configuration Files
+## Remote Templates
 
-You can use a config file to more easily maintain all your scaffold definitions. Simple Scaffold
-**auto-detects** config files in the current directory — no `--config` flag needed.
+Use templates from any Git repository:
 
-It searches for these files in order: `scaffold.config.{mjs,cjs,js,json}`,
-`scaffold.{mjs,cjs,js,json}`, `.scaffold.{mjs,cjs,js,json}`.
+```sh
+# GitHub shorthand
+npx simple-scaffold -g username/repo -k component MyComponent
 
-`scaffold.config.js`
+# Full Git URL (GitLab, Bitbucket, etc.)
+npx simple-scaffold -g https://gitlab.com/user/repo.git -k component MyComponent
+```
+
+The repository is cloned to a temporary directory, used, and cleaned up automatically.
+
+## CLI Reference
+
+### Commands
+
+| Command       | Description                              |
+| ------------- | ---------------------------------------- |
+| `[name]`      | Generate files from a template (default) |
+| `init`        | Create config file and example template  |
+| `list` / `ls` | List available template keys in a config |
+
+### Options
+
+| Flag                           | Short     | Description                                          | Default     |
+| ------------------------------ | --------- | ---------------------------------------------------- | ----------- |
+| `--config`                     | `-c`      | Path to config file or directory                     | auto-detect |
+| `--git`                        | `-g`      | Git URL or GitHub shorthand                          |             |
+| `--key`                        | `-k`      | Template key from config                             | `default`   |
+| `--output`                     | `-o`      | Output directory                                     |             |
+| `--templates`                  | `-t`      | Template file paths or globs                         |             |
+| `--data`                       | `-d`      | Custom JSON data                                     |             |
+| `--append-data`                | `-D`      | Key-value data (`key=string`, `key:=raw`)            |             |
+| `--subdir`/`--no-subdir`       | `-s`/`-S` | Create parent directory with input name              | `false`     |
+| `--subdir-helper`              | `-H`      | Helper to transform subdir name                      |             |
+| `--overwrite`/`--no-overwrite` | `-w`/`-W` | Overwrite existing files                             | `false`     |
+| `--dry-run`                    | `-dr`     | Preview output without writing files                 | `false`     |
+| `--before-write`               | `-B`      | Script to run before each file is written            |             |
+| `--after-scaffold`             | `-A`      | Shell command to run after scaffolding               |             |
+| `--quiet`                      | `-q`      | Suppress output                                      |             |
+| `--log-level`                  | `-l`      | Log level (`none`, `debug`, `info`, `warn`, `error`) | `info`      |
+| `--version`                    | `-v`      | Show version                                         |             |
+| `--help`                       | `-h`      | Show help                                            |             |
+
+## Node.js API
+
+```js
+import Scaffold from "simple-scaffold"
+
+// Basic usage
+const scaffold = new Scaffold({
+  name: "MyComponent",
+  templates: ["templates/component"],
+  output: "src/components",
+})
+await scaffold.run()
+
+// Load from config file
+const scaffold = await Scaffold.fromConfig("scaffold.config.js", {
+  key: "component",
+  name: "MyComponent",
+})
+await scaffold.run()
+```
+
+### Config Options
+
+| Option          | Type                       | Description                           |
+| --------------- | -------------------------- | ------------------------------------- |
+| `name`          | `string`                   | Name for generated files (required)   |
+| `templates`     | `string[]`                 | Template paths or globs (required)    |
+| `output`        | `string \| Function`       | Output directory or per-file function |
+| `data`          | `Record<string, unknown>`  | Custom template data                  |
+| `inputs`        | `Record<string, Input>`    | Interactive input definitions         |
+| `helpers`       | `Record<string, Function>` | Custom Handlebars helpers             |
+| `subdir`        | `boolean`                  | Create parent directory with name     |
+| `subdirHelper`  | `string`                   | Helper for subdir name transformation |
+| `overwrite`     | `boolean \| Function`      | Overwrite existing files              |
+| `dryRun`        | `boolean`                  | Preview without writing               |
+| `logLevel`      | `string`                   | Log verbosity                         |
+| `beforeWrite`   | `Function`                 | Async hook before each file write     |
+| `afterScaffold` | `Function \| string`       | Hook after all files are written      |
+
+## Built-in Helpers
+
+All helpers work in both file names and file contents.
+
+### Case Helpers
+
+| Helper       | Example Input | Output    |
+| ------------ | ------------- | --------- |
+| `camelCase`  | `my name`     | `myName`  |
+| `pascalCase` | `my name`     | `MyName`  |
+| `snakeCase`  | `my name`     | `my_name` |
+| `kebabCase`  | `my name`     | `my-name` |
+| `hyphenCase` | `my name`     | `my-name` |
+| `startCase`  | `my name`     | `My Name` |
+| `upperCase`  | `my name`     | `MY NAME` |
+| `lowerCase`  | `My Name`     | `my name` |
+
+### Date Helpers
+
+```handlebars
+{{now "yyyy-MM-dd"}}
+{{now "yyyy-MM-dd HH:mm" -1 "hours"}}
+{{date myDateVar "yyyy-MM-dd"}}
+{{date "2077-01-01T00:00:00Z" "yyyy-MM-dd" 7 "days"}}
+```
+
+### Custom Helpers
+
+Add your own via config:
 
 ```js
 module.exports = {
-  // use "default" to avoid needing to specify key
-  // in this case the key is "component"
   component: {
     templates: ["templates/component"],
     output: "src/components",
-    data: {
-      // ...
+    helpers: {
+      shout: (str) => str.toUpperCase() + "!!!",
     },
   },
-}
-```
-
-Then just run from the same directory:
-
-```sh
-$ npx simple-scaffold PageWrapper
-# or explicitly: npx simple-scaffold -c scaffold.config.js PageWrapper
-```
-
-This will allow you to avoid needing to remember which configs are needed or to store them in a
-one-liner in `package.json` which can get pretty long and messy, and harder to maintain.
-
-Also, this allows you to define more complex scaffolds with logic without having to use the Node.js
-API directly. (Of course you always have the option to still do so if you wish)
-
-More information can be found at the
-[Configuration Files documentation](https://chenasraf.github.io/simple-scaffold/docs/usage/configuration_files).
-
-### Templates Structure
-
-Templates are **any file** in the a directory given to `--templates`.
-
-Simple Scaffold will maintain any file and directory structure you try to generate, while replacing
-any tokens such as `{{ name }}` or other custom-data using
-[Handlebars.js](https://handlebarsjs.com/).
-
-`templates/component/{{ pascalName name }}.tsx`
-
-```tsx
-// Created: {{ now 'yyyy-MM-dd' }}
-import React from 'react'
-
-export default {{pascalCase name}}: React.FC = (props) => {
-  return (
-    <div className="{{camelCase name}}">{{pascalCase name}} Component</div>
-  )
-}
-```
-
-To generate the template output once without saving a configuration file, run:
-
-```sh
-# generate single component
-$ npx simple-scaffold \
-  -t templates/component \
-  -o src/components \
-  PageWrapper
-```
-
-This will immediately create the following file: `src/components/PageWrapper.tsx`
-
-```tsx
-// Created: 2077-01-01
-import React from 'react'
-
-export default PageWrapper: React.FC = (props) => {
-  return (
-    <div className="pageWrapper">PageWrapper Component</div>
-  )
 }
 ```
 
@@ -231,7 +327,7 @@ just a small amount to help sustain this project, I would be very very thankful!
   <img
     height='36'
     src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3'
-    alt='Buy Me a Coffee at ko-fi.com' 
+    alt='Buy Me a Coffee at ko-fi.com'
   />
 </a>
 
