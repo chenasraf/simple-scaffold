@@ -1,31 +1,40 @@
 ---
-title: Template Files
+title: Templates
 ---
 
-# Preparing template files
+# Templates
 
-Put your template files anywhere, and fill them with tokens for replacement.
+Templates are regular files in a directory. Both **file names** and **file contents** support
+[Handlebars.js](https://handlebarsjs.com/) syntax for token replacement.
 
-Each template (not file) in the config array is parsed individually, and copied to the output
-directory. If a single template path contains multiple files (e.g. if you use a folder path or a
-glob pattern), the first directory up the tree of that template will become the base inside the
-defined output path for that template, while copying files recursively and maintaining their
-relative structure.
+## How Templates Are Resolved
 
-Examples:
+Each path in the `templates` array is resolved individually. If a path points to a directory or glob
+pattern containing multiple files, the first directory up the tree becomes the base path — files are
+then copied recursively into `output`, preserving their relative structure.
 
-> In the following examples, the config `name` is `AppName`, and the config `output` is `src`.
+> In the examples below, `name` is `AppName` and `output` is `src`.
 
-| Input template                | Files in template                                      | Output path(s)                                               |
+| Template path                 | Files found                                            | Output                                                       |
 | ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `./templates/{{ name }}.txt`  | `./templates/{{ name }}.txt`                           | `src/AppName.txt`                                            |
 | `./templates/directory`       | `outer/{{name}}.txt`,<br />`outer2/inner/{{name}}.txt` | `src/outer/AppName.txt`,<br />`src/outer2/inner/AppName.txt` |
 | `./templates/others/**/*.txt` | `outer/{{name}}.jpg`,<br />`outer2/inner/{{name}}.txt` | `src/outer2/inner/AppName.txt`                               |
 
-## Ignoring files
+### Glob Patterns & Exclusions
 
-You can create a `.scaffoldignore` file in your template directory to exclude files from being
-copied to the output. It works like `.gitignore` — one pattern per line, comments with `#`.
+Template paths support glob patterns and negation with `!`:
+
+```js
+{
+  templates: ["templates/component/**", "!templates/component/README.md"]
+}
+```
+
+## Ignoring Files
+
+Place a `.scaffoldignore` file in your template directory to exclude files. It works like
+`.gitignore` — one pattern per line, `#` for comments.
 
 ```text
 # .scaffoldignore
@@ -38,120 +47,88 @@ dist/**
 The `.scaffoldignore` file itself is never copied to the output.
 
 Patterns are matched against both the file's basename and its path relative to the template
-directory, so `README.md` will match at any depth, while `dist/**` only matches a `dist` directory
-at the template root.
+directory, so `README.md` matches at any depth while `dist/**` only matches a `dist` directory at
+the template root.
 
-## Variable/token replacement
+## Token Replacement
 
-Scaffolding will replace `{{ varName }}` in both the file name and its contents and put the
-transformed files in the output directory.
+Handlebars expressions like `{{ name }}` are replaced in both file names and file contents. The
+`name` variable is always available — it's the name you pass when running the scaffold.
 
-The data available for the template parser is the data you pass to the `data` config option (or
-`--data` argument in CLI).
-
-For example, using the following command:
+Any additional data from `--data`, `-D`, `data` config, or [inputs](configuration_files#inputs) is
+also available.
 
 ```bash
-npx simple-scaffold@latest \
-  --templates templates/components/{{name}}.jsx \
-  --output src/components \
-  --create-sub-folder true \
+npx simple-scaffold \
+  -t templates/component/{{name}}.jsx \
+  -o src/components \
   MyComponent
 ```
 
-Will output a file with the path:
+This produces `src/components/MyComponent.jsx`, with all tokens inside the file replaced as well.
 
-```text
-<working_dir>/src/components/MyComponent.jsx
-```
+All standard Handlebars features work — `{{#if}}`, `{{#each}}`, `{{#with}}`, and more. See
+[Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for details.
 
-The contents of the file will be transformed in a similar fashion.
+## Built-in Helpers
 
-Your `data` will be pre-populated with the following:
+Simple Scaffold includes helpers you can use in templates and file names. Helpers can also be
+nested: `{{ pascalCase (snakeCase name) }}`.
 
-- `{{name}}`: raw name of the component as you entered it
+### Case Helpers
 
-> Simple-Scaffold uses [Handlebars.js](https://handlebarsjs.com/) for outputting the file contents.
-> Any `data` you add in the config will be available for use with their names wrapped in `{{` and
-> `}}`. Other Handlebars built-ins such as `each`, `if` and `with` are also supported, see
-> [Handlebars.js Language Features](https://handlebarsjs.com/guide/#language-features) for more
-> information.
+| Helper       | Usage                   | `my name` becomes |
+| ------------ | ----------------------- | ----------------- |
+| _(none)_     | `{{ name }}`            | `my name`         |
+| `camelCase`  | `{{ camelCase name }}`  | `myName`          |
+| `pascalCase` | `{{ pascalCase name }}` | `MyName`          |
+| `snakeCase`  | `{{ snakeCase name }}`  | `my_name`         |
+| `kebabCase`  | `{{ kebabCase name }}`  | `my-name`         |
+| `hyphenCase` | `{{ hyphenCase name }}` | `my-name`         |
+| `startCase`  | `{{ startCase name }}`  | `My Name`         |
+| `upperCase`  | `{{ upperCase name }}`  | `MY NAME`         |
+| `lowerCase`  | `{{ lowerCase name }}`  | `my name`         |
 
-## Helpers
+### Date Helpers
 
-### Built-in Helpers
+Both `now` and `date` use [`date-fns`](https://date-fns.org/docs/format) format tokens.
 
-Simple-Scaffold provides some built-in text transformation filters usable by Handlebars.
+| Helper               | Example                                                          | Output              |
+| -------------------- | ---------------------------------------------------------------- | ------------------- |
+| `now`                | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00`  |
+| `now` (with offset)  | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00`  |
+| `date`               | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00`  |
+| `date` (with offset) | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-12-31 15:00`  |
+| `date` (from data)   | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | _(depends on data)_ |
 
-For example, you may use `{{ snakeCase name }}` inside a template file or filename, and it will
-replace `My Name` with `my_name` when producing the final value.
-
-#### Capitalization Helpers
-
-| Helper name  | Example code            | Example output |
-| ------------ | ----------------------- | -------------- |
-| [None]       | `{{ name }}`            | my name        |
-| `camelCase`  | `{{ camelCase name }}`  | myName         |
-| `snakeCase`  | `{{ snakeCase name }}`  | my_name        |
-| `startCase`  | `{{ startCase name }}`  | My Name        |
-| `kebabCase`  | `{{ kebabCase name }}`  | my-name        |
-| `hyphenCase` | `{{ hyphenCase name }}` | my-name        |
-| `pascalCase` | `{{ pascalCase name }}` | MyName         |
-| `upperCase`  | `{{ upperCase name }}`  | MY NAME        |
-| `lowerCase`  | `{{ lowerCase name }}`  | my name        |
-
-#### Date helpers
-
-| Helper name                      | Description                                                      | Example code                                                     | Example output     |
-| -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------ |
-| `now`                            | Current date with format                                         | `{{ now "yyyy-MM-dd HH:mm" }}`                                   | `2042-01-01 15:00` |
-| `now` (with offset)              | Current date with format, and with offset                        | `{{ now "yyyy-MM-dd HH:mm" -1 "hours" }}`                        | `2042-01-01 14:00` |
-| `date`                           | Custom date with format                                          | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" }}`           | `2042-01-01 15:00` |
-| `date` (with offset)             | Custom date with format, and with offset                         | `{{ date "2042-01-01T15:00:00Z" "yyyy-MM-dd HH:mm" -1 "days" }}` | `2041-31-12 15:00` |
-| `date` (with date from `--data`) | Custom date with format, with data from the `data` config option | `{{ date myCustomDate "yyyy-MM-dd HH:mm" }}`                     | `2042-01-01 12:00` |
-
-Further details:
-
-- We use [`date-fns`](https://date-fns.org/docs/) for parsing/manipulating the dates. If you want
-  more information on the date tokens to use, refer to
-  [their format documentation](https://date-fns.org/docs/format).
-
-- The date helper format takes the following arguments:
-
-  ```typescript
-  (
-    date: string,
-    format: string,
-    offsetAmount?: number,
-    offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
-  )
-  ```
-
-- **The now helper** (for current time) takes the same arguments, minus the first one (`date`) as it
-  is implicitly the current date:
-
-  ```typescript
-  (
-    format: string,
-    offsetAmount?: number,
-    offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds"
-  )
-  ```
-
-### Custom Helpers
-
-You may also add your own custom helpers using the `helpers` options when using the JS API (rather
-than the CLI). The `helpers` option takes an object whose keys are helper names, and values are the
-transformation functions. For example, `upperCase` is implemented like so:
+**Signatures:**
 
 ```typescript
-config.helpers = {
-  upperCase: (text) => text.toUpperCase(),
+now(format: string, offsetAmount?: number, offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds")
+
+date(date: string, format: string, offsetAmount?: number, offsetType?: "years" | "months" | "weeks" | "days" | "hours" | "minutes" | "seconds")
+```
+
+## Custom Helpers
+
+You can register custom Handlebars helpers via the `helpers` config option:
+
+```js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    helpers: {
+      shout: (text) => text.toUpperCase() + "!!!",
+    },
+  },
 }
 ```
 
-All of the above helpers (built in and custom) will also be available to you when using
-`subdirHelper` (`--sub-dir-helper`/`-H`) as a possible value.
+Then use in templates: `{{ shout name }}`.
 
-> To see more information on how helpers work and more features, see
-> [Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).
+All helpers (built-in and custom) are also available as values for `subdirHelper` (`--subdir-helper`
+/ `-H`).
+
+For more on Handlebars helpers, see the
+[Handlebars.js docs](https://handlebarsjs.com/guide/#custom-helpers).

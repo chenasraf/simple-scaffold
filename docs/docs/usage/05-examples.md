@@ -2,139 +2,185 @@
 title: Examples
 ---
 
-## Example files
+# Examples
 
-### Input
+## React Component
 
-- Input file path:
+### Template
 
-  ```text
-  project → scaffold → {{Name}}.js → src → components
-  ```
+**File:** `templates/component/{{pascalCase name}}.tsx`
 
-- Input file contents:
+```tsx
+/**
+ * Author: {{ author }}
+ * Date: {{ now "yyyy-MM-dd" }}
+ */
+import React from "react"
 
-  ```typescript
-  /**
-   * Author: {{ author }}
-   * Date: {{ now "yyyy-MM-dd" }}
-   */
-  import React from 'react'
+export default {{ pascalCase name }}: React.FC = (props) => {
+  return (
+    <div className="{{ camelCase name }}">{{ pascalCase name }} Component</div>
+  )
+}
+```
 
-  export default {{camelCase name}}: React.FC = (props) => {
-    return (
-      <div className="{{className}}">{{camelCase name}} Component</div>
-    )
-  }
-  ```
+### Config
+
+```js
+// scaffold.config.js
+module.exports = {
+  component: {
+    templates: ["templates/component"],
+    output: "src/components",
+    data: {
+      author: "My Name",
+    },
+  },
+}
+```
+
+### Running
+
+```sh
+npx simple-scaffold -k component MyComponent
+```
 
 ### Output
 
-- Output file path:
-  - With `subdir = false` (default):
+**File:** `src/components/MyComponent.tsx`
 
-    ```text
-    project → src → components → MyComponent.js
-    ```
+```tsx
+/**
+ * Author: My Name
+ * Date: 2077-01-01
+ */
+import React from "react"
 
-  - With `subdir = true`:
-
-    ```text
-    project → src → components → MyComponent → MyComponent.js
-    ```
-
-  - With `subdir = true` and `subdirHelper = 'upperCase'`:
-
-    ```text
-    project → src → components → MYCOMPONENT → MyComponent.js
-    ```
-
-- Output file contents:
-
-  ```typescript
-  /**
-   * Author: My Name
-   * Date: 2077-01-01
-   */
-  import React from 'react'
-
-  export default MyComponent: React.FC = (props) => {
-    return (
-      <div className="myClassName">MyComponent Component</div>
-    )
-  }
-  ```
-
-## Example run commands
-
-### Command Example
-
-```bash
-simple-scaffold \
-    -t project/scaffold/**/* \
-    -o src/components \
-    -d '{"className": "myClassName","author": "My Name"}'
-    MyComponent
+export default MyComponent: React.FC = (props) => {
+  return (
+    <div className="myComponent">MyComponent Component</div>
+  )
+}
 ```
 
-### Equivalent Node Module Example
+## Subdir Variations
+
+Given the template and config above, the output path changes based on `subdir` settings:
+
+| Setting                                     | Output path                                  |
+| ------------------------------------------- | -------------------------------------------- |
+| `subdir: false` (default)                   | `src/components/MyComponent.tsx`             |
+| `subdir: true`                              | `src/components/MyComponent/MyComponent.tsx` |
+| `subdir: true`, `subdirHelper: "upperCase"` | `src/components/MYCOMPONENT/MyComponent.tsx` |
+
+## CLI One-liner (No Config)
+
+```sh
+npx simple-scaffold \
+  -t templates/component/**/* \
+  -o src/components \
+  -d '{"author": "My Name"}' \
+  MyComponent
+```
+
+## Node.js Equivalent
 
 ```typescript
 import Scaffold from "simple-scaffold"
 
-async function main() {
-  await Scaffold({
-    name: "MyComponent",
-    templates: ["project/scaffold/**/*"],
-    output: ["src/components"],
-    data: {
-      className: "myClassName",
-      author: "My Name",
-    },
-  })
-  console.log("Done.")
+await new Scaffold({
+  name: "MyComponent",
+  templates: ["templates/component"],
+  output: "src/components",
+  data: {
+    author: "My Name",
+  },
+}).run()
+```
+
+## Reusable Config Files
+
+### CommonJS (`scaffold.config.js`)
+
+```js
+module.exports = {
+  default: {
+    templates: ["templates/component"],
+    output: "src/components",
+  },
 }
 ```
 
-### Re-usable config
+### ESM (`scaffold.config.mjs`)
 
-#### Shell
-
-```bash
-# cjs
-simple-scaffold -c scaffold.cjs MyComponent \
-    -d '{"className": "myClassName","author": "My Name"}'
-# mjs
-simple-scaffold -c scaffold.mjs MyComponent \
-    -d '{"className": "myClassName","author": "My Name"}'
+```js
+export default {
+  default: {
+    templates: ["templates/component"],
+    output: "src/components",
+  },
+}
 ```
 
-#### scaffold.cjs
+### Dynamic Config (with function)
 
 ```js
 module.exports = (config) => ({
   default: {
-    templates: ["project/scaffold/**/*"],
-    output: ["src/components"],
+    templates: ["templates/component"],
+    output: "src/components",
     data: {
-      className: "myClassName",
-      author: "My Name",
+      generatedAt: new Date().toISOString(),
     },
   },
 })
 ```
 
-#### scaffold.mjs
+## With Inputs
 
 ```js
-export default (config) => ({
-  default: {
-    templates: ["project/scaffold/**/*"],
-    output: ["src/components"],
-    data: {
-      className: "myClassName",
-      author: "My Name",
+// scaffold.config.js
+module.exports = {
+  package: {
+    templates: ["templates/package"],
+    output: "packages",
+    subdir: true,
+    inputs: {
+      description: { message: "Package description", required: true },
+      author: { message: "Author", default: "Team" },
+      license: {
+        type: "select",
+        message: "License",
+        options: ["MIT", "Apache-2.0", "ISC"],
+      },
+      private: { type: "confirm", message: "Private package?", default: true },
     },
   },
-})
+}
+```
+
+```sh
+# Interactive — prompts for each input
+npx simple-scaffold -k package my-lib
+
+# Non-interactive — provide all values upfront
+npx simple-scaffold -k package -D description="A utility library" -D author=John my-lib
+```
+
+## With Hooks
+
+```js
+module.exports = {
+  app: {
+    templates: ["templates/app"],
+    output: ".",
+    subdir: true,
+    afterScaffold: "cd {{name}} && npm install && git init",
+  },
+}
+```
+
+```sh
+npx simple-scaffold -k app my-app
+# Files are generated, then npm install and git init run automatically
 ```
