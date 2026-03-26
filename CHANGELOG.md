@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.1.1](https://github.com/chenasraf/simple-scaffold/compare/v3.1.0...v3.1.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([f5ed38a](https://github.com/chenasraf/simple-scaffold/commit/f5ed38ad950e3738b173cd39baf2acc9e35bf8de))
+
 ## [3.1.0](https://github.com/chenasraf/simple-scaffold/compare/v3.0.0...v3.1.0) (2026-03-23)
 
 
