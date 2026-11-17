@@ -15,6 +15,11 @@ module.exports = (conf) => {
       output: "examples/test-output/component",
       data: { property: "myProp", value: "10" },
     },
+    lazy: async (cmdConfig) => ({
+      templates: ["examples/test-input/Component"],
+      output: `examples/test-output/${cmdConfig.name}`,
+      data: { property: "myProp", value: "10" },
+    }),
     configs: {
       templates: ["examples/test-input/**/.*"],
       output: "examples/test-output/configs",

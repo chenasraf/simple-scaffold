@@ -497,7 +497,8 @@ export type ScaffoldCmdConfig = {
 /**
  * A mapping of scaffold template keys to their configurations.
  *
- * Each configuration is a {@link ScaffoldConfig} object.
+ * Each configuration is a {@link ScaffoldConfig} object, or a (possibly async) function that
+ * receives the CLI config and returns one. A function is only called when its key is selected.
  *
  * The key is the name of the template, and the value is the configuration for that template.
  *
@@ -508,7 +509,7 @@ export type ScaffoldCmdConfig = {
  * @internal
  * @category Config
  */
-export type ScaffoldConfigMap = Record<string, ScaffoldConfig>
+export type ScaffoldConfigMap = Record<string, AsyncResolver<ScaffoldCmdConfig, ScaffoldConfig>>
 
 /**
  * The scaffold config file is either:

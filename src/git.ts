@@ -1,6 +1,13 @@
 import path from "node:path"
 import { log } from "./logger"
-import { AsyncResolver, LogConfig, LogLevel, ScaffoldCmdConfig, ScaffoldConfigMap } from "./types"
+import {
+  AsyncResolver,
+  LogConfig,
+  LogLevel,
+  ScaffoldCmdConfig,
+  ScaffoldConfig,
+  ScaffoldConfigMap,
+} from "./types"
 import { spawn } from "node:child_process"
 import { resolve, wrapNoopResolver } from "./utils"
 import { findConfigFile } from "./config"
@@ -55,11 +62,15 @@ export async function loadGitConfig({
   log(logConfig, LogLevel.debug, `Loaded config from git`)
   log(logConfig, LogLevel.debug, `Raw config:`, loadedConfig)
   const fixedConfig: ScaffoldConfigMap = {}
+  const fixTemplates = (v: ScaffoldConfig): ScaffoldConfig => ({
+    ...v,
+    templates: v.templates.map((t) => path.resolve(tmpPath, t)),
+  })
   for (const [k, v] of Object.entries(loadedConfig)) {
-    fixedConfig[k] = {
-      ...v,
-      templates: v.templates.map((t) => path.resolve(tmpPath, t)),
-    }
+    fixedConfig[k] =
+      typeof v === "function"
+        ? async (cmdConfig) => fixTemplates(await resolve(v, cmdConfig))
+        : fixTemplates(v as ScaffoldConfig)
   }
   return wrapNoopResolver(fixedConfig)
 }

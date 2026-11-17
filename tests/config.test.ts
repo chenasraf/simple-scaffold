@@ -275,6 +275,20 @@ describe("config", () => {
       })
       expect(result.templates.length).toBeGreaterThan(0)
     })
+
+    test("resolves function config keys with the CLI config", async () => {
+      const result = await parseConfigFile({
+        ...blankCliConf,
+        name: "MyComponent",
+        templates: undefined as unknown as string[],
+        output: undefined as unknown as string,
+        config: path.resolve(__dirname, "test-config.js"),
+        key: "lazy",
+        tmpDir: `/tmp/scaffold-config-${Date.now()}`,
+      })
+      expect(result.output).toEqual("examples/test-output/MyComponent")
+      expect(result.templates).toEqual(["examples/test-input/Component"])
+    })
   })
 
   describe("getConfig", () => {

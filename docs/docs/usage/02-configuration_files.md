@@ -58,6 +58,18 @@ module.exports = (config) => ({
 
 The function can also be `async`.
 
+Individual template keys can be functions too. A key's function is only called when that template is
+selected, so expensive or interactive setup for one template doesn't run for the others:
+
+```js
+module.exports = {
+  component: (config) => ({
+    templates: ["templates/component"],
+    output: `src/components/${config.name}`,
+  }),
+}
+```
+
 ### Supported Formats
 
 - `.js` (CommonJS)

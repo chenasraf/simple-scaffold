@@ -58,10 +58,11 @@ export async function getConfigFile(config: ScaffoldCmdConfig): Promise<Scaffold
     : getLocalConfig({ config: configFilename, logLevel: config.logLevel }))
 
   let configImport = await resolve(configPromise, config)
+  const moduleDefault = (configImport as { default?: ScaffoldConfigFile }).default
 
-  if (typeof configImport.default === "function" || configImport.default instanceof Promise) {
+  if (typeof moduleDefault === "function" || moduleDefault instanceof Promise) {
     log(config, LogLevel.debug, "Config is a function or promise, resolving...")
-    configImport = await resolve(configImport.default, config)
+    configImport = await resolve(moduleDefault, config)
   }
   return configImport
 }
@@ -99,7 +100,7 @@ export async function parseConfigFile(config: ScaffoldCmdConfig): Promise<Scaffo
       throw new Error(`Template "${key}" not found in ${config.config}`)
     }
 
-    const imported = configImport[key]
+    const imported = await resolve(configImport[key], config)
     log(config, LogLevel.debug, "Imported result", imported)
     output = {
       ...output,
