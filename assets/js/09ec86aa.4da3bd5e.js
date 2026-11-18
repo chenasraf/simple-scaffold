@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunksimple_scaffold_docs||=[]).push([[530],{7801(l){l.exports=JSON.parse('{"metadata":{"permalink":"/simple-scaffold/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":0,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
