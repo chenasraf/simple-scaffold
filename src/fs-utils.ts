@@ -13,7 +13,7 @@ export async function createDirIfNotExists(
   config: LogConfig & Pick<ScaffoldConfig, "dryRun">,
 ): Promise<void> {
   if (config.dryRun) {
-    log(config, LogLevel.info, `Dry Run. Not creating dir ${dir}`)
+    log(config, LogLevel.debug, `Dry Run. Not creating dir ${dir}`)
     return
   }
   const parentDir = path.dirname(dir)

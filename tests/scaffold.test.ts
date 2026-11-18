@@ -270,6 +270,46 @@ describe("Scaffold", () => {
 
         expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
       })
+
+      test("should log the files that would be written", async () => {
+        const logMock = vi.spyOn(console, "log").mockImplementation(() => void 0)
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          data: { value: "1" },
+          logLevel: "info",
+          dryRun: true,
+        })
+        const output = logMock.mock.calls.map((args) => args.join(" ")).join("\n")
+        logMock.mockRestore()
+
+        expect(output).toContain("app_name.txt")
+        expect(output).toContain("1 file(s) would be created")
+        expect(() => readFileSync(join(process.cwd(), "output", "app_name.txt"))).toThrow()
+      })
+
+      test("should list existing files as skipped", async () => {
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          logLevel: "none",
+        })
+        const logMock = vi.spyOn(console, "log").mockImplementation(() => void 0)
+        await Scaffold({
+          name: "app_name",
+          output: "output",
+          templates: ["input"],
+          logLevel: "info",
+          dryRun: true,
+        })
+        const output = logMock.mock.calls.map((args) => args.join(" ")).join("\n")
+        logMock.mockRestore()
+
+        expect(output).toContain("app_name.txt (exists, skipped)")
+        expect(output).toContain("0 file(s) would be created, 1 skipped")
+      })
     }),
   )
 

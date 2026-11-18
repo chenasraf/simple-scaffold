@@ -170,15 +170,21 @@ export function getOutputDir(
   )
 }
 
+/** The output path of a processed template file, and whether it was skipped because it exists. */
+export interface TemplateFileResult {
+  outputPath: string
+  skipped: boolean
+}
+
 /**
  * Processes a single template file: resolves output paths, creates directories,
  * and writes the transformed output.
- * Returns the output path if the file was written, or null if skipped.
+ * A file counts as written in dry run when it would be written.
  */
 export async function handleTemplateFile(
   config: ScaffoldConfig,
   { templatePath, basePath }: { templatePath: string; basePath: string },
-): Promise<string | null> {
+): Promise<TemplateFileResult> {
   try {
     const { inputPath, outputPathOpt, outputDir, outputPath, exists } = await getTemplateFileInfo(
       config,
@@ -203,10 +209,9 @@ export async function handleTemplateFile(
 
     await createDirIfNotExists(path.dirname(outputPath), config)
 
-    const shouldWrite = (!exists || overwrite) && !config.dryRun
     log(config, LogLevel.debug, `Writing to ${outputPath}`)
     await copyFileTransformed(config, { exists, overwrite, outputPath, inputPath })
-    return shouldWrite ? outputPath : null
+    return { outputPath, skipped: exists && !overwrite }
   } catch (e: unknown) {
     handleErr(e as NodeJS.ErrnoException)
     throw e

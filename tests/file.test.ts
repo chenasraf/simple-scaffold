@@ -440,6 +440,34 @@ describe("file utilities", () => {
           expect(content).toEqual("Content for test_app")
         })
 
+        test("returns the would-be output path in dry run without writing", async () => {
+          const config: ScaffoldConfig = { ...baseConfig, tmpDir: ".", dryRun: true }
+          registerHelpers(config)
+          const result = await handleTemplateFile(config, {
+            templatePath: "input/{{name}}.txt",
+            basePath: "",
+          })
+          expect(result).toEqual({
+            outputPath: path.resolve("output", "test_app.txt"),
+            skipped: false,
+          })
+          expect(await pathExists(path.join("output", "test_app.txt"))).toBe(false)
+        })
+
+        test("marks the file skipped in dry run when it exists and overwrite is off", async () => {
+          const config: ScaffoldConfig = { ...baseConfig, tmpDir: "." }
+          registerHelpers(config)
+          await handleTemplateFile(config, { templatePath: "input/{{name}}.txt", basePath: "" })
+          const result = await handleTemplateFile(
+            { ...config, dryRun: true },
+            { templatePath: "input/{{name}}.txt", basePath: "" },
+          )
+          expect(result).toEqual({
+            outputPath: path.resolve("output", "test_app.txt"),
+            skipped: true,
+          })
+        })
+
         test("throws for non-existing template", async () => {
           const config: ScaffoldConfig = { ...baseConfig, tmpDir: "." }
           registerHelpers(config)

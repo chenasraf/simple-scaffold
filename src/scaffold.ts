@@ -9,7 +9,14 @@ import os from "node:os"
 import { exec } from "node:child_process"
 
 import { handleErr, resolve } from "./utils"
-import { isDir, getTemplateGlobInfo, getFileList, handleTemplateFile, GlobInfo } from "./file"
+import {
+  isDir,
+  getTemplateGlobInfo,
+  getFileList,
+  handleTemplateFile,
+  GlobInfo,
+  TemplateFileResult,
+} from "./file"
 import { removeGlob, makeRelativePath, getBasePath } from "./path-utils"
 import { LogLevel, MinimalConfig, Resolver, ScaffoldCmdConfig, ScaffoldConfig } from "./types"
 import { registerHelpers } from "./parser"
@@ -59,7 +66,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   registerHelpers(config)
 
   const startTime = performance.now()
-  const writtenFiles: string[] = []
+  const results: TemplateFileResult[] = []
   try {
     config.data = { name: config.name, ...config.data }
     logInitStep(config)
@@ -72,8 +79,7 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
     const templates = await resolveTemplateGlobs(config, includes)
 
     for (const tpl of templates) {
-      const files = await processTemplateGlob(config, tpl, excludes)
-      writtenFiles.push(...files)
+      results.push(...(await processTemplateGlob(config, tpl, excludes)))
     }
   } catch (e: unknown) {
     log(config, LogLevel.error, e)
@@ -81,12 +87,15 @@ export async function Scaffold(config: ScaffoldConfig): Promise<void> {
   }
 
   const elapsed = performance.now() - startTime
+  const writtenFiles = results.filter((r) => !r.skipped).map((r) => r.outputPath)
+  const skippedFiles = results.filter((r) => r.skipped).map((r) => r.outputPath)
 
-  logFileTree(config, writtenFiles)
-  logSummary(config, writtenFiles.length, elapsed, config.dryRun)
+  logFileTree(config, writtenFiles, skippedFiles)
+  logSummary(config, writtenFiles.length, elapsed, config.dryRun, skippedFiles.length)
 
   if (config.afterScaffold) {
-    await runAfterScaffoldHook(config, writtenFiles)
+    // The hook only receives files that exist on disk, which a dry run never creates.
+    await runAfterScaffoldHook(config, config.dryRun ? [] : writtenFiles)
   }
 }
 
@@ -106,13 +115,13 @@ async function resolveTemplateGlobs(
   return templates
 }
 
-/** Processes all files matching a single template glob pattern. Returns paths of written files. */
+/** Processes all files matching a single template glob pattern. */
 async function processTemplateGlob(
   config: ScaffoldConfig,
   tpl: GlobInfo,
   excludes: string[],
-): Promise<string[]> {
-  const written: string[] = []
+): Promise<TemplateFileResult[]> {
+  const results: TemplateFileResult[] = []
 
   // Load .scaffoldignore from the template base directory
   const ignorePatterns = await loadIgnorePatterns(tpl.baseTemplatePath)
@@ -143,12 +152,9 @@ async function processTemplateGlob(
       isGlob: tpl.isGlob,
     })
 
-    const outputPath = await handleTemplateFile(config, { templatePath: file, basePath })
-    if (outputPath) {
-      written.push(outputPath)
-    }
+    results.push(await handleTemplateFile(config, { templatePath: file, basePath }))
   }
-  return written
+  return results
 }
 
 /** Executes the afterScaffold hook — either a function or a shell command string. */

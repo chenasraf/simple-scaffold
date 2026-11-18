@@ -83,28 +83,34 @@ export function logInitStep(config: ScaffoldConfig): void {
 }
 
 /**
- * Logs a tree of created files, grouped by directory.
+ * Logs a tree of created files, grouped by directory. Skipped files are listed with a marker.
  */
-export function logFileTree(config: LogConfig, files: string[]): void {
-  if (files.length === 0) return
+export function logFileTree(config: LogConfig, files: string[], skipped: string[] = []): void {
+  const all = [...files, ...skipped]
+  if (all.length === 0) return
 
   // Find common prefix to make paths relative
-  const commonDir = files.reduce((prefix, file) => {
+  const commonDir = all.reduce((prefix, file) => {
     while (!file.startsWith(prefix)) {
       prefix = path.dirname(prefix)
     }
     return prefix
-  }, path.dirname(files[0]))
+  }, path.dirname(all[0]))
 
   log(config, LogLevel.info, "")
   log(config, LogLevel.info, colorize.bold(`📁 ${commonDir}`))
 
-  const relPaths = files.map((f) => path.relative(commonDir, f)).sort()
+  const skippedSet = new Set(skipped)
+  const entries = all
+    .map((f) => ({ rel: path.relative(commonDir, f), skipped: skippedSet.has(f) }))
+    .sort((a, b) => (a.rel < b.rel ? -1 : a.rel > b.rel ? 1 : 0))
 
-  for (let i = 0; i < relPaths.length; i++) {
-    const isLast = i === relPaths.length - 1
+  for (let i = 0; i < entries.length; i++) {
+    const isLast = i === entries.length - 1
     const prefix = isLast ? "└── " : "├── "
-    log(config, LogLevel.info, colorize.dim(prefix) + relPaths[i])
+    const { rel, skipped: isSkipped } = entries[i]
+    const line = isSkipped ? colorize.dim(`${rel} (exists, skipped)`) : rel
+    log(config, LogLevel.info, colorize.dim(prefix) + line)
   }
 }
 
@@ -116,20 +122,28 @@ export function logSummary(
   fileCount: number,
   elapsedMs: number,
   dryRun?: boolean,
+  skippedCount = 0,
 ): void {
   const timeStr =
     elapsedMs < 1000 ? `${Math.round(elapsedMs)}ms` : `${(elapsedMs / 1000).toFixed(2)}s`
+  const skippedStr = skippedCount > 0 ? `, ${skippedCount} skipped` : ""
 
   log(config, LogLevel.info, "")
   if (dryRun) {
     log(
       config,
       LogLevel.info,
-      colorize.yellow(`🏜️  Dry run complete — ${fileCount} file(s) would be created (${timeStr})`),
+      colorize.yellow(
+        `🏜️  Dry run complete — ${fileCount} file(s) would be created${skippedStr} (${timeStr})`,
+      ),
     )
   } else if (fileCount === 0) {
-    log(config, LogLevel.info, colorize.yellow(`⚠️  No files created (${timeStr})`))
+    log(config, LogLevel.info, colorize.yellow(`⚠️  No files created${skippedStr} (${timeStr})`))
   } else {
-    log(config, LogLevel.info, colorize.green(`✅ Created ${fileCount} file(s) in ${timeStr}`))
+    log(
+      config,
+      LogLevel.info,
+      colorize.green(`✅ Created ${fileCount} file(s)${skippedStr} in ${timeStr}`),
+    )
   }
 }
