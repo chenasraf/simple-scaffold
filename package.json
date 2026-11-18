@@ -5,7 +5,7 @@
   "homepage": "https://chenasraf.github.io/simple-scaffold",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chenasraf/simple-scaffold.git"
+    "url": "git+https://github.com/chenasraf/simple-scaffold.git"
   },
   "author": "Chen Asraf <contact@casraf.dev> (https://casraf.dev)",
   "license": "MIT",
