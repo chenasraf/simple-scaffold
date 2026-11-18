@@ -1,5 +1,18 @@
 # Change Log
 
+## [3.2.0](https://github.com/chenasraf/simple-scaffold/compare/v3.1.1...v3.2.0) (2026-11-18)
+
+
+### Features
+
+* **config:** allow lazy function values for template keys ([717bd48](https://github.com/chenasraf/simple-scaffold/commit/717bd48860deae4bff10414aacad57f315f4d378))
+
+
+### Bug Fixes
+
+* **ci:** upgrade npm for trusted publishing ([74e2d08](https://github.com/chenasraf/simple-scaffold/commit/74e2d08010eaf046bf0c1ef8bc6ba0accddfdf23))
+* **scaffold:** list would-be and skipped files in dry run ([3d1bafc](https://github.com/chenasraf/simple-scaffold/commit/3d1bafc4602fa501643a013e6f6d41c440ed2878))
+
 ## [3.1.1](https://github.com/chenasraf/simple-scaffold/compare/v3.1.0...v3.1.1) (2026-03-26)
 
 
