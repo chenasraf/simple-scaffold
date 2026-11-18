@@ -5,8 +5,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index: path.resolve(__dirname, "src/index.ts"),
-        cmd: path.resolve(__dirname, "src/cmd.ts"),
+        index: path.resolve(import.meta.dirname, "src/index.ts"),
+        cmd: path.resolve(import.meta.dirname, "src/cmd.ts"),
       },
       formats: ["cjs"],
     },
@@ -27,7 +27,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": path.resolve(import.meta.dirname, "src"),
     },
   },
   test: {
