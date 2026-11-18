@@ -83,22 +83,9 @@ jobs:
       - run: npm publish ./dist --provenance
 
   docs:
-    name: Deploy Documentation
+    name: Docs
     needs: release
-    runs-on: ubuntu-latest
     if: ${{ needs.release.outputs.release_created }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: cd docs && pnpm install --frozen-lockfile
-      - run: pnpm docs:build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build
+    permissions:
+      contents: write
+    uses: ./.github/workflows/docs.yml
